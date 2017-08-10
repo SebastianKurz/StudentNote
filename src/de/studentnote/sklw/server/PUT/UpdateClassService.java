@@ -1,4 +1,4 @@
-package de.studentnote.sklw.PUT;
+package de.studentnote.sklw.server.PUT;
 
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;

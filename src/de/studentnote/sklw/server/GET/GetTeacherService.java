@@ -1,16 +1,16 @@
-package de.studentnote.sklw.GET;
+package de.studentnote.sklw.server.GET;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 
-@Path("/getNote/")
-public class GetNoteService {
-
+@Path("/getTeacher/")
+public class GetTeacherService {
+	
 	@GET
 	@Produces("application/json")
-	public String allNotes() {
+	public String allTeachers() {
 		
 		/*
 		 * 
@@ -18,13 +18,13 @@ public class GetNoteService {
 		 * 
 		 */
 		
-		return "notes";
+		return "teachers";
 	}
 	
 	@GET
-	@Path("{noteId}")
+	@Path("{teacherId}")
 	@Produces("application/json")
-	public String specificNote(@PathParam("noteId") long noteId) {
+	public String specificTeacher(@PathParam("teacherId") long teacherId) {
 		
 		/*
 		 * 
@@ -32,6 +32,6 @@ public class GetNoteService {
 		 * 
 		 */
 		
-		return "note";
+		return "teacher";
 	}
 }

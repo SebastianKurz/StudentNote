@@ -1,4 +1,4 @@
-package de.studentnote.sklw.GET;
+package de.studentnote.sklw.server.GET;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
