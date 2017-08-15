@@ -23,32 +23,37 @@ public class Note {
 	public long getNoteId() {
 		return noteId;
 	}
-	public void setNoteId(long noteId) {
+	public Note setNoteId(long noteId) {
 		this.noteId = noteId;
+		return this;
 	}
 	public String getText() {
 		return text;
 	}
-	public void setText(String text) {
+	public Note setText(String text) {
 		this.text = text;
+		return this;
 	}
 	public Timestamp getTimestamp() {
 		return timestamp;
 	}
-	public void setTimestamp(Timestamp timestamp) {
+	public Note setTimestamp(Timestamp timestamp) {
 		this.timestamp = timestamp;
+		return this;
 	}
 	public String getAuthorTeacherId() {
 		return authorTeacherId;
 	}
-	public void setAuthorTeacherId(String authorTeacherId) {
+	public Note setAuthorTeacherId(String authorTeacherId) {
 		this.authorTeacherId = authorTeacherId;
+		return this;
 	}
 	public String getBelongsToStudent() {
 		return belongsToStudent;
 	}
-	public void setBelongsToStudent(String belongsToStudent) {
+	public Note setBelongsToStudent(String belongsToStudent) {
 		this.belongsToStudent = belongsToStudent;
+		return this;
 	}
 	
 }

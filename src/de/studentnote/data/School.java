@@ -19,16 +19,18 @@ public class School {
 		return schoolId;
 	}
 
-	public void setSchoolId(long schoolId) {
+	public School setSchoolId(long schoolId) {
 		this.schoolId = schoolId;
+		return this;
 	}
 	
 	public String getName() {
 		return name;
 	}
 
-	public void setName(String name) {
+	public School setName(String name) {
 		this.name = name;
+		return this;
 	}
 	
 	

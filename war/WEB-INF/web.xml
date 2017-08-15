@@ -7,6 +7,7 @@
 
   <!-- Servlets -->
   <display-name>de.studentnote.sklw</display-name>
+  
   <servlet>
     <servlet-name>Jersey REST Service</servlet-name>
     <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
@@ -16,7 +17,6 @@
     </init-param>
     <load-on-startup>1</load-on-startup>
   </servlet>
-  
   <servlet-mapping>
     <servlet-name>Jersey REST Service</servlet-name>
     <url-pattern>/rest/*</url-pattern>
@@ -31,7 +31,6 @@
     </init-param>
     <load-on-startup>1</load-on-startup>
   </servlet>
-  
   <servlet-mapping>
     <servlet-name>Create Service</servlet-name>
     <url-pattern>/create/*</url-pattern>
@@ -46,7 +45,6 @@
     </init-param>
     <load-on-startup>1</load-on-startup>
   </servlet>
-  
   <servlet-mapping>
     <servlet-name>Update Service</servlet-name>
     <url-pattern>/update/*</url-pattern>
@@ -61,7 +59,6 @@
     </init-param>
     <load-on-startup>1</load-on-startup>
   </servlet>
-  
   <servlet-mapping>
     <servlet-name>Get Service</servlet-name>
     <url-pattern>/get/*</url-pattern>
@@ -76,7 +73,6 @@
     </init-param>
     <load-on-startup>1</load-on-startup>
   </servlet>
-  
   <servlet-mapping>
     <servlet-name>Delete Service</servlet-name>
     <url-pattern>/delete/*</url-pattern>

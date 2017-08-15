@@ -16,36 +16,41 @@ public class Student {
 	private String lastName;
 	private long belongsToClass;
 	
+	
 	public long getStudentId() {
 		return studentId;
 	}
 	
-	public void setStudentId(long studentId) {
+	public Student setStudentId(long studentId) {
 		this.studentId = studentId;
+		return this;
 	}
 	
 	public String getFirstName() {
 		return firstName;
 	}
 	
-	public void setFirstName(String firstName) {
+	public Student setFirstName(String firstName) {
 		this.firstName = firstName;
+		return this;
 	}
 	
 	public String getLastName() {
 		return lastName;
 	}
 	
-	public void setLastName(String lastName) {
+	public Student setLastName(String lastName) {
 		this.lastName = lastName;
+		return this;
 	}
 	
 	public long getIdOfClass() {
 		return belongsToClass;
 	}
 	
-	public void setIdOfClass(long idOfClass) {
+	public Student setIdOfClass(long idOfClass) {
 		belongsToClass = idOfClass;
+		return this;
 	}
 	
 }

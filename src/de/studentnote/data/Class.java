@@ -22,31 +22,48 @@ public class Class {
 		return classId;
 	}
 	
-	public void setClassId(long classId) {
+	public Class setClassId(long classId) {
 		this.classId = classId;
+		return this;
 	}
 
 	public long getSchool() {
 		return belongsToSchool;
 	}
 
-	public void setSchool(long school) {
+	public Class setSchool(long school) {
 		this.belongsToSchool = school;
+		return this;
 	}
 
 	public String getName() {
 		return name;
 	}
 
-	public void setName(String name) {
+	public Class setName(String name) {
 		this.name = name;
+		return this;
 	}
 
 	public String getLevel() {
 		return level;
 	}
 
-	public void setLevel(String level) {
+	public Class setLevel(String level) {
 		this.level = level;
+		return this;
 	}
+	
+	/*
+	public String toJSONString() throws JSONException {
+		
+		JSONObject obj = new JSONObject();
+		
+		obj.put("classId", this.classId)
+		   .put("name", this.name)
+		   .put("level", this.level)
+		   .put("belongsToSchool", this.belongsToSchool);
+		
+		return obj.toString();
+	}*/
 }

@@ -22,38 +22,44 @@ public class Teacher {
 	public long getTeacherId() {
 		return teacherId;
 	}
-	public void setTeacherId(long teacherId) {
+	public Teacher setTeacherId(long teacherId) {
 		this.teacherId = teacherId;
+		return this;
 	}
 	public String getFirstName() {
 		return firstName;
 	}
-	public void setFirstName(String firstName) {
+	public Teacher setFirstName(String firstName) {
 		this.firstName = firstName;
+		return this;
 	}
 	public String getLastName() {
 		return lastName;
 	}
-	public void setLastName(String lastName) {
+	public Teacher setLastName(String lastName) {
 		this.lastName = lastName;
+		return this;
 	}
 	public String getMailAddress() {
 		return mailAddress;
 	}
-	public void setMailAddress(String mailAddress) {
+	public Teacher setMailAddress(String mailAddress) {
 		this.mailAddress = mailAddress;
+		return this;
 	}
 	public String getPassword() {
 		return password;
 	}
-	public void setPassword(String password) {
+	public Teacher setPassword(String password) {
 		this.password = password;
+		return this;
 	}
 	public long getBelongsToSchool() {
 		return belongsToSchool;
 	}
-	public void setBelongsToSchool(long belongsToSchool) {
+	public Teacher setBelongsToSchool(long belongsToSchool) {
 		this.belongsToSchool = belongsToSchool;
+		return this;
 	}
 	
 }
