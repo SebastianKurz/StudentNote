@@ -32,11 +32,11 @@ public class CreateNewClassService {
 		obj.put("level", level);
 		obj.put("schoolId", schoolId);
 		
-		return obj.toString();
-		
 		//em = EMF.getEntityManager();
 		//em.persist(cl);
+		//em.close;
 		
+		return obj.toString();
 		
 		/*
 		 * Derzeit fliegt eine exception, wenn man eine Request startet

@@ -5,8 +5,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import org.json.simple.JSONAware;
+import org.json.simple.JSONObject;
+
+
 @Entity
-public class Class {
+public class Class implements JSONAware{
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -53,17 +57,19 @@ public class Class {
 		this.level = level;
 		return this;
 	}
-	
-	/*
-	public String toJSONString() throws JSONException {
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public String toJSONString() {
 		
 		JSONObject obj = new JSONObject();
 		
-		obj.put("classId", this.classId)
-		   .put("name", this.name)
-		   .put("level", this.level)
-		   .put("belongsToSchool", this.belongsToSchool);
+		obj.put("classId", this.classId);
+		obj.put("name", this.name);
+		obj.put("level", this.level);
+		obj.put("belongsToSchool", this.belongsToSchool);
 		
+		   
 		return obj.toString();
-	}*/
+	}
 }

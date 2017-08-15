@@ -7,8 +7,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import org.json.simple.JSONAware;
+import org.json.simple.JSONObject;
+
 @Entity
-public class Note {
+public class Note implements JSONAware{
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -54,6 +57,19 @@ public class Note {
 	public Note setBelongsToStudent(String belongsToStudent) {
 		this.belongsToStudent = belongsToStudent;
 		return this;
+	}
+	@SuppressWarnings("unchecked")
+	@Override
+	public String toJSONString() {
+		JSONObject obj = new JSONObject();
+		
+		obj.put("noteId", this.noteId);
+		obj.put("text", this.text);
+		obj.put("timestamp", this.timestamp);
+		obj.put("authorTeacherId", this.authorTeacherId);
+		obj.put("belongsToStudent", this.belongsToStudent);
+		
+		return obj.toString();
 	}
 	
 }
