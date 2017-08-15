@@ -27,20 +27,14 @@ public class CreateNewClassService {
 		  .setLevel(level)
 		  .setSchool(schoolId);
 		
-		JSONObject obj = new JSONObject();
-		obj.put("name", name);
-		obj.put("level", level);
-		obj.put("schoolId", schoolId);
+		em = EMF.getEntityManager();
+		em.persist(cl);
+		em.close();
 		
-		//em = EMF.getEntityManager();
-		//em.persist(cl);
-		//em.close;
-		
-		return obj.toString();
+		return cl.toJSONString();
 		
 		/*
 		 * Derzeit fliegt eine exception, wenn man eine Request startet
-		 * "WARNUNG: Unable to create validator handler"
 		 */
 	}
 }
