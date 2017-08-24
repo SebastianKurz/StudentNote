@@ -1,4 +1,4 @@
-package de.studentnote.data;
+package de.studentnote.sklw.data;
 
 import java.sql.Timestamp;
 

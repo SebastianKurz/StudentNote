@@ -1,4 +1,4 @@
-package de.studentnote.data;
+package de.studentnote.sklw.data;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

@@ -6,6 +6,12 @@
 
     <persistence-unit name="transactions-optional">
         <provider>org.datanucleus.api.jpa.PersistenceProviderImpl</provider>
+        <class>de.studentnote.sklw.data.Class</class>
+        <class>de.studentnote.sklw.data.Note</class>
+        <class>de.studentnote.sklw.data.School</class>
+        <class>de.studentnote.sklw.data.Student</class>
+        <class>de.studentnote.sklw.data.Teacher</class>
+        <exclude-unlisted-classes/>
         <properties>
             <property name="datanucleus.NontransactionalRead" value="true"/>
             <property name="datanucleus.NontransactionalWrite" value="true"/>

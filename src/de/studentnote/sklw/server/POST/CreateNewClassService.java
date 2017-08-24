@@ -8,8 +8,8 @@ import javax.ws.rs.Produces;
 
 import org.json.simple.JSONObject;
 
-import de.studentnote.data.Class;
-import de.studentnote.data.EMF;
+import de.studentnote.sklw.data.Class;
+import de.studentnote.sklw.data.EMF;
 
 @Path("/newClass/{name}/{level}/{schoolId}")
 public class CreateNewClassService {
