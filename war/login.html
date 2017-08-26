@@ -1,48 +1,52 @@
 <html>
 
-	<head>
-		<title>login</title>
+<head>
+<title>login</title>
 
-		<link rel="stylesheet" href="css/index.css"></link>
-		<link rel="stylesheet" href="css/masken.css"></link>
-		<style type="text/css">
+<link rel="stylesheet" href="css/index.css"></link>
+<link rel="stylesheet" href="css/masken.css"></link>
+<style type="text/css">
+input {
+	width: 220px;
+	height: 30px;
+	border-radius: 7px;
+}
+</style>
 
-			input{	width : 220px;
-					height : 30px;
-					border-radius:7px;}
-			
-		</style>
-			
-		<script type="text/javascript" src="js/index.js">
+<script type="text/javascript" src="js/index.js">
 		</script>
 
-	</head>
+</head>
 
-	<body>
+<body>
 
-		<div id="container">
+	<div id="container">
 
-			<div id="header">
-				<div id="schrift">
-					<h1>Schulverwaltung - Login</h1>
-				</div>
+		<div id="header">
+			<div id="schrift">
+				<h1>Schulverwaltung - Login</h1>
 			</div>
+		</div>
 
-			<div id="maske">
-				<form name="form1">
-					<h3>Username: <input type="text" name="username"></h3><p>
-					<h3>Passwort:&nbsp; <input type="password" name="passwort"></h3>
-				</form>
+		<div id="maske">
+			<form name="form1">
+				<h3>
+					Username: <input type="text" name="username">
+				</h3>
+				<p>
+				<h3>
+					Passwort:&nbsp; <input type="password" name="passwort">
+				</h3>
+			</form>
 
-				<button onclick="basicLogin();" id="maskeButton" >anmelden</button>
-			
-			</div>
-
-			<div id="footer">
-			</div>
+			<button onclick="basicLogin();" id="maskeButton">anmelden</button>
 
 		</div>
 
-	</body>
+		<div id="footer"></div>
+
+	</div>
+
+</body>
 
 </html>

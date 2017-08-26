@@ -1,80 +1,80 @@
 <html>
 
-	<head>
-		<title>Kurs hinzuf&uuml;gen</title>
-		
-		<link rel="stylesheet" href="css/index.css">
-		<link rel="stylesheet" href="css/masken.css">
-		
-		<style type="text/css">
+<head>
+<title>Kurs hinzuf&uuml;gen</title>
 
-			input{	width:140%;
-					height:90%;}
+<link rel="stylesheet" href="css/index.css">
+<link rel="stylesheet" href="css/masken.css">
 
-			#maskeButton{width:75%;}
+<style type="text/css">
+input {
+	width: 140%;
+	height: 90%;
+}
 
-		</style>
-		
-		<script type="text/javascript" src="js/NeuerKurs.js">
-		</script>
-		
-		<script type="text/javascript" src="js/LinksTo.js">
-		</script>
-		
-		<script type="text/javascript" src="js/logout.js">
+#maskeButton {
+	width: 75%;
+}
+</style>
+
+<script type="text/javascript" src="js/NeuerKurs.js">
 		</script>
 
-	</head>
+<script type="text/javascript" src="js/LinksTo.js">
+		</script>
 
-	<body>
+<script type="text/javascript" src="js/logout.js">
+		</script>
 
-		<div id="container">
+</head>
 
-			<div id="header">
-				<button onclick="linkToLehrer()" class="links">Lehrer</button>
-				<button onclick="linkToKurse()" class="rechts">Kurse</button>
+<body>
 
-				<div id="schrift">
+	<div id="container">
+
+		<div id="header">
+			<button onclick="linkToLehrer()" class="links">Lehrer</button>
+			<button onclick="linkToKurse()" class="rechts">Kurse</button>
+
+			<div id="schrift">
 				<h1>Schulverwaltung - Neuer Kurs</h1>
-				</div>
 			</div>
-
-			<div id="maske">
-				<form name="form1">
-					<table>
-						<tbody>
-							<tr>
-								<td>
-									<h3>Klasse:</h3>
-								</td>
-								<td>
-									<input type="text" name="klasse">
-								</td>
-							</tr>
-							<tr>
-								<td>
-									<h3>Name:</h3>
-								</td>
-								<td>
-									<input type="text" name="name">
-								</td>
-							</tr>
-						</tbody>
-					</table>
-					<button onclick="neuerKurs()" id="maskeButton">speichern</button>
-				</form>
-			</div>
-
-			<div id="footer">
-				<button onclick="linkToLogin(); logout();" class="rechts">Logout</button>
-				<div id="schrift">
-					<button onclick="linkToUserBearbeiten()" class="links" id="footerLinks">User</button>
-					<button onclick="linkToSchuleBearbeiten()" class="rechts" id="footerRechts">Schule</button>
-				</div>
-			</div>			
-
 		</div>
 
-	</body>	
+		<div id="maske">
+			<form name="form1">
+				<table>
+					<tbody>
+						<tr>
+							<td>
+								<h3>Klasse:</h3>
+							</td>
+							<td><input type="text" name="klasse"></td>
+						</tr>
+						<tr>
+							<td>
+								<h3>Name:</h3>
+							</td>
+							<td><input type="text" name="name"></td>
+						</tr>
+					</tbody>
+				</table>
+				<button onclick="neuerKurs()" id="maskeButton">speichern</button>
+			</form>
+		</div>
+
+		<div id="footer">
+			<button onclick="linkToLogin(); logout();" class="rechts">Logout</button>
+			<div id="schrift">
+				<button onclick="linkToUserBearbeiten()" class="links"
+					id="footerLinks">User</button>
+				<button onclick="linkToSchuleBearbeiten()" class="rechts"
+					id="footerRechts">Schule</button>
+			</div>
+		</div>
+
+	</div>
+
+</body>
 
 </html>

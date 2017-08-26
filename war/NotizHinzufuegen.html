@@ -1,79 +1,87 @@
 <html>
 
-	<head>
-		<title>Notiz hinzuf&uuml;gen</title>
-		
-		<link rel="stylesheet" href="css/index.css">
-		<link rel="stylesheet" href="css/masken.css">
-		
-		<style type="text/css">
+<head>
+<title>Notiz hinzuf&uuml;gen</title>
 
-			input{	width:140%;
-					height:90%;}
+<link rel="stylesheet" href="css/index.css">
+<link rel="stylesheet" href="css/masken.css">
 
-			#maskeButton{width:110%;}
+<style type="text/css">
+input {
+	width: 140%;
+	height: 90%;
+}
 
-			#maske{margin-top:12%;}
-			
-			#notiz{	width:120%;
-					height:90%;
-					border:2px solid;
-					border-radius:15px;}
+#maskeButton {
+	width: 110%;
+}
 
-		</style>
-		
-		<script type="text/javascript" src="js/NotizHinzufuegen.js">
+#maske {
+	margin-top: 12%;
+}
+
+#notiz {
+	width: 120%;
+	height: 90%;
+	border: 2px solid;
+	border-radius: 15px;
+}
+</style>
+
+<script type="text/javascript" src="js/NotizHinzufuegen.js">
 		</script>
-		
-		<script type="text/javascript" src="js/LinksTo.js">
+
+<script type="text/javascript" src="js/LinksTo.js">
 		</script>
-		
-		<script type="text/javascript" src="js/logout.js">
+
+<script type="text/javascript" src="js/logout.js">
 		</script>
-		
-	</head>
 
-	<body>
+</head>
 
-		<div id="container">
+<body>
 
-			<div id="header">
-			
-				<button onclick="linkToLehrer()" class="links">Lehrer</button>
-				<button onclick="linkToSchueler()" class="rechts">Sch&uuml;ler</button>
+	<div id="container">
 
-				<div id="schrift">
+		<div id="header">
+
+			<button onclick="linkToLehrer()" class="links">Lehrer</button>
+			<button onclick="linkToSchueler()" class="rechts">Sch&uuml;ler</button>
+
+			<div id="schrift">
 				<h1>Schulverwaltung - Notiz hinzuf&uuml;gen</h1>
-				</div>
-				
 			</div>
-
-			<div id="maske">
-			
-				<form name="form1">
-				
-					<textarea name="notiz" id="notiz">
-					</textarea>
-				
-					<button onclick="neueNotiz();" id="maskeButton">speichern</button>
-				</form>
-				
-			</div>
-
-			<div id="footer">
-			
-				<button onclick="linkToLogin(); logout();" class="rechts">Logout</button>
-				<div id="schrift">
-				
-					<button onclick="linkToUserBearbeiten()" class="links" id="footerLinks">User</button>
-					<button onclick="linkToSchuleBearbeiten()" class="rechts" id="footerRechts">Schule</button>
-					
-				</div>
-				
-			</div>			
 
 		</div>
 
-	</body>	
+		<div id="maske">
+
+			<form name="form1">
+
+				<textarea name="notiz" id="notiz">
+					</textarea>
+
+				<button onclick="neueNotiz();" id="maskeButton">speichern</button>
+			</form>
+
+		</div>
+
+		<div id="footer">
+
+			<button onclick="linkToLogin(); logout();" class="rechts">Logout</button>
+			<div id="schrift">
+
+				<button onclick="linkToUserBearbeiten()" class="links"
+					id="footerLinks">User</button>
+				<button onclick="linkToSchuleBearbeiten()" class="rechts"
+					id="footerRechts">Schule</button>
+
+			</div>
+
+		</div>
+
+	</div>
+
+</body>
 
 </html>

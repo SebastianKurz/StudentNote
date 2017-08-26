@@ -1,86 +1,85 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
               http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
-         version="2.5"
-         xmlns="http://java.sun.com/xml/ns/javaee">
+	version="2.5" xmlns="http://java.sun.com/xml/ns/javaee">
 
-  <!-- Servlets -->
-  <display-name>de.studentnote.sklw</display-name>
-  
-  <servlet>
-    <servlet-name>Jersey REST Service</servlet-name>
-    <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
-    <init-param>
-    	<param-name>jersey.config.server.provider.packages</param-name>
-    	<param-value>de.studentnote.sklw.server</param-value>
-    </init-param>
-    <load-on-startup>1</load-on-startup>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>Jersey REST Service</servlet-name>
-    <url-pattern>/rest/*</url-pattern>
-  </servlet-mapping>
+	<!-- Servlets -->
+	<display-name>de.studentnote.sklw</display-name>
 
-  <servlet>
-    <servlet-name>Create Service</servlet-name>
-    <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
-    <init-param>
-    	<param-name>jersey.config.server.provider.packages</param-name>
-    	<param-value>de.studentnote.sklw.server.POST</param-value>
-    </init-param>
-    <load-on-startup>1</load-on-startup>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>Create Service</servlet-name>
-    <url-pattern>/create/*</url-pattern>
-  </servlet-mapping>
-  
-    <servlet>
-    <servlet-name>Update Service</servlet-name>
-    <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
-    <init-param>
-    	<param-name>jersey.config.server.provider.packages</param-name>
-    	<param-value>de.studentnote.sklw.server.PUT</param-value>
-    </init-param>
-    <load-on-startup>1</load-on-startup>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>Update Service</servlet-name>
-    <url-pattern>/update/*</url-pattern>
-  </servlet-mapping>
-  
-    <servlet>
-    <servlet-name>Get Service</servlet-name>
-    <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
-    <init-param>
-    	<param-name>jersey.config.server.provider.packages</param-name>
-    	<param-value>de.studentnote.sklw.server.GET</param-value>
-    </init-param>
-    <load-on-startup>1</load-on-startup>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>Get Service</servlet-name>
-    <url-pattern>/get/*</url-pattern>
-  </servlet-mapping>
-  
-    <servlet>
-    <servlet-name>Delete Service</servlet-name>
-    <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
-    <init-param>
-    	<param-name>jersey.config.server.provider.packages</param-name>
-    	<param-value>de.studentnote.sklw.server.DELETE</param-value>
-    </init-param>
-    <load-on-startup>1</load-on-startup>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>Delete Service</servlet-name>
-    <url-pattern>/delete/*</url-pattern>
-  </servlet-mapping>
-  
-  <!-- Default page to -->
-  <welcome-file-list>
-    <welcome-file>login.html</welcome-file>
-  </welcome-file-list>
+	<servlet>
+		<servlet-name>Jersey REST Service</servlet-name>
+		<servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
+		<init-param>
+			<param-name>jersey.config.server.provider.packages</param-name>
+			<param-value>de.studentnote.sklw.server</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>Jersey REST Service</servlet-name>
+		<url-pattern>/rest/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>Create Service</servlet-name>
+		<servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
+		<init-param>
+			<param-name>jersey.config.server.provider.packages</param-name>
+			<param-value>de.studentnote.sklw.server.POST</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>Create Service</servlet-name>
+		<url-pattern>/create/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>Update Service</servlet-name>
+		<servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
+		<init-param>
+			<param-name>jersey.config.server.provider.packages</param-name>
+			<param-value>de.studentnote.sklw.server.PUT</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>Update Service</servlet-name>
+		<url-pattern>/update/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>Get Service</servlet-name>
+		<servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
+		<init-param>
+			<param-name>jersey.config.server.provider.packages</param-name>
+			<param-value>de.studentnote.sklw.server.GET</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>Get Service</servlet-name>
+		<url-pattern>/get/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>Delete Service</servlet-name>
+		<servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
+		<init-param>
+			<param-name>jersey.config.server.provider.packages</param-name>
+			<param-value>de.studentnote.sklw.server.DELETE</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>Delete Service</servlet-name>
+		<url-pattern>/delete/*</url-pattern>
+	</servlet-mapping>
+
+	<!-- Default page to -->
+	<welcome-file-list>
+		<welcome-file>login.html</welcome-file>
+	</welcome-file-list>
 
 </web-app>

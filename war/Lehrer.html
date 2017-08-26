@@ -1,71 +1,69 @@
 <html>
 
-	<head>
-		<title>Lehrer</title>
-		
-		<link rel="stylesheet" href="css/index.css">
-		<link rel="stylesheet" href="css/Inhalt.css">
-		<link rel="stylesheet" href="css/Liste.css">
-		
-		<script type="text/javascript" src="js/LinksTo.js">
-		</script>
-		
-		<script type="text/javascript" src="js/Lehrerliste.js">
-		</script>
-		
-		<script type="text/javascript" src="js/logout.js">
+<head>
+<title>Lehrer</title>
+
+<link rel="stylesheet" href="css/index.css">
+<link rel="stylesheet" href="css/Inhalt.css">
+<link rel="stylesheet" href="css/Liste.css">
+
+<script type="text/javascript" src="js/LinksTo.js">
 		</script>
 
-	</head>
+<script type="text/javascript" src="js/Lehrerliste.js">
+		</script>
 
-	<body>
+<script type="text/javascript" src="js/logout.js">
+		</script>
 
-		<div id="container">
+</head>
 
-			<div id="header">
-				<button onclick="linkToLehrerHinzufuegen()" class="links">neuer Lehrer</button>
-				<button onclick="linkToKurse()" class="rechts">Kurse</button>
+<body>
 
-				<div id="schrift">
-					<h1>Schulverwaltung - Lehrer</h1>
-				</div>
+	<div id="container">
+
+		<div id="header">
+			<button onclick="linkToLehrerHinzufuegen()" class="links">neuer
+				Lehrer</button>
+			<button onclick="linkToKurse()" class="rechts">Kurse</button>
+
+			<div id="schrift">
+				<h1>Schulverwaltung - Lehrer</h1>
 			</div>
-			
-			<div id="inhalt">
-				<div id="inhaltKopf">
-				</div>
-				
-				<div id="inhaltLinks" class="listeLinks">
-				
-					<div id="linksinnenLinks" class="listeLinks">
-					</div>
-					
-					<div id="linksinnenRechts" class="listeRechts">
-					</div>
-					
-				</div>
-				
-				<div id="inhaltRechts" class="listeRechts">
-				
-					<div id="rechtsinnenLinks" class="listeLinks">
-					</div>
-					
-					<div id="rechtsinnenRechts" class="listeRechts">
-					</div>
-					
-				</div>	
-			</div>
-
-			<div id="footer">
-				<button onclick="linkToLogin(); logout();" class="rechts">Logout</button>
-				<div id="schrift">
-					<button onclick="linkToSchuleBearbeiten()" class="links" id="footerLinks">Schule</button>
-					<button onclick="linkToUserBearbeiten()"class="rechts" id="footerRechts">User</button>
-				</div>
-			</div>			
-
 		</div>
 
-	</body>	
+		<div id="inhalt">
+			<div id="inhaltKopf"></div>
+
+			<div id="inhaltLinks" class="listeLinks">
+
+				<div id="linksinnenLinks" class="listeLinks"></div>
+
+				<div id="linksinnenRechts" class="listeRechts"></div>
+
+			</div>
+
+			<div id="inhaltRechts" class="listeRechts">
+
+				<div id="rechtsinnenLinks" class="listeLinks"></div>
+
+				<div id="rechtsinnenRechts" class="listeRechts"></div>
+
+			</div>
+		</div>
+
+		<div id="footer">
+			<button onclick="linkToLogin(); logout();" class="rechts">Logout</button>
+			<div id="schrift">
+				<button onclick="linkToSchuleBearbeiten()" class="links"
+					id="footerLinks">Schule</button>
+				<button onclick="linkToUserBearbeiten()" class="rechts"
+					id="footerRechts">User</button>
+			</div>
+		</div>
+
+	</div>
+
+</body>
 
 </html>

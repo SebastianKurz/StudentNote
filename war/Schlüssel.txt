@@ -1,15 +1,13 @@
 ===============Keys localStorage===============
 
-Lehrer 			: 	lehrer#		*
-Schüler			:	kurs#schueler#	*
-Kurs			: 	kurs#		*
-Notiz			:	schueler#notiz#	*
-eingeloggter User	: 	isLoggedIn	*
-ausgewählter Kurs 	: 	selectedKurs	*
-ausgewählter Schüler	:	selectedSchueler*
-ausgewählte Notiz	:	selectedNotiz	*
-Name der Schule		:	schuleName	*
-Kurse			:	kursName	*
-Schüler			:	schuelerName	*
-
-
+Lehrer					:	lehrer#				*
+SchÃ¼ler					:	kurs#schueler#		*
+Kurs					:	kurs#				*
+Notiz					:	schueler#notiz#		*
+eingelggter User		:	isLoggedIn			*
+ausgewÃ¤hlter Kurs		:	selectedKurs		*
+ausgewÃ¤hlter SchÃ¼ler	:	selectedSchueler	*
+ausgewÃ¤hlte Notiz		:	selectedNotiz		*
+Name der Schule			:	schuleName			*
+Kurse					:	kursName			*
+SchÃ¼ler					:	schuelerName		*
