@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'navbar',
-  template: `This will be a navbar `
+  template: `Home | School | Classes | Teacher | Students                       | Logoff `
 })
 
 export class NavbarComponent {
