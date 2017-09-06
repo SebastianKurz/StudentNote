@@ -16,7 +16,7 @@ import { Component } from '@angular/core';
 
 <!--Login Button -->
 <div style="text-align:center">
-<button type="button" id="login:google">Login</button>
+<button type="button" id="login:google" (click)="login()">Login</button>
 </div>
 
 `,
@@ -25,4 +25,8 @@ styleUrls: ['./css/component.css']
 
 export class LoginComponent {
   title = 'Studentnote';
+
+login(): void {
+  alert("Google login will be accessible here. No Session implemented yet.");
+}
 }

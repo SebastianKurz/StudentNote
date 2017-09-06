@@ -40,7 +40,7 @@ const CLASSES: Class[] = [
   <div class="pane" style="display:block;float:left;">
 <h2>{{title}}</h2>
 <ul class="classes">
-  <li *ngFor="let klasse of classes | filter : 'belongsToSchool' : 1"
+  <li *ngFor="let klasse of classes"
     [class.selected]="klasse === selectedClass"
     (click)="onSelect(klasse)">
     <span class="badge">{{klasse.level}}</span> {{klasse.name}}
@@ -50,13 +50,13 @@ const CLASSES: Class[] = [
 <div *ngIf="selectedClass" class="pane floatleft">
 <div class="clearfix"></div>
   <div class="group" style="margin-top:3em;margin-bottom:1em;">
-      <input type="text" required [(ngModel)]="selectedClass.name" placeholder="name">
+      <input type="text" required [(ngModel)]="selectedClass.name">
       <span class="highlight"></span>
       <span class="bar"></span>
       <label class="input">Name</label>
     </div>
     <div class="group" style="margin-top:3em;margin-bottom:1em;">
-        <input type="text" required [(ngModel)]="selectedClass.level" placeholder="Stufe">
+        <input type="text" required [(ngModel)]="selectedClass.level">
         <span class="highlight"></span>
         <span class="bar"></span>
         <label class="input">Stufe</label>
