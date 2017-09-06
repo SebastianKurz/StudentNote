@@ -16,7 +16,7 @@ h2 {
 }
 .title {
   color: #f0f0f0;
-  text-shadow: 3px 3px rgba(0,0,0);
+  text-shadow: 0 0 3px rgba(0,0,0,0.25), 0 0 5px rgba(0,0,0,0.12);
 }
 .title:hover {
     cursor:pointer;
@@ -167,7 +167,7 @@ button:focus:not(:active)::after {
   margin-bottom:1em;
 }
 input 				{
-  font-size:13px;
+  font-size:16px;
   padding:.3em .5em .1em .3em;
   display:block;
   min-width:18em;
@@ -179,7 +179,7 @@ input:focus 		{ outline:none; }
 /* LABEL ======================================= */
 label.input 				 {
   color:#999;
-  font-size:12px;
+  font-size:16px;
   font-weight:normal;
   position:absolute;
   pointer-events:none;

@@ -33,8 +33,9 @@ const CLASSES: Class[] = [
 
 
 @Component({
-  selector: 'content',
+  selector: 'app',
   template: `
+  <navbar></navbar>
 
   <div style="width: 64%;margin: 0 auto;align:center;">
   <div class="pane" style="display:block;float:left;">
@@ -72,7 +73,7 @@ const CLASSES: Class[] = [
    styleUrls: ['./css/component.css']
 })
 
-export class ContentHolderComponent {
+export class ClassesComponent {
   title = 'Klassenübersicht';
   classes = CLASSES;
   selectedClass: Class;

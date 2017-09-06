@@ -14,7 +14,7 @@ import { Component } from '@angular/core';
 </li>
     <li class="active floatleft" (click)="viewSchool()">School</li>
     <li class="active floatleft" (click)="viewClasses()">Classes</li>
-    <li class="active floatleft" (click)="viewTeachers()">Teacher</li>
+    <li class="active floatleft" (click)="viewTeachers()">Teachers</li>
     <li class="active floatleft" (click)="viewStudents()">Students</li>
     <li style="">&nbsp;</li>
 
@@ -32,22 +32,22 @@ export class NavbarComponent {
   title = 'Studentnote';
 
   logoff():void{
-    alert("Logoff will be executed here. Currently no session implemented.");
+    location.href="/login";
   }
   viewHome():void{
-    alert("going back to startpage.");
+    location.href="/home";
   }
   viewSchool():void{
-    alert("visiting school view.");
+    location.href="/schools";
   }
   viewClasses():void{
-    alert("visiting classes view.");
+    location.href="/classes";
   }
   viewTeachers():void{
-    alert("visiting teachers view.");
+    location.href="/teachers";
   }
   viewStudents():void{
-    alert("visiting students view.");
+    location.href="/students";
   }
 
 
