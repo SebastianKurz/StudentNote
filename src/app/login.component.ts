@@ -20,7 +20,7 @@ import { Component } from '@angular/core';
 </div>
 
 `,
-styleUrls: ['./component.css']
+styleUrls: ['./css/component.css']
 })
 
 export class LoginComponent {

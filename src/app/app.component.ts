@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 
-import {Class } from './types';
-import {Note} from './types';
-import {School} from './types';
-import {Student} from './types';
-import {Teacher} from './types';
+import {Class } from './types/types';
+import {Note} from './types/types';
+import {School} from './types/types';
+import {Student} from './types/types';
+import {Teacher} from './types/types';
 
 @Component({
   selector: 'app-root',
@@ -15,7 +15,7 @@ import {Teacher} from './types';
   <navbar></navbar>
   <content></content>
   `,
-  styleUrls: ['./component.css']
+  styleUrls: ['./css/component.css']
 })
 
 export class AppComponent {

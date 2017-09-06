@@ -1,16 +1,18 @@
 import { Component } from '@angular/core';
 
-import {Class } from './types';
-import {Note} from './types';
-import {School} from './types';
-import {Student} from './types';
-import {Teacher} from './types';
+import {FilterPipe} from './filter.pipe';
+
+import {Class } from './types/types';
+import {Note} from './types/types';
+import {School} from './types/types';
+import {Student} from './types/types';
+import {Teacher} from './types/types';
 
 const CLASSES: Class[] = [
-  { id: 7, name: 'Mathematik 1', level:'EF',belongsToSchool: 1 },
-  { id: 8, name: 'Mathematik 2' , level:'EF',belongsToSchool: 1},
-  { id: 9, name: 'Physik 1', level:'EF',belongsToSchool: 1 },
-  { id: 10, name: 'Informatik  1', level:'EF',belongsToSchool: 1 },
+  { id: 7, name: 'Mathematik 1', level:'EF',belongsToSchool: 2 },
+  { id: 8, name: 'Mathematik 2' , level:'EF',belongsToSchool: 2},
+  { id: 9, name: 'Physik 1', level:'EF',belongsToSchool: 2},
+  { id: 10, name: 'Informatik  1', level:'EF',belongsToSchool: 2 },
   { id: 11, name: 'GK Mathematik 1', level:'Q1',belongsToSchool: 1 },
   { id: 12, name: 'GK Mathematik 2' , level:'Q1',belongsToSchool: 1},
   { id: 13, name: 'GK Physik 1', level:'Q1',belongsToSchool: 1 },
@@ -33,32 +35,41 @@ const CLASSES: Class[] = [
 @Component({
   selector: 'content',
   template: `
-  <div id="divtest1" style="width: 64%;margin: 0 auto;align:center;">
-  <div id="divtest2" class="pane" style>
+
+  <div style="width: 64%;margin: 0 auto;align:center;">
+  <div class="pane" style="display:block;float:left;">
 <h2>{{title}}</h2>
 <ul class="classes">
-  <li *ngFor="let klasse of classes"
+  <li *ngFor="let klasse of classes | filter : 'belongsToSchool' : 1"
     [class.selected]="klasse === selectedClass"
     (click)="onSelect(klasse)">
     <span class="badge">{{klasse.level}}</span> {{klasse.name}}
   </li>
 </ul></div>
 
-<div *ngIf="selectedClass" class="card card-4 floatleft">
-  <h3>{{selectedClass.name}} details!</h3>
-  <div><label>id: </label>{{selectedClass.id}}</div>
-  <div>
-    <label>name: </label>
-    <input class="md-input" [(ngModel)]="selectedClass.name" placeholder="name"/>
+<div *ngIf="selectedClass" class="pane floatleft">
+<div class="clearfix"></div>
+  <div class="group" style="margin-top:3em;margin-bottom:1em;">
+      <input type="text" required [(ngModel)]="selectedClass.name" placeholder="name">
+      <span class="highlight"></span>
+      <span class="bar"></span>
+      <label class="input">Name</label>
+    </div>
+    <div class="group" style="margin-top:3em;margin-bottom:1em;">
+        <input type="text" required [(ngModel)]="selectedClass.level" placeholder="Stufe">
+        <span class="highlight"></span>
+        <span class="bar"></span>
+        <label class="input">Stufe</label>
+      </div>
+    <div style="margin-left:5px"><label>id: </label>{{selectedClass.id}}</div>
   </div>
-</div>
 
 
 
 
 </div>
    `,
-   styleUrls: ['./component.css']
+   styleUrls: ['./css/component.css']
 })
 
 export class ContentHolderComponent {
