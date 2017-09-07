@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'app',
   template: `
-<div class="pane" style="width:30em;margin: 1em auto 1em auto; padding: 3em 0 3em 0;">
+<div class="pane" style="width:40%;margin: 1em auto 1em auto; padding: 3em 0 3em 0;">
   <!--Title Part -->
 <div  style="text-align:center">
   <h1 style="padding-top:50px;">

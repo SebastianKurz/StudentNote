@@ -8,9 +8,7 @@ import {School} from './types/types';
 import {Student} from './types/types';
 import {Teacher} from './types/types';
 
-const TEACHERS: Teacher[] = [
-
-];
+import {TEACHERS} from './dummy.data';
 
 @Component({
   selector: 'app',

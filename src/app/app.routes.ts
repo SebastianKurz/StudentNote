@@ -16,6 +16,8 @@ export const ROUTE_CONFIG: Routes = [
   { path: 'schools',component: SchoolComponent},
   { path: 'teachers',component: TeacherComponent},
   { path: 'students',component: StudentComponent},
+  { path: 'student/:id',component: StudentComponent},
+
 
 
   /*{

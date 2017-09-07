@@ -8,29 +8,8 @@ import {School} from './types/types';
 import {Student} from './types/types';
 import {Teacher} from './types/types';
 
-const CLASSES: Class[] = [
-  { id: 7, name: 'Mathematik 1', level:'EF',belongsToSchool: 2 },
-  { id: 8, name: 'Mathematik 2' , level:'EF',belongsToSchool: 2},
-  { id: 9, name: 'Physik 1', level:'EF',belongsToSchool: 2},
-  { id: 10, name: 'Informatik  1', level:'EF',belongsToSchool: 2 },
-  { id: 11, name: 'GK Mathematik 1', level:'Q1',belongsToSchool: 1 },
-  { id: 12, name: 'GK Mathematik 2' , level:'Q1',belongsToSchool: 1},
-  { id: 13, name: 'GK Physik 1', level:'Q1',belongsToSchool: 1 },
-  { id: 14, name: 'LK Informatik 1', level:'Q1',belongsToSchool: 1 },
-  { id: 15, name: 'GK Deutsch 1', level:'Q1',belongsToSchool: 1 },
-  { id: 16, name: 'GK Englisch 1', level:'Q1',belongsToSchool: 1 },
-  { id: 17, name: 'LK Englisch 1', level:'Q1',belongsToSchool: 1 },
-  { id: 18, name: 'GK Erdkunde 1', level:'Q1',belongsToSchool: 1 },
-  { id: 19, name: 'LK Mathematik 1', level:'Q2',belongsToSchool: 1 },
-  { id: 20, name: 'GK Mathematik 1', level:'Q2',belongsToSchool: 1 },
-  { id: 21, name: 'GK Mathematik 1', level:'Q1',belongsToSchool: 1 },
-  { id: 22, name: 'GK Mathematik 2' , level:'Q1',belongsToSchool: 1},
-  { id: 23, name: 'GK Physik 1', level:'Q1',belongsToSchool: 1 },
-  { id: 24, name: 'LK Informatik 1', level:'Q1',belongsToSchool: 1 },
-  { id: 25, name: 'GK Deutsch 1', level:'Q1',belongsToSchool: 1 },
-  { id: 26, name: 'GK Englisch 1', level:'Q1',belongsToSchool: 1 }
-];
-
+import {CLASSES} from './dummy.data';
+import {STUDENTS} from './dummy.data';
 
 @Component({
   selector: 'app',
@@ -38,9 +17,9 @@ const CLASSES: Class[] = [
   <navbar></navbar>
 
   <div style="width: 64%;margin: 0 auto;align:center;">
-  <div class="pane" style="display:block;float:left;">
+  <div class="pane leftbar">
 <h2>{{title}}</h2>
-<ul class="classes">
+<ul class="listing">
   <li *ngFor="let klasse of classes"
     [class.selected]="klasse === selectedClass"
     (click)="onSelect(klasse)">
@@ -48,7 +27,8 @@ const CLASSES: Class[] = [
   </li>
 </ul></div>
 
-<div *ngIf="selectedClass" class="pane floatleft">
+<div *ngIf="selectedClass" class="pane floatleft widthnexttobar">
+<h3>Details: {{selectedClass.name}}</h3>
 <div class="clearfix"></div>
   <div class="group" style="margin-top:3em;margin-bottom:1em;">
       <input type="text" required [(ngModel)]="selectedClass.name">
@@ -65,6 +45,15 @@ const CLASSES: Class[] = [
     <div style="margin-left:5px"><label>id: </label>{{selectedClass.id}}</div>
   </div>
 
+<div *ngIf="selectedClass" class="pane floatleft widthnexttobar">
+<h3> Schüler dieser Klasse</h3>
+<ul class="listing">
+  <li class="nobadge" *ngFor="let student of students"
+    [class.selected]="student === selectedStudent" [routerLink]="['/student',student.id]" routerLinkActive="active">{{student.firstname}} {{student.lastname}}
+
+  </li>
+</ul>
+</div>
 
 
 
@@ -76,9 +65,11 @@ const CLASSES: Class[] = [
 export class ClassesComponent {
   title = 'Klassenübersicht';
   classes = CLASSES;
+students : Student[];
   selectedClass: Class;
 
 onSelect(klasse: Class): void {
   this.selectedClass = klasse;
+  this.students = STUDENTS;
 }
 }
