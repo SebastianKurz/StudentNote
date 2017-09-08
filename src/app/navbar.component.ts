@@ -11,7 +11,7 @@ import { Component } from '@angular/core';
 <nav class="pane" style="padding: 0 0;margin: 0 0;">
 <ul>
     <li class="active floatleft" [routerLink]="['/home']" routerLinkActive="active"><i class="fa fa-home" aria-hidden="true"></i></li>
-    <li class="active floatleft" [routerLink]="['/schools']" routerLinkActive="active">Schule</li>
+    <!--<li class="active floatleft" [routerLink]="['/schools']" routerLinkActive="active">Schule</li>-->
     <li class="active floatleft" [routerLink]="['/classes']" routerLinkActive="active">Klasse</li>
     <li class="active floatleft" [routerLink]="['/teachers']" routerLinkActive="active">Lehrer</li>
     <li class="active floatleft" [routerLink]="['/students']" routerLinkActive="active">Schüler</li>

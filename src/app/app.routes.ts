@@ -11,21 +11,13 @@ import { TeacherComponent } from './teacher.component';
 
 export const ROUTE_CONFIG: Routes = [
   { path: 'login', component: LoginComponent },
-  { path: 'home',component: ClassesComponent},
+  { path: 'home',component: SchoolComponent},
   { path: 'classes',component: ClassesComponent},
   { path: 'schools',component: SchoolComponent},
   { path: 'teachers',component: TeacherComponent},
-  { path: 'teacher/:id',component: TeacherComponent},
+  //{ path: 'teacher/:id',component: TeacherComponent},
   { path: 'students',component: StudentComponent},
   { path: 'student/:id',component: StudentComponent},
-
-
-
-  /*{
-    path: 'heroes',
-    component: HeroListComponent,
-    data: { title: 'Heroes List' }
-  },*/
   { path: '',
     redirectTo: '/login',
     pathMatch: 'full'

@@ -68,4 +68,8 @@ export class Teacher {
     this.password=password;
     this.belongsToSchool=belongsToSchool;
   }
+  public toString = () : string => {
+
+        return `Foo (id: ${this.id})`;
+    }
 }

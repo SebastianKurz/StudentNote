@@ -3,8 +3,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule }   from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
+import {HttpClientModule} from '@angular/common/http';
 
-import {FilterPipe} from './filter.pipe';
 
 import {ROUTE_CONFIG} from './app.routes';
 
@@ -17,6 +17,11 @@ import { SchoolComponent } from './school.component';
 import { StudentComponent } from './student.component';
 import { TeacherComponent } from './teacher.component';
 
+import { getSchoolService} from './service/get.service';
+import { getClassService} from './service/get.service';
+import { getStudentService} from './service/get.service';
+import { getTeacherService} from './service/get.service';
+import { getNoteService} from './service/get.service';
 
 
 @NgModule({
@@ -29,7 +34,6 @@ import { TeacherComponent } from './teacher.component';
     StudentComponent,
     TeacherComponent,
     LoginComponent,
-    FilterPipe
   ],
   imports: [
     BrowserModule,
@@ -37,12 +41,19 @@ import { TeacherComponent } from './teacher.component';
     RouterModule.forRoot(
       ROUTE_CONFIG,
       { enableTracing: true }
-    )
+    ),
+    HttpClientModule,
   ],
   exports: [
     RouterModule
   ],
-  providers: [],
+  providers: [
+    getTeacherService,
+    getSchoolService,
+    getClassService,
+    getStudentService,
+    getNoteService
+  ],
   bootstrap: [Root]
 })
 export class AppModule {

@@ -5,12 +5,6 @@ import {Student} from './types/types';
 import {Teacher} from './types/types';
 
 export const CLASSES: Class[] = [
-  { id: 7, name: 'Mathematik 1', level:'EF',belongsToSchool: 2 },
-  { id: 8, name: 'Mathematik 2' , level:'EF',belongsToSchool: 2},
-  { id: 9, name: 'Physik 1', level:'EF',belongsToSchool: 2},
-  { id: 10, name: 'Informatik  1', level:'EF',belongsToSchool: 2 },
-  { id: 11, name: 'GK Mathematik 1', level:'Q1',belongsToSchool: 1 },
-  { id: 12, name: 'GK Mathematik 2' , level:'Q1',belongsToSchool: 1},
   { id: 13, name: 'GK Physik 1', level:'Q1',belongsToSchool: 1 },
   { id: 14, name: 'LK Informatik 1', level:'Q1',belongsToSchool: 1 },
   { id: 15, name: 'GK Deutsch 1', level:'Q1',belongsToSchool: 1 },
@@ -21,6 +15,12 @@ export const CLASSES: Class[] = [
   { id: 20, name: 'GK Mathematik 1', level:'Q2',belongsToSchool: 1 },
   { id: 21, name: 'GK Mathematik 1', level:'Q1',belongsToSchool: 1 },
   { id: 22, name: 'GK Mathematik 2' , level:'Q1',belongsToSchool: 1},
+  { id: 7, name: 'Mathematik 1', level:'EF',belongsToSchool: 2 },
+  { id: 8, name: 'Mathematik 2' , level:'EF',belongsToSchool: 2},
+  { id: 9, name: 'Physik 1', level:'EF',belongsToSchool: 2},
+  { id: 10, name: 'Informatik  1', level:'EF',belongsToSchool: 2 },
+  { id: 11, name: 'GK Mathematik 1', level:'Q1',belongsToSchool: 1 },
+  { id: 12, name: 'GK Mathematik 2' , level:'Q1',belongsToSchool: 1},
   { id: 23, name: 'GK Physik 1', level:'Q1',belongsToSchool: 1 },
   { id: 24, name: 'LK Informatik 1', level:'Q1',belongsToSchool: 1 },
   { id: 25, name: 'GK Deutsch 1', level:'Q1',belongsToSchool: 1 },
@@ -51,11 +51,12 @@ export const TEACHERS: Teacher[] = [
 
 export const SCHOOLS : School[] =[
   {id: 1, name:'Friedrich-Spee Gymnasium Geldern'},
-  {id: 2, name:'Erasmus Gymnasium Grevenbroich'}
+  {id: 2, name:'Erasmus Gymnasium Grevenbroich'},
+  {id: 3, name:'Konrad Adenauer Gemeinschaftsgesamtschule Bonn-Beuel'}
 
 ];
 
 export const NOTES : Note[] =[
-  {id: 10, text:'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.',timestamp : 123456789, authorTeacherId: 12 ,belongsToStudent: 10},
-    {id: 11, text:'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.',timestamp : 123456789, authorTeacherId: 10 ,belongsToStudent: 15}
+  {id: 10, text:'Test 1: Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.',timestamp : 1504872457000, authorTeacherId: 12 ,belongsToStudent: 10},
+    {id: 11, text:'Test 2: Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.',timestamp : 1504872935000, authorTeacherId: 10 ,belongsToStudent: 15}
 ]

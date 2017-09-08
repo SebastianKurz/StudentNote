@@ -18,11 +18,37 @@ h3 {
   margin: .8em 0 .2em 8px;
   font-size: 200%
 }
-textarea {
-   resize: none;
-}
 
-.title a{
+textarea {
+  resize: none;
+	display: block;
+	width: 100%;
+	border: 0;
+	padding: 10px 5px;
+  background: white no-repeat;
+  /*
+  * IMPORTANT PART HERE
+  */
+
+  /* 2 imgs : 1px gray line (normal state) AND 2px green line (focus state) */
+  background-image: linear-gradient(to bottom, #1abc9c, #1abc9c), linear-gradient(to bottom, silver, silver);
+  /* sizes for the 2 images (default state) */
+  background-size: 0 2px, 100% 1px;
+  /* positions for the 2 images. Change both "50%" to "0%" or "100%" and tri again */
+  background-position: 50% 100%, 50% 100%;
+
+  /* animation solely on background-size */
+  transition: background-size 0.3s cubic-bezier(0.64, 0.09, 0.08, 1);
+
+  }
+
+  textarea:focus{
+    /* sizes for the 2 images (focus state) */
+  	background-size: 100% 2px, 100% 1px;
+  	outline: none;
+  }
+
+.title{
   color: #f0f0f0;
   text-shadow: 0 0 3px rgba(0,0,0,0.25), 0 0 5px rgba(0,0,0,0.12);
   text-decoration: none;
@@ -66,7 +92,7 @@ nav ul li.active:hover {
 nav a:hover{
     color:black;
 }
-nav a:visited, .noLink:visited {
+nav a:visited, .noLink:visited  {
   color:black;
 }
 
@@ -179,49 +205,51 @@ button:focus:not(:active)::after {
   animation: ripple 1s ease-out;
 }
 
-
-/* form starting stylings ------------------------------- */
 .group 			  {
   position:relative;
   margin-bottom:1em;
+  width:90%;
 }
-input 				{
-  font-size:16px;
-  padding:.3em .5em .1em .3em;
+.md-input 				{
+  font-size:18px;
+  padding:10px 10px 10px 5px;
   display:block;
-  min-width:18em;
   border:none;
   border-bottom:1px solid #757575;
 }
-input:focus 		{ outline:none; }
+.md-input, .bar {
+  width:100%;
+}
+.md-input:focus 		{ outline:none; }
 
 /* LABEL ======================================= */
-label.input 				 {
+.md-input-label 				 {
   color:#999;
-  font-size:16px;
+  font-size:18px;
   font-weight:normal;
   position:absolute;
   pointer-events:none;
   left:5px;
-  top:5px;
+  top:10px;
   transition:0.2s ease all;
   -moz-transition:0.2s ease all;
   -webkit-transition:0.2s ease all;
 }
 
 /* active state */
-input:focus ~ label, input:valid ~ label 		{
+.md-input:focus ~ .md-input-label, .md-input:valid ~ .md-input-label 		{
   top:-20px;
   font-size:14px;
   color:#5264AE;
 }
 
 /* BOTTOM BARS ================================= */
-.bar 	{ position:relative; display:block; min-width:18em; }
+.bar 	{ position:relative; display:block;}
 .bar:before, .bar:after 	{
   content:'';
   height:2px;
-  bottom:0;
+  width:0;
+  bottom:1px;
   position:absolute;
   background:#5264AE;
   transition:0.2s ease all;
@@ -236,7 +264,7 @@ input:focus ~ label, input:valid ~ label 		{
 }
 
 /* active state */
-input:focus ~ .bar:before, input:focus ~ .bar:after {
+.md-input:focus ~ .bar:before, .md-input:focus ~ .bar:after {
   width:50%;
 }
 
@@ -244,15 +272,15 @@ input:focus ~ .bar:before, input:focus ~ .bar:after {
 .highlight {
   position:absolute;
   height:60%;
+  width:100px;
   top:25%;
-  width:50%;
   left:0;
   pointer-events:none;
   opacity:0.5;
 }
 
 /* active state */
-input:focus ~ .highlight {
+  .md-input:focus ~ .highlight {
   -webkit-animation:inputHighlighter 0.3s ease;
   -moz-animation:inputHighlighter 0.3s ease;
   animation:inputHighlighter 0.3s ease;
@@ -292,7 +320,7 @@ input:focus ~ .highlight {
     background-color: #EEE;
     margin: .5em;
     padding: .3em 0;
-    height: 1.8em;
+    min-height: 1.8em;
     width: 18em;
     line-height: 1em;
     vertical-align: middle;

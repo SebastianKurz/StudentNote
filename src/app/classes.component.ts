@@ -1,6 +1,4 @@
-import { Component } from '@angular/core';
-
-import {FilterPipe} from './filter.pipe';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 
 import {Class } from './types/types';
 import {Note} from './types/types';
@@ -8,9 +6,8 @@ import {School} from './types/types';
 import {Student} from './types/types';
 import {Teacher} from './types/types';
 
-import {CLASSES} from './dummy.data';
-import {STUDENTS} from './dummy.data';
-import {TEACHERS} from './dummy.data';
+import {getClassService} from './service/get.service';
+import {getStudentService} from './service/get.service';
 
 @Component({
   selector: 'app',
@@ -32,34 +29,28 @@ import {TEACHERS} from './dummy.data';
 
 <div *ngIf="showNewClass" class="pane floatleft widthnexttobar">
   <h3>Neue Klasse erstellen</h3>
-  <div class="group floatleft" style="margin-top:3em;margin-bottom:1em;min-width:20em;max-width:30em;">
-      <input type="text" required [value]="NewClass.name">
+  <div class="group floatleft" style="margin-top:3em;margin-bottom:1em;">
+      <input type="text" class="md-input" required [value]="NewClass.name">
       <span class="highlight"></span>
       <span class="bar"></span>
-      <label class="input">Name</label>
+      <label class="md-input-label">Name</label>
     </div>
-    <div class="group floatleft" style="margin-top:3em;margin-bottom:1em;min-width:20em;max-width:30em;">
-        <input type="text" required [value]="NewClass.level">
+    <div class="group floatleft" style="margin-top:3em;margin-bottom:1em;">
+        <input type="text" class="md-input" required [value]="NewClass.level">
         <span class="highlight"></span>
         <span class="bar"></span>
-        <label class="input">Stufe</label>
+        <label class="md-input-label">Stufe</label>
       </div>
-      <div class="group floatleft" style="margin-top:3em;margin-bottom:1em;min-width:20em;max-width:30em;">
-          <input type="text" required [value]="NewClass.id">
-          <span class="highlight"></span>
-          <span class="bar"></span>
-          <label class="input">ID</label>
-        </div>
-        <div class="group floatleft" style="margin-top:3em;margin-bottom:1em;min-width:20em;max-width:30em;">
-            <input type="text" required [value]="NewClass.belongsToSchool">
+        <div class="group floatleft" style="margin-top:3em;margin-bottom:1em;">
+            <input type="text" class="md-input" required [value]="NewClass.belongsToSchool">
             <span class="highlight"></span>
             <span class="bar"></span>
-            <label class="input">Schule</label>
+            <label class="md-input-label">Schule</label>
           </div>
-  <div class="">
-  <button class="button small blue floatright" style="margin-left:.3em;" type="button" (click)="newClass()">Anlegen</button>
-  <button class="button small grey floatright" type="button" (click)="cancelNewClass()">Abbrechen</button>
-  </div>
+          <div class="floatright">
+          <button class="button small grey" type="button" (click)="cancelNewClass()">Abbrechen</button>
+          <button class="button small blue" style="margin: 0 .3em;" type="button" (click)="newClass()">Anlegen</button>
+          </div>
 </div>
 
 
@@ -67,26 +58,28 @@ import {TEACHERS} from './dummy.data';
 <h3>Details: {{selectedClass.name}}</h3>
 <div class="clearfix"></div>
   <div class="group" style="margin-top:3em;margin-bottom:1em;">
-      <input type="text" required [(ngModel)]="selectedClass.name">
+      <input class="md-input" type="text" required [(ngModel)]="selectedClass.name">
       <span class="highlight"></span>
       <span class="bar"></span>
-      <label class="input">Name</label>
+      <label class="md-input-label">Name</label>
     </div>
     <div class="group" style="margin-top:3em;margin-bottom:1em;">
-        <input type="text" required [(ngModel)]="selectedClass.level">
+        <input class="md-input" type="text" required [(ngModel)]="selectedClass.level">
         <span class="highlight"></span>
         <span class="bar"></span>
-        <label class="input">Stufe</label>
+        <label class="md-input-label">Stufe</label>
       </div>
     <div style="margin-left:5px"><label>id: </label>{{selectedClass.id}}</div>
   </div>
 
+<!--
   <div *ngIf="selectedClass" class="pane floatleft widthnexttobar">
   <h3> Lehrer</h3>
   <ul class="listing">
     <li class="nobadge" *ngFor="let teacher of teachers"
       [class.selected]="teacher === selectedTeacher" [routerLink]="['/teacher',teacher.id]" routerLinkActive="active">{{teacher.firstname}} {{teacher.lastname}}
   </li></ul></div>
+  -->
 
 <div *ngIf="selectedClass" class="pane floatleft widthnexttobar">
 <h3> Schüler dieser Klasse</h3>
@@ -108,14 +101,27 @@ export class ClassesComponent {
   selectedClass: Class;
   showNewClass : Boolean;
   NewClass : Class;
+  private GetClassService: getClassService;
+  private GetStudentService: getStudentService;
 
-constructor(){
+
+
+constructor(private GetClassServiceImpl: getClassService, private GetStudentServiceImpl: getStudentService){
   this.title = 'Klassenübersicht';
-  this.classes = CLASSES;
-  this.teachers=TEACHERS;
+  this.GetClassService=GetClassServiceImpl;
+  this.GetStudentService=GetStudentServiceImpl;
   this.showNewClass = false;
   this.NewClass =  new Class( null ,null , null , null );
+
 }
+ngOnInit() {
+this.classes = this.GetClassService.getClasses();
+  }
+
+  ngOnDestroy():void {
+
+}
+
 
 toggleNewClass(){
       if(this.showNewClass==false){
@@ -136,6 +142,6 @@ newClass(){
 selectClass(klasse: Class): void {
   this.cancelNewClass();
   this.selectedClass = klasse;
-  this.students = STUDENTS;
+  this.students = this.GetStudentService.getEntities(klasse.id);
 }
 }
