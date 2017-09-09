@@ -7,7 +7,13 @@ import {Teacher} from './types/types';
 import {Student} from './types/types';
 import {School} from './types/types';
 
+import {GlobalSchool}from './service/local.service';
+import {GlobalStatus}from './service/local.service';
+
+import {postTeacherService} from './service/post.service';
 import {getTeacherService} from './service/get.service';
+import {updateTeacherService} from './service/update.service';
+import {deleteTeacherService} from './service/delete.service';
 
 
 @Component({
@@ -20,17 +26,20 @@ import {getTeacherService} from './service/get.service';
 <h2>{{title}}</h2>
 <button class="button medium red" type="button" (click) = "toggleNewTeacher()"><i class="fa fa-plus" aria-hidden="true"></i>
 </button>
-<ul class="listing">
-  <li class="nobadge" *ngFor="let teacher of teachers"
+<ul class="L">
+  <li class="LNO" *ngFor="let teacher of teachers"
     [class.selected]="teacher === selectedTeacher"
     (click)="selectTeacher(teacher)">
-    {{teacher.lastname}}, {{teacher.firstname}}
+    <div class="floatleft pane LPane">
+    <div class="LText floatleft">{{teacher.lastname}}, {{teacher.firstname}}</div>
+    </div>
   </li>
 </ul>
-      </div>
+</div>
+
       <div class=" floatleft widthnexttobar">
 
-      <div *ngIf="showNewTeacher" class="pane" style="width:100%;">
+      <div *ngIf="showNewTeacher" class="pane floatleft" style="width:100%;">
         <h3>Neuen Lehrer erfassen</h3>
           <div class="group floatleft" style="margin-top:3em;margin-bottom:1em;">
             <input type="text" class="md-input" required [value]="NewTeacher.firstname">
@@ -69,7 +78,8 @@ import {getTeacherService} from './service/get.service';
       </div>
 
       <div *ngIf="selectedTeacher" class="pane" style="width:100%;">
-      <h3>Details: {{selectedTeacher.firstname}} {{selectedTeacher.lastname}}</h3>
+      <h3 style="width:90%;">Details: {{selectedTeacher.firstname}} {{selectedTeacher.lastname}}</h3>
+      <div class="del"><i class="fa fa-trash" aria-hidden="true" style="font-weight:600;font-size:150%;" (click)="deleteTeacher(selectedTeacher)"></i></div>
         <div class="group" style="margin-top:3em;margin-bottom:1em;">
             <input class="md-input" type="text" required [(ngModel)]="selectedTeacher.firstname">
             <span class="highlight"></span>
@@ -100,15 +110,36 @@ export class TeacherComponent {
   NewTeacher : Teacher;
   id: number;
   private sub: any;
+  private globalSchool : GlobalSchool;
+  private globalStatus : GlobalStatus;
+  private PostTeacherService: postTeacherService;
+  private GetTeacherService: getTeacherService;
+  private UpdateTeacherService: updateTeacherService;
+  private DeleteTeacherService: deleteTeacherService;
 
-  constructor(private route: ActivatedRoute, private GetTeacherService: getTeacherService){
+  constructor(
+    private route: ActivatedRoute,
+    private PostTeacherServiceImpl: postTeacherService,
+    private GetTeacherServiceImpl: getTeacherService,
+    private UpdateTeacherServiceImpl: updateTeacherService,
+    private DeleteTeacherServiceImpl: deleteTeacherService,
+    private globalSchoolImpl : GlobalSchool,
+    private globalStatusImpl : GlobalStatus
+  ){
     this.title = 'Liste der Lehrer';
+    this.globalSchool=globalSchoolImpl;
+    this.globalStatus=globalStatusImpl;
+    this.PostTeacherService=PostTeacherServiceImpl;
+    this.GetTeacherService=GetTeacherServiceImpl;
+    this.UpdateTeacherService=UpdateTeacherServiceImpl;
+    this.DeleteTeacherService=DeleteTeacherServiceImpl;
     this.showNewTeacher=false;
     this.NewTeacher= new Teacher(null,null,null,null,null,null);
   }
 
   toggleNewTeacher(){
         if(this.showNewTeacher==false){
+            this.selectedTeacher = null;
                 this.showNewTeacher=true;
         }
         else{
@@ -119,13 +150,41 @@ export class TeacherComponent {
       this.NewTeacher = new Teacher(null,null,null,null,null,null);
       this.showNewTeacher= false;
   }
-  newTeacher(){
-    //klasse anlegen und danach verstecken
+  newTeacher(firstname:string,lastname:string,mailAddress:string,password:string, belongsToSchool:number){
+    if (firstname > "" && lastname > "" && mailAddress > "" && password > "" && belongsToSchool > 0){
+      this.PostTeacherService.postTeacher(new Teacher(null,firstname,lastname,mailAddress,password,belongsToSchool));
       this.showNewTeacher= false;
+      //fetch new data
+          this.init();
+          }
+    else{
+    }
+}
+updateTeacher(teacher :Teacher){
+  if (this.UpdateTeacherService.updateTeacher(teacher)==0){
+      this.globalStatus.setStatus("Data submitted");
+      this.init();
+  }else{
+      this.globalStatus.setStatus("ERROR during submitting data");
   }
-
+}
+deleteTeacher(teacher : Teacher){
+  if (this.DeleteTeacherService.deleteTeacher(teacher)==0){
+      this.globalStatus.setStatus("Data submitted");
+      this.init();
+  }else{
+      this.globalStatus.setStatus("ERROR during submitting data");
+  }
+}
+init(){
+  if(this.globalSchool.getSchool()){
+this.teachers = this.GetTeacherService.getEntities(this.globalSchool.getSchool().id);
+}else{
+  this.teachers = this.GetTeacherService.getTeachers();
+}
+}
 ngOnInit() {
-    this.teachers = this.GetTeacherService.getTeachers();
+this.init();
     this.sub = this.route.params.subscribe(params => {
        this.id = +params['id']; // (+) converts string 'id' to a number
        //Ask Webservice

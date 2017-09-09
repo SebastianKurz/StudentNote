@@ -1,4 +1,17 @@
+
 @import './font-awesome.css';
+
+.status {
+  position: absolute;
+  display:block;
+  width: 20%;
+  padding: .5em 2% .5em 2%;
+  top: .5em;
+  right:38%;
+  background-color: rgba(0,0,0, 0.50);
+  color:white;
+  border-radius: 2px;
+}
 
 body {
   background: #e2e1e0;
@@ -55,6 +68,12 @@ textarea {
 }
 .title:hover {
     cursor:pointer;
+}
+.del {
+  position:absolute;top: 4em;right:4em;
+}
+.del:hover {
+  cursor:pointer;
 }
 nav {
   display:block;
@@ -205,6 +224,68 @@ button:focus:not(:active)::after {
   animation: ripple 1s ease-out;
 }
 
+.switch-input {
+  display: none;
+}
+.switch-label {
+  position: relative;
+  display: inline-block;
+  min-width: 112px;
+  cursor: pointer;
+  font-weight: 500;
+  text-align: left;
+  margin: 16px;
+  padding: 16px 0 16px 44px;
+}
+.switch-label:before, .switch-label:after {
+  content: "";
+  position: absolute;
+  margin: 0;
+  outline: 0;
+  top: 50%;
+  -ms-transform: translate(0, -50%);
+  -webkit-transform: translate(0, -50%);
+  transform: translate(0, -50%);
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+.switch-label:before {
+  left: 1px;
+  width: 34px;
+  height: 14px;
+  background-color: #9E9E9E;
+  border-radius: 8px;
+}
+.switch-label:after {
+  left: 0;
+  width: 20px;
+  height: 20px;
+  background-color: #FAFAFA;
+  border-radius: 50%;
+  box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.14), 0 2px 2px 0 rgba(0, 0, 0, 0.098), 0 1px 5px 0 rgba(0, 0, 0, 0.084);
+}
+.switch-label .toggle--on {
+  display: none;
+}
+.switch-label .toggle--off {
+  display: inline-block;
+}
+.switch-input:checked + .switch-label:before {
+  background-color: #A5D6A7;
+}
+.switch-input:checked + .switch-label:after {
+  background-color: #4CAF50;
+  -ms-transform: translate(80%, -50%);
+  -webkit-transform: translate(80%, -50%);
+  transform: translate(80%, -50%);
+}
+.switch-input:checked + .switch-label .toggle--on {
+  display: inline-block;
+}
+.switch-input:checked + .switch-label .toggle--off {
+  display: none;
+}
+
 .group 			  {
   position:relative;
   margin-bottom:1em;
@@ -299,70 +380,73 @@ button:focus:not(:active)::after {
 	from { background:#5264AE; }
   to 	{ width:0; background:transparent; }
 }
+.L {
+  width:18.3em;
+  list-style-type: none;
+  text-decoration: none;
+  padding: 5px;
+  line-height: 1em;
+  display:block;
+}
+.LNO{padding: 0;
+margin:0;
+margin-bottom:.1em;
 
-.listing .selected {
+}
+.LBadge {
+  width:3em;
+  padding: .8em;
+  font-size: small;
+  border-radius: 2px 2px 2px 2px;
+  margin:0 .5em 0 0;
+}
+.LB-Blue{
+  color: white;
+  background-color: #4285f4;
+}
+.LB-Green{
+  background-color: #0f9d58;
+  color: #fff;
+}
+.LB.Red{
+  background-color: #ef5a4a;
+  color: #fff;
+}
+.LPane {
+width:17.2em;
+min-height: 1.8em;
+padding: .5em .5em .5em .5em;
+background-color: #EEE;
+margin-bottom: .2em;
+vertical-align: middle;
+box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+}
+.LText {
+  margin: .7em .5em 0 .3em;
+  overflow: hidden;
+  width:11.6em;
+}
+.LPane:hover {
   color: #607D8B;
+  background-color: #DDD;
+  left: .1em;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+  cursor:pointer;
+}
+li.selected
+.LPane{
+  color: black;
   background-color: #CCCCCC;
   left: .1em;
   box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
-  }
-  .listing {
-    margin: 0 0 2em 0;
-    list-style-type: none;
-    padding: 0;
-    width: 18em;
-
-  }
-  .listing li {
-    cursor: pointer;
-    position: relative;
-    left: 0;
-    background-color: #EEE;
-    margin: .5em;
-    padding: .3em 0;
-    min-height: 1.8em;
-    width: 18em;
-    line-height: 1em;
-    vertical-align: middle;
-    border-radius: 0px 2px 2px 0px;
-    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
-  }
-  .listing li.selected:hover {
-    background-color: #b3b3b3 !important;
-    color: white;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
-  }
-  .listing li:hover {
-    color: #607D8B;
-    background-color: #DDD;
-    left: .1em;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
-  }
-  .listing .text {
-    position: relative;
-    top: -3px;
-  }
-.listing .nobadge{
-    padding: 0.8em 0.7em 0 0.9em;
-    width: 16.4em;
+}
+li.selected
+.LPane:hover{
+  background-color: #b3b3b3 !important;
+  color: black;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
 }
 
-  .listing .badge {
-    display: inline-block;
-    font-size: small;
-    color: white;
-    padding: 0.8em 0.7em 0 0.7em;
-    background-color: #4285f4;
-    line-height: 1em;
-    position: relative;
-    left: -1px;
-    top: -4px;
-    height: 1.8em;
-    margin-right: .8em;
-    margin-top: .1em;
-    border-radius: 2px;
-    width: 3em;
-  }
   .leftbar {
     display:block;
     float:left;

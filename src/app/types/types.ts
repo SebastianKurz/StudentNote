@@ -60,7 +60,7 @@ export class Teacher {
   password: string;
   belongsToSchool: number;
 
-  constructor(id:number,firstname:string,lastname:string,mailAddress:string,password:string, belongsToSchool,){
+  constructor(id:number,firstname:string,lastname:string,mailAddress:string,password:string, belongsToSchool){
     this.id=id;
     this.firstname=firstname;
     this.lastname=lastname;
@@ -68,8 +68,4 @@ export class Teacher {
     this.password=password;
     this.belongsToSchool=belongsToSchool;
   }
-  public toString = () : string => {
-
-        return `Foo (id: ${this.id})`;
-    }
 }

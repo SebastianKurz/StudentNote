@@ -14,7 +14,7 @@ export function sort(array, key,order) {
     }
   }
 
-  export function find(array : any[], key:string, value :number ):any  {
+  export function find(array : any[], key:string, value):any  {
     return array.find(o => o[key] === value);
          }
 /*
@@ -27,6 +27,6 @@ export function find(array : any[], key:string, value :number ):any{
 }
 */
 
-export function filter(array : any[], key: string, value : any) : any[] {
-  return array.filter(o => o[key] === value);
+export function filter(array : any[], key: string, value) : any[] {
+    return array.filter(o => o[key] === value);
 }

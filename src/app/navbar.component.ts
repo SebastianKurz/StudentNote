@@ -1,11 +1,16 @@
 import { Component } from '@angular/core';
 
+import {GlobalSchool}from './service/local.service';
+
 @Component({
   selector: 'navbar',
   template: `
   <div class="pane headerpicture" style="width: 64%;margin: 1.3em auto 1em auto;align:center;padding:2% 0 1% 0;">
 
-<h1 class="title" style="margin:.6em;" [routerLink]="['/home']" routerLinkActive="active">{{title}}</h1>
+  <div *ngIf="isGlobalSchool(); then  TitleWSchool  else Title"></div>
+
+<ng-template #Title><h1 class="title" style="margin:.6em;" [routerLink]="['/home']" routerLinkActive="active">{{title}}</h1></ng-template>
+<ng-template #TitleWSchool><h1 class="title" style="margin:.6em;" [routerLink]="['/home']" routerLinkActive="active">{{title}} for {{this.globalSchool.getSchool().name}}</h1></ng-template>
 
 
 <nav class="pane" style="padding: 0 0;margin: 0 0;">
@@ -28,26 +33,23 @@ styleUrls: ['./css/component.css']
 })
 
 export class NavbarComponent {
+  private globalSchool : GlobalSchool;
   title = 'Studentnote';
+
+  constructor(private globalSchoolImpl : GlobalSchool){
+    this.globalSchool=globalSchoolImpl;
+  }
+
+  isGlobalSchool(){
+    if(this.globalSchool.getSchool() != null){
+    return true;
+    }
+    else{
+    return false;
+  }
+  }
 
   logoff():void{
     location.href="/login";
   }
-  viewHome():void{
-    location.href="/home";
-  }
-  viewSchool():void{
-    location.href="/schools";
-  }
-  viewClasses():void{
-    location.href="/classes";
-  }
-  viewTeachers():void{
-    location.href="/teachers";
-  }
-  viewStudents():void{
-    location.href="/students";
-  }
-
-
 }
