@@ -105,9 +105,9 @@ import {deleteNoteService} from './service/delete.service';
         <div *ngFor="let note of notes" class="pane" style="width:100%;margin-bottom:.3em;" >
         <div class="floatleft" style="width:40%;font-weight:600;" >{{note.timestamp | date: 'dd.MM.yyyy HH:mm'}}</div>
         <div class="floatleft" style="width:40%;font-weight:600;">erstellt von: {{this.getTeacherName(this.GetTeacherService.getTeacher(note.authorTeacherId))}}</div>
-        <div class="del"><i class="fa fa-trash" aria-hidden="true" style="font-weight:600;font-size:150%;" (click)="deleteSelectedClass(selectedClass)"></i></div>
+        <div class="del"><i class="fa fa-trash" aria-hidden="true" style="font-weight:600;font-size:150%;" (click)="deleteNote(note)"></i></div>
         <div class="clearfix"></div>
-          <textarea style="width:95%;height:7em;border:none;padding-top:1em;align:center;"
+          <textarea style="width:90%;height:7em;border:none;padding-top:1em;align:center;"
             [class.selected]="note === selectedNote" >{{note.text}}
         </textarea>
         </div>

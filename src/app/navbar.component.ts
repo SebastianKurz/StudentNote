@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 
 import {GlobalSchool}from './service/local.service';
+import {GlobalLogin}from './service/local.service';
 
 @Component({
   selector: 'navbar',
@@ -34,10 +35,24 @@ styleUrls: ['./css/component.css']
 
 export class NavbarComponent {
   private globalSchool : GlobalSchool;
+  private globalLogin : GlobalLogin;
   title = 'Studentnote';
 
-  constructor(private globalSchoolImpl : GlobalSchool){
+  constructor(
+    private globalSchoolImpl : GlobalSchool,
+    private globalLoginImpl : GlobalLogin
+  ){
     this.globalSchool=globalSchoolImpl;
+    this.globalLogin=globalLoginImpl;
+    this.ngOnInit();
+  }
+
+  ngOnInit() {
+    if (!this.globalLogin.getLogin()){
+//this.logoff();
+    }
+    }
+    ngOnDestroy():void {
   }
 
   isGlobalSchool(){

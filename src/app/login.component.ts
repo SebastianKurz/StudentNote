@@ -1,5 +1,12 @@
 import { Component } from '@angular/core';
 
+import {Teacher} from './types/types';
+
+import {GlobalSchool}from './service/local.service';
+import {GlobalLogin}from './service/local.service';
+import {getTeacherService} from './service/get.service';
+import {getSchoolService} from './service/get.service';
+
 @Component({
   selector: 'app',
   template: `
@@ -16,7 +23,13 @@ import { Component } from '@angular/core';
 
 <!--Login Button -->
 <div style="text-align:center">
-<button type="button" style="margin-top:8em;" (click)="login()">Login</button>
+<div class="group floatleft" style="margin-top:3em;margin-bottom:1em;">
+    <input #a type="text" class="md-input" required>
+    <span class="highlight"></span>
+    <span class="bar"></span>
+    <label class="md-input-label">EMail"</label>
+  </div>
+<button type="button" style="margin-top:8em;" (click)="login(a.value)">Login</button>
 </div>
 
 </div>
@@ -26,9 +39,39 @@ styleUrls: ['./css/component.css']
 
 export class LoginComponent {
   title = 'Studentnote';
+  private globalLogin:GlobalLogin;
+  private globalSchool: GlobalSchool;
+  private GetTeacherService: getTeacherService;
+  private GetSchoolService: getSchoolService;
 
-login(): void {
-  //alert("Google login will be accessible here. No Session implemented yet.");
-location.href="/home";
+  constructor(
+    private globalLoginImpl:GlobalLogin,
+    private globalSchoolImpl: GlobalSchool,
+    private GetTeacherServiceImpl: getTeacherService,
+    private GetSchoolServiceImpl: getSchoolService
+  ){
+this.globalLogin=globalLoginImpl;
+this.globalSchool=globalSchoolImpl;
+this.GetTeacherService=GetTeacherServiceImpl;
+this.GetSchoolService=GetSchoolServiceImpl;
+  }
+
+login(email:string): void {
+  if (email >""){
+    //alert("Google login will be accessible here. No Session implemented yet.");
+  var teacher:Teacher;
+  teacher = this.GetTeacherService.getTeacherByMail(email);
+  if (!teacher){
+    alert("No Permission");
+  }else {
+    this.globalLogin.setLogin(teacher);
+    this.globalSchool.setSchool(this.GetSchoolService.getSchool(teacher.belongsToSchool));
+    location.href="/home";
+  }
+
+}
+else{
+  alert("Enter your Email address");
+}
 }
 }

@@ -19,6 +19,7 @@ import { TeacherComponent } from './teacher.component';
 
 import { GlobalSchool } from './service/local.service';
 import { GlobalStatus } from './service/local.service';
+import { GlobalLogin } from './service/local.service';
 import { Global } from './service/local.service';
 
 import { postSchoolService} from './service/post.service';
@@ -72,6 +73,7 @@ import { deleteNoteService} from './service/delete.service';
   providers: [
     GlobalSchool,
     GlobalStatus,
+    GlobalLogin,
     Global,
 
     postTeacherService,

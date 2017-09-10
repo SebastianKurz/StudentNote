@@ -194,9 +194,10 @@ cancelNewClass(){
 }
 newClass(name:string,level:string,belongsToSchool:number){
     if (name > "" && level > "" && belongsToSchool > 0){
-      this.PostClassService.postClass(this.NewClass);
+      if (this.PostClassService.postClass(this.NewClass)){
+        this.globalStatus.setStatus("Data submitted");
+      }
       this.showNewClass= false;
-      this.globalStatus.setStatus(name +" "+ level +" "+ belongsToSchool);
       //refesh Data
       this.init();
     }

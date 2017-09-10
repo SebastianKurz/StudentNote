@@ -17,16 +17,11 @@ export function sort(array, key,order) {
   export function find(array : any[], key:string, value):any  {
     return array.find(o => o[key] === value);
          }
-/*
-export function find(array : any[], key:string, value :number ):any{
-  for (var i=0; i < array.length; i++) {
-       if (array[i][key] === value) {
-           return array[i];
-       }
-   }
-}
-*/
 
 export function filter(array : any[], key: string, value) : any[] {
     return array.filter(o => o[key] === value);
+}
+
+export function update (obj, key, value){
+  return obj[key]=value;
 }

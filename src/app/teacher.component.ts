@@ -9,6 +9,7 @@ import {School} from './types/types';
 
 import {GlobalSchool}from './service/local.service';
 import {GlobalStatus}from './service/local.service';
+import {GlobalLogin}from './service/local.service';
 
 import {postTeacherService} from './service/post.service';
 import {getTeacherService} from './service/get.service';
@@ -31,7 +32,15 @@ import {deleteTeacherService} from './service/delete.service';
     [class.selected]="teacher === selectedTeacher"
     (click)="selectTeacher(teacher)">
     <div class="floatleft pane LPane">
+    <div *ngIf="isLoginTeacher(teacher.id); then B else NB"></div>
+    <ng-template #B>
+    <div class="LBadge LB-Green floatleft" style="text-align:center" (click)="selectLoginTeacher(teacher)">&nbsp;</div>
     <div class="LText floatleft">{{teacher.lastname}}, {{teacher.firstname}}</div>
+    </ng-template>
+    <ng-template #NB>
+    <div class="LBadge LB-Blue floatleft" style="text-align:center" (click)="selectLoginTeacher(teacher)">&nbsp;</div>
+    <div class="LText floatleft">{{teacher.lastname}}, {{teacher.firstname}}</div>
+    </ng-template>
     </div>
   </li>
 </ul>
@@ -112,6 +121,7 @@ export class TeacherComponent {
   private sub: any;
   private globalSchool : GlobalSchool;
   private globalStatus : GlobalStatus;
+  private globalLogin : GlobalLogin;
   private PostTeacherService: postTeacherService;
   private GetTeacherService: getTeacherService;
   private UpdateTeacherService: updateTeacherService;
@@ -124,11 +134,13 @@ export class TeacherComponent {
     private UpdateTeacherServiceImpl: updateTeacherService,
     private DeleteTeacherServiceImpl: deleteTeacherService,
     private globalSchoolImpl : GlobalSchool,
-    private globalStatusImpl : GlobalStatus
+    private globalStatusImpl : GlobalStatus,
+    private globalLoginImpl : GlobalLogin
   ){
     this.title = 'Liste der Lehrer';
     this.globalSchool=globalSchoolImpl;
     this.globalStatus=globalStatusImpl;
+    this.globalLogin=globalLoginImpl;
     this.PostTeacherService=PostTeacherServiceImpl;
     this.GetTeacherService=GetTeacherServiceImpl;
     this.UpdateTeacherService=UpdateTeacherServiceImpl;
@@ -158,6 +170,7 @@ export class TeacherComponent {
           this.init();
           }
     else{
+      this.globalStatus.setStatus("Enter required Values");
     }
 }
 updateTeacher(teacher :Teacher){
@@ -194,6 +207,17 @@ this.init();
   }
   ngOnDestroy() {
   this.sub.unsubscribe();
+}
+isLoginTeacher(id : number) {
+  if (this.globalLogin.getLogin() && this.globalLogin.getLogin().id == id){
+    return true;
+  }
+  else{
+    return false;
+  }
+}
+selectLoginTeacher(teacher){
+
 }
 
 selectTeacher(teacher: Teacher): void {

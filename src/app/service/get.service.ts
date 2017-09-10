@@ -56,4 +56,5 @@ this.global=globalData;
   public getTeachers(): Teacher[] {return func.sort(this.global.gTeachers,'lastname','asc');}
   public getTeacher(id:number):Teacher {return func.find(this.global.gTeachers, 'id' , id);}
   public getEntities(id:number):Teacher[] {return func.filter(this.global.gTeachers,'belongsToSchool' ,id);}
+  public getTeacherByMail(mail:string):Teacher {return func.find(this.global.gTeachers,'mailAddress',mail);}
 }
