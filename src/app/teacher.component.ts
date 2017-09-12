@@ -1,113 +1,17 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
-
-import {Class } from './types/types';
-import {Note} from './types/types';
-import {Teacher} from './types/types';
-import {Student} from './types/types';
-import {School} from './types/types';
-
-import {GlobalSchool}from './service/local.service';
-import {GlobalStatus}from './service/local.service';
-import {GlobalLogin}from './service/local.service';
-
+import * as func from './lib/functions';
+import {Class, Note, Teacher,Student, School } from './types/types';
+import {GlobalSchool, GlobalStatus, GlobalLogin}from './service/local.service';
 import {postTeacherService} from './service/post.service';
-import {getTeacherService} from './service/get.service';
+import {getTeacherService, getSchoolService} from './service/get.service';
 import {updateTeacherService} from './service/update.service';
 import {deleteTeacherService} from './service/delete.service';
 
 
 @Component({
   selector: 'app',
-  template: `
-  <navbar></navbar>
-
-  <div style="width: 64%;margin: 0 auto;align:center;">
-  <div class="pane leftbar">
-<h2>{{title}}</h2>
-<button class="button medium red" type="button" (click) = "toggleNewTeacher()"><i class="fa fa-plus" aria-hidden="true"></i>
-</button>
-<ul class="L">
-  <li class="LNO" *ngFor="let teacher of teachers"
-    [class.selected]="teacher === selectedTeacher"
-    (click)="selectTeacher(teacher)">
-    <div class="floatleft pane LPane">
-    <div *ngIf="isLoginTeacher(teacher.id); then B else NB"></div>
-    <ng-template #B>
-    <div class="LBadge LB-Green floatleft" style="text-align:center" (click)="selectLoginTeacher(teacher)">&nbsp;</div>
-    <div class="LText floatleft">{{teacher.lastname}}, {{teacher.firstname}}</div>
-    </ng-template>
-    <ng-template #NB>
-    <div class="LBadge LB-Blue floatleft" style="text-align:center" (click)="selectLoginTeacher(teacher)">&nbsp;</div>
-    <div class="LText floatleft">{{teacher.lastname}}, {{teacher.firstname}}</div>
-    </ng-template>
-    </div>
-  </li>
-</ul>
-</div>
-
-      <div class=" floatleft widthnexttobar">
-
-      <div *ngIf="showNewTeacher" class="pane floatleft" style="width:100%;">
-        <h3>Neuen Lehrer erfassen</h3>
-          <div class="group floatleft" style="margin-top:3em;margin-bottom:1em;">
-            <input type="text" class="md-input" required [value]="NewTeacher.firstname">
-            <span class="highlight"></span>
-            <span class="bar"></span>
-            <label class="md-input-label">Vorname</label>
-          </div>
-          <div class="group floatleft" style="margin-top:3em;margin-bottom:1em;">
-              <input type="text" class="md-input" required [value]="NewTeacher.lastname">
-              <span class="highlight"></span>
-              <span class="bar"></span>
-              <label class="md-input-label">Nachname</label>
-          </div>
-          <div class="group floatleft" style="margin-top:3em;margin-bottom:1em;">
-                <input type="text" class="md-input" required [value]="NewTeacher.mailAddress">
-                <span class="highlight"></span>
-                <span class="bar"></span>
-                <label class="md-input-label">EMail Adresse</label>
-          </div>
-         <div class="group floatleft" style="margin-top:3em;margin-bottom:1em;">
-                  <input type="password" class="md-input" required [value]="NewTeacher.password">
-                  <span class="highlight"></span>
-                  <span class="bar"></span>
-                  <label class="md-input-label">Passwort</label>
-                </div>
-              <div class="group floatleft" style="margin-top:3em;margin-bottom:1em;">
-                  <input type="text" class="md-input" required [value]="NewTeacher.belongsToSchool">
-                  <span class="highlight"></span>
-                  <span class="bar"></span>
-                  <label class="md-input-label">Schule</label>
-                </div>
-        <div class="floatright">
-        <button class="button small grey" type="button" (click)="cancelNewTeacher()">Abbrechen</button>
-        <button class="button small blue" style="margin: 0 .3em;" type="button" (click)="newTeacher()">Anlegen</button>
-        </div>
-      </div>
-
-      <div *ngIf="selectedTeacher" class="pane" style="width:100%;">
-      <h3 style="width:90%;">Details: {{selectedTeacher.firstname}} {{selectedTeacher.lastname}}</h3>
-      <div class="del"><i class="fa fa-trash" aria-hidden="true" style="font-weight:600;font-size:150%;" (click)="deleteTeacher(selectedTeacher)"></i></div>
-        <div class="group" style="margin-top:3em;margin-bottom:1em;">
-            <input class="md-input" type="text" required [(ngModel)]="selectedTeacher.firstname">
-            <span class="highlight"></span>
-            <span class="bar"></span>
-            <label class="md-input-label">Vorname</label>
-          </div>
-          <div class="group" style="margin-top:3em;margin-bottom:1em;">
-              <input class="md-input" type="text" required [(ngModel)]="selectedTeacher.lastname">
-              <span class="highlight"></span>
-              <span class="bar"></span>
-              <label class="md-input-label">Nachname</label>
-            </div>
-          <div style="margin-left:5px"><label>id: </label>{{selectedTeacher.id}}</div>
-        </div>
-
-        </div>
-
-</div>
-   `,
+  templateUrl: './html/teacher.component.html',
    styleUrls: ['./css/component.css']
 })
 
@@ -126,6 +30,7 @@ export class TeacherComponent {
   private GetTeacherService: getTeacherService;
   private UpdateTeacherService: updateTeacherService;
   private DeleteTeacherService: deleteTeacherService;
+  private GetSchoolService: getSchoolService;
 
   constructor(
     private route: ActivatedRoute,
@@ -133,6 +38,7 @@ export class TeacherComponent {
     private GetTeacherServiceImpl: getTeacherService,
     private UpdateTeacherServiceImpl: updateTeacherService,
     private DeleteTeacherServiceImpl: deleteTeacherService,
+    private GetSchoolServiceImpl:getSchoolService,
     private globalSchoolImpl : GlobalSchool,
     private globalStatusImpl : GlobalStatus,
     private globalLoginImpl : GlobalLogin
@@ -145,6 +51,7 @@ export class TeacherComponent {
     this.GetTeacherService=GetTeacherServiceImpl;
     this.UpdateTeacherService=UpdateTeacherServiceImpl;
     this.DeleteTeacherService=DeleteTeacherServiceImpl;
+    this.GetSchoolService=GetSchoolServiceImpl;
     this.showNewTeacher=false;
     this.NewTeacher= new Teacher(null,null,null,null,null,null);
   }
@@ -166,6 +73,7 @@ export class TeacherComponent {
     if (firstname > "" && lastname > "" && mailAddress > "" && password > "" && belongsToSchool > 0){
       this.PostTeacherService.postTeacher(new Teacher(null,firstname,lastname,mailAddress,password,belongsToSchool));
       this.showNewTeacher= false;
+      this.globalStatus.setStatus("Data submitted");
       //fetch new data
           this.init();
           }
@@ -173,16 +81,25 @@ export class TeacherComponent {
       this.globalStatus.setStatus("Enter required Values");
     }
 }
-updateTeacher(teacher :Teacher){
-  if (this.UpdateTeacherService.updateTeacher(teacher)==0){
-      this.globalStatus.setStatus("Data submitted");
+updateTeacher(teacher :Teacher, key:string, value){
+  var val :  any;
+if (teacher != null && key != null && value != null){
+  val = value;
+  teacher[key]=val;
+  var h : number;
+  this.UpdateTeacherService.updateTeacher(teacher).then( r => h = r);
+  if (h==0){
+      this.globalStatus.setStatus("Data submitted " + teacher[key]);
       this.init();
   }else{
       this.globalStatus.setStatus("ERROR during submitting data");
   }
 }
+}
 deleteTeacher(teacher : Teacher){
-  if (this.DeleteTeacherService.deleteTeacher(teacher)==0){
+  var h : number;
+  this.UpdateTeacherService.updateTeacher(teacher).then( r => h = r);
+  if (h==0){
       this.globalStatus.setStatus("Data submitted");
       this.init();
   }else{
@@ -191,7 +108,7 @@ deleteTeacher(teacher : Teacher){
 }
 init(){
   if(this.globalSchool.getSchool()){
-this.teachers = this.GetTeacherService.getEntities(this.globalSchool.getSchool().id);
+this.GetTeacherService.getEntities(this.globalSchool.getSchool().id).then(t => this.teachers = t);
 }else{
   this.teachers = this.GetTeacherService.getTeachers();
 }
@@ -217,6 +134,16 @@ isLoginTeacher(id : number) {
   }
 }
 selectLoginTeacher(teacher){
+  this.globalStatus.setStatus("You cannot change your user. Please relogin with the desired user.");
+}
+getSchoolName(id : number){
+  var school :School;
+  this.GetSchoolService.getSchool(id).then(s => school = s);
+  if (school!=null){
+    return school.name;
+  }else{
+    return "not existing";
+  }
 
 }
 

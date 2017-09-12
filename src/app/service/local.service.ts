@@ -18,6 +18,7 @@ var globalSchool:School;
 var globalLogin:Teacher;
 var globalStatus : string = null;
 
+
 @Injectable()
 export class GlobalSchool {
   public setSchool(school:School): number {
@@ -62,4 +63,5 @@ export class Global {
   public gStudents:Student[] = STUDENTS;
   public gNotes:Note[] = NOTES;
   public gTeachers:Teacher[] = TEACHERS;
+  public basicUrl = 'api/heroes';
 }

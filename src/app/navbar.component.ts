@@ -49,7 +49,7 @@ export class NavbarComponent {
 
   ngOnInit() {
     if (!this.globalLogin.getLogin()){
-//this.logoff();
+    this.logoff();
     }
     }
     ngOnDestroy():void {

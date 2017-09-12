@@ -1,4 +1,7 @@
 import { Injectable } from '@angular/core';
+import { Headers, Http } from '@angular/http';
+
+import 'rxjs/add/operator/toPromise';
 
 import {Class } from '../types/types';
 import {Note} from '../types/types';
@@ -13,36 +16,85 @@ import * as func from '../lib/functions';
 @Injectable()
 export class deleteSchoolService {
   private global : Global;
-  constructor (private globalData : Global){
-  this.global=globalData;
+  private http: Http;
+  private url = 'delete/deleteSchool';
+  private headers = new Headers({'Content-Type': 'application/json'});
+constructor (private globalData : Global, private httpImpl: Http){
+this.global=globalData;
+this.http=httpImpl;
   }
-  public deleteSchool(school:School): number {return 0;}
+  public deleteSchool(school:School): Promise<number> {
+  return this.http.delete(`${this.global.basicUrl}/${this.url}/${school.id}`, {headers: this.headers})
+    .toPromise()
+    .then(() => 0)
+    .catch(func.handleError);
+  }
 }
 @Injectable()
-export class deleteClassService {private global : Global;
-constructor (private globalData : Global){
+export class deleteClassService {
+  private global : Global;
+  private http: Http;
+  private url = 'delete/deleteClass';
+  private headers = new Headers({'Content-Type': 'application/json'});
+constructor (private globalData : Global, private httpImpl: Http){
 this.global=globalData;
-}
-  public deleteClass(klasse:Class): number {return 0;}
+this.http=httpImpl;
+  }
+  public deleteClass(klasse:Class): Promise<number> {
+  return this.http.delete(`${this.global.basicUrl}/${this.url}/${klasse.id}`, {headers: this.headers})
+    .toPromise()
+    .then(() => 0)
+    .catch(func.handleError);
+  }
 }
 @Injectable()
-export class deleteStudentService {private global : Global;
-constructor (private globalData : Global){
+export class deleteStudentService {
+  private global : Global;
+  private http: Http;
+  private url = 'delete/deleteStudent';
+  private headers = new Headers({'Content-Type': 'application/json'});
+constructor (private globalData : Global, private httpImpl: Http){
 this.global=globalData;
-}
-  public deleteStudent(student:Student): number {return 0;}
+this.http=httpImpl;
+  }
+  public deleteStudent(student:Student): Promise<number> {
+  return this.http.delete(`${this.global.basicUrl}/${this.url}/${student.id}`, {headers: this.headers})
+    .toPromise()
+    .then(() => 0)
+    .catch(func.handleError);
+  }
 }
 @Injectable()
-export class deleteNoteService {private global : Global;
-constructor (private globalData : Global){
+export class deleteNoteService {
+  private global : Global;
+  private http: Http;
+  private url = 'delete/deleteNote';
+  private headers = new Headers({'Content-Type': 'application/json'});
+constructor (private globalData : Global, private httpImpl: Http){
 this.global=globalData;
-}
-  public deleteNote(note:Note): number {return 0;}
+this.http=httpImpl;
+  }
+  public deleteNote(note:Note): Promise<number> {
+  return this.http.delete(`${this.global.basicUrl}/${this.url}/${note.id}`, {headers: this.headers})
+    .toPromise()
+    .then(() => 0)
+    .catch(func.handleError);
+  }
 }
 @Injectable()
-export class deleteTeacherService {private global : Global;
-constructor (private globalData : Global){
+export class deleteTeacherService {
+  private global : Global;
+  private http: Http;
+  private url = 'delete/deleteTeacher';
+  private headers = new Headers({'Content-Type': 'application/json'});
+constructor (private globalData : Global, private httpImpl: Http){
 this.global=globalData;
-}
-  public deleteTeacher(teacher:Teacher): number {return 0;}
+this.http=httpImpl;
+  }
+  public deleteTeacher(teacher:Teacher): Promise<number> {
+  return this.http.delete(`${this.global.basicUrl}/${this.url}/${teacher.id}`, {headers: this.headers})
+    .toPromise()
+    .then(() => 0)
+    .catch(func.handleError);
+  }
 }

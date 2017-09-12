@@ -19,7 +19,7 @@ timestamp: number;
 authorTeacherId: number;
 belongsToStudent: number;
 
-constructor (id:number,text:string,timestamp:number,authorTeacherId:number,belongsToStudent){
+constructor (id:number,text:string,timestamp:number,authorTeacherId:number,belongsToStudent:number){
 this.id=id;
 this.text=text;
 this.timestamp=timestamp;

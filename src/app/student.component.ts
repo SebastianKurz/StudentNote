@@ -1,122 +1,18 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import { DatePipe } from '@angular/common';
-
-import {Class } from './types/types';
-import {Note} from './types/types';
-import {School} from './types/types';
-import {Student} from './types/types';
-import {Teacher} from './types/types';
-
-import {GlobalSchool}from './service/local.service';
-import {GlobalStatus}from './service/local.service';
-
-import {getTeacherService} from './service/get.service';
-import {postStudentService} from './service/post.service';
-import {getStudentService} from './service/get.service';
-import {updateStudentService} from './service/update.service';
-import {deleteStudentService} from './service/delete.service';
-import {postNoteService} from './service/post.service';
-import {getNoteService} from './service/get.service';
-import {updateNoteService} from './service/update.service';
-import {deleteNoteService} from './service/delete.service';
+import * as func from './lib/functions';
+import {Class, Note, School, Student, Teacher } from './types/types';
+import {GlobalSchool,GlobalStatus, GlobalLogin}from './service/local.service';
+import {getTeacherService, getStudentService, getNoteService, getClassService} from './service/get.service';
+import {updateStudentService, updateNoteService} from './service/update.service';
+import {deleteStudentService, deleteNoteService} from './service/delete.service';
+import {postStudentService, postNoteService} from './service/post.service';
 
 
 @Component({
   selector: 'app',
-  template: `
-  <navbar></navbar>
-
-  <div style="width: 64%;margin: 0 auto;align:center;">
-  <div class="pane leftbar">
-<h2 >{{title}}</h2>
-<button class="button medium red" type="button" (click) = "toggleNewStudent()"><i class="fa fa-plus" aria-hidden="true"></i>
-</button>
-<ul class="L">
-  <li class="LNO" *ngFor="let student of students "
-    [class.selected]="student === selectedStudent"
-    (click)="onSelect(student)">
-    <div class="floatleft pane LPane">
-    <div class="LText floatleft">{{student.lastname}}, {{student.firstname}}</div>
-    </div>
-
-  </li>
-</ul>
-</div>
-<div class="floatleft widthnexttobar">
-<div *ngIf="showNewStudent" class="pane floatleft" style="width:100%;">
-  <h3>Neuen Schüler erfassen</h3>
-  <div class="group floatleft" style="margin-top:3em;margin-bottom:1em;">
-      <input #a type="text" class="md-input" required [value]="NewStudent.firstname">
-      <span class="highlight"></span>
-      <span class="bar"></span>
-      <label class="md-input-label">Vorname</label>
-    </div>
-    <div class="group floatleft" style="margin-top:3em;margin-bottom:1em;">
-        <input #b type="text" class="md-input" required [value]="NewStudent.lastname">
-        <span class="highlight"></span>
-        <span class="bar"></span>
-        <label class="md-input-label">Nachname</label>
-      </div>
-        <div class="group floatleft" style="margin-top:3em;margin-bottom:1em;">
-            <input #c type="text" class="md-input" required [value]="NewStudent.belongsToClass">
-            <span class="highlight"></span>
-            <span class="bar"></span>
-            <label class="md-input-label">Klasse</label>
-          </div>
-          <div class="floatright">
-          <button class="button small grey" type="button" (click)="cancelNewStudent()">Abbrechen</button>
-          <button class="button small blue" style="margin: 0 .3em;" type="button" (click)="newStudent(a.value, b.value, c.value)">Anlegen</button>
-          </div>
-</div>
-
-<div class="floatleft" *ngIf="selectedStudent" style="width:100%;">
-      <div class="pane" style="width:100%">
-      <h3 style="width:90%;">Details: {{selectedStudent.firstname}} {{selectedStudent.lastname}}</h3>
-      <div class="del"><i class="fa fa-trash" aria-hidden="true" style="font-weight:600;font-size:150%;" (click)="deleteStudent(selectedStudent)"></i></div>
-        <div class="group" style="margin-top:3em;margin-bottom:1em;">
-            <input class="md-input" type="text" required [(ngModel)]="selectedStudent.firstname">
-            <span class="highlight"></span>
-            <span class="bar"></span>
-            <label class="md-input-label">Vorname</label>
-          </div>
-          <div class="group" style="margin-top:3em;margin-bottom:1em;">
-              <input class="md-input" type="text" required [(ngModel)]="selectedStudent.lastname">
-              <span class="highlight"></span>
-              <span class="bar"></span>
-              <label class="md-input-label">Nachname</label>
-            </div>
-          <div style="margin-left:5px"><label>id: </label>{{selectedStudent.id}}</div>
-        </div>
-
-        <div *ngIf="isNotes(); then Bemerkungen else keineBemerkungen"></div>
-
-        <ng-template #keineBemerkungen>
-        <div class="pane" style="width:100%;margin-bottom:.3em;">
-        <span style="width:40%;font-weight:600;font-size:130%;">Noch keine Bemerkungen</span>
-        </div>
-        </ng-template>
-
-        <ng-template #Bemerkungen>
-        <div class="pane" style="padding-top: 1em;padding-bottom:1em;margin-bottom:.3em;width:100%">
-        <h3>Bemerkungen</h3>
-        </div>
-
-        <div *ngFor="let note of notes" class="pane" style="width:100%;margin-bottom:.3em;" >
-        <div class="floatleft" style="width:40%;font-weight:600;" >{{note.timestamp | date: 'dd.MM.yyyy HH:mm'}}</div>
-        <div class="floatleft" style="width:40%;font-weight:600;">erstellt von: {{this.getTeacherName(this.GetTeacherService.getTeacher(note.authorTeacherId))}}</div>
-        <div class="del"><i class="fa fa-trash" aria-hidden="true" style="font-weight:600;font-size:150%;" (click)="deleteNote(note)"></i></div>
-        <div class="clearfix"></div>
-          <textarea style="width:90%;height:7em;border:none;padding-top:1em;align:center;"
-            [class.selected]="note === selectedNote" >{{note.text}}
-        </textarea>
-        </div>
-        </ng-template>
-        </div>
-        </div>
-
-</div>
-   `,
+  templateUrl: './html/student.component.html',
    styleUrls: ['./css/component.css']
 })
 
@@ -130,10 +26,12 @@ export class StudentComponent implements OnInit, OnDestroy{
   showNewStudent : Boolean;
   showNewNote : Boolean;
   NewStudent : Student;
+  NewNote : Note;
   id: number;
   private sub: any;
   private globalSchool : GlobalSchool;
   private globalStatus : GlobalStatus;
+  private globalLogin : GlobalLogin;
   private PostStudentService: postStudentService;
   private GetStudentService: getStudentService;
   private UpdateStudentService: updateStudentService;
@@ -143,6 +41,7 @@ export class StudentComponent implements OnInit, OnDestroy{
   private GetNoteService: getNoteService;
   private UpdateNoteService: updateNoteService;
   private DeleteNoteService: deleteNoteService;
+  private GetClassService : getClassService;
 
   constructor(
     private route: ActivatedRoute,
@@ -155,12 +54,15 @@ export class StudentComponent implements OnInit, OnDestroy{
     private GetNoteServiceImpl: getNoteService,
     private UpdateNoteServiceImpl: updateNoteService,
     private DeleteNoteServiceImpl: deleteNoteService,
+    private GetClassServiceImpl:getClassService,
     private globalSchoolImpl : GlobalSchool,
-    private globalStatusImpl : GlobalStatus
+    private globalStatusImpl : GlobalStatus,
+    private globalLoginImpl : GlobalLogin,
   ) {
     this.title='Schülerübersicht';
-    this.globalSchool=globalSchoolImpl;
+    this.globalSchool=globalSchoolImpl;6
       this.globalStatus=globalStatusImpl;
+      this.globalLogin=globalLoginImpl;
     this.PostStudentService=PostStudentServiceImpl;
     this.GetStudentService=GetStudentServiceImpl;
     this.UpdateStudentService=UpdateStudentServiceImpl;
@@ -170,9 +72,12 @@ export class StudentComponent implements OnInit, OnDestroy{
     this.UpdateNoteService=UpdateNoteServiceImpl;
     this.DeleteNoteService=DeleteNoteServiceImpl;
     this.GetTeacherService=GetTeacherServiceImpl;
+    this.GetClassService=GetClassServiceImpl;
     this.showNewStudent=false;
+    this.showNewNote=false;
     this.NewStudent=new Student(null,null,null,null);
-    if(this.selectedStudent != null){this.notes=this.GetNoteService.getEntities(this.selectedStudent.id);}
+    this.NewNote=new Note(null,null,null,null,null);
+
 
   }
   isNotes(){
@@ -197,14 +102,20 @@ export class StudentComponent implements OnInit, OnDestroy{
       this.showNewStudent= false;
   }
   newStudent(firstname:string,lastname:string,belongsToClass:number){
-    if (firstname > "" && lastname > ""  && belongsToClass > 0){
-      this.PostStudentService.postStudent(new Student(null,firstname,lastname,belongsToClass));
+    if (firstname > "" && lastname > "" && belongsToClass > 0){
+      var h : number;
+      this.PostStudentService.postStudent(new Student(null,firstname,lastname,belongsToClass)).then(r => h = r);
+      if (0==h){
       this.showNewStudent= false;
+      this.globalStatus.setStatus("Data submitted");
       //fetch new data
-            this.init();
-          }
+          this.init();
+        }
+        else{
+          this.globalStatus.setStatus("[ERROR] submitting data");
+        }}
     else{
-
+      this.globalStatus.setStatus("Enter required Values");
     }
   }
   toggleNewNote():void{
@@ -216,30 +127,52 @@ export class StudentComponent implements OnInit, OnDestroy{
         }
   }
   cancelNewNote():void{
-      this.NewStudent =new Student(null,null,null,null);
-      this.showNewStudent= false;
+      this.NewNote =new Note(null,null,null,null,null);
+      this.showNewNote= false;
   }
-  newNote(firstname:string,lastname:string,belongsToClass:number){
-    if (firstname > "" && lastname > ""  && belongsToClass > 0){
-      this.PostStudentService.postStudent(new Student(null,firstname,lastname,belongsToClass));
-      this.showNewStudent= false;
+  newNote(text:string,timestamp:number,authorTeacherId:number,belongsToStudent:number){
+    if (text > "" && timestamp > 0 && authorTeacherId != null && belongsToStudent > 0){
+      var h : number;
+      this.PostNoteService.postNote(new Note(null,text,timestamp,authorTeacherId,belongsToStudent));
+      if (0==h){
+      this.showNewNote= false;
+      this.globalStatus.setStatus("Data submitted");
       //fetch new data
-            this.init();
-          }
+          this.init();
+        }else{
+          this.globalStatus.setStatus("[ERROR] submitting data");
+      }
+      }
     else{
-
+      this.globalStatus.setStatus("Enter required Values");
     }
-  }
+}
 
   getTeacherName(teacher : Teacher){
     return teacher.firstname + ' ' + teacher.lastname;
   }
+  getLoginName(){
+    var teacher = this.globalLogin.getLogin();
+    if (teacher != null){
+    return this.getTeacherName(teacher);
+  }else{
+    return "Not logged in!";
+  }
+  }
+  getLoginId(){
+    var teacher = this.globalLogin.getLogin();
+    if (teacher != null){
+    return teacher.id;
+  }else{
+    return "-1";
+  }
+  }
 init(){
-  if(this.globalSchool.getSchool() != null ){
+  /*if(this.globalSchool.getSchool() != null ){
 this.students = this.GetStudentService.getEntities(this.globalSchool.getSchool().id);
-}else{
-  this.students = this.GetStudentService.getStudents();
-}
+}else{*/
+  this.GetStudentService.getStudents().then(s => this.students = s);
+//}
 }
   ngOnInit() {
     this.init();
@@ -248,48 +181,79 @@ this.students = this.GetStudentService.getEntities(this.globalSchool.getSchool()
          //Ask Webservice
          this.selectedStudent = this.students.find(o => o.id === this.id);
       });
-        if(this.selectedStudent){this.notes=this.GetNoteService.getEntities(this.selectedStudent.id);}
+        if(this.selectedStudent){this.GetNoteService.getEntities(this.selectedStudent.id).then(n => this.notes = n);
+        }
     }
     ngOnDestroy():void {
     this.sub.unsubscribe();
   }
-  updateStudent(student :Student){
-    if (this.UpdateStudentService.updateStudent(student)==0){
+  updateStudent(student :Student,key:string,value){
+    var val :  any;
+  if (student != null && key != null && value != null){
+    val = value;
+    student[key]=val;
+    var h:number;
+    this.UpdateStudentService.updateStudent(student).then(r => h=r);
+    if (h==0){
+        this.globalStatus.setStatus("Data submitted " + student[key]);
+        this.init();
+    }else{
+        this.globalStatus.setStatus("ERROR during submitting data");
+    }
+  }
+  }
+
+  getNow(){
+    var now=Date.now()+1;
+    return now;
+  }
+  deleteStudent(student : Student){var h:number;
+  this.DeleteStudentService.deleteStudent(student).then(r => h=r);
+  if (h==0){
         this.globalStatus.setStatus("Data submitted");
         this.init();
     }else{
         this.globalStatus.setStatus("ERROR during submitting data");
     }
   }
-  deleteStudent(student : Student){
-    if (this.DeleteStudentService.deleteStudent(student)==0){
+  updateNote(note :Note,key:string,value){
+    var val :  any;
+  if (note != null && key != null && value != null){
+    val = value;
+    note[key]=val;var h:number;
+    this.UpdateNoteService.updateNote(note).then(r => h=r);
+    if (h==0){
+        this.globalStatus.setStatus("Data submitted " + note[key]);
+        this.init();
+    }else{
+        this.globalStatus.setStatus("ERROR during submitting data");
+    }
+  }
+  }
+  deleteNote(note : Note){var h:number;
+  this.DeleteNoteService.deleteNote(note).then(r => h=r);
+  if (h==0){
         this.globalStatus.setStatus("Data submitted");
         this.init();
     }else{
         this.globalStatus.setStatus("ERROR during submitting data");
     }
   }
-  updateNote(note :Note){
-    if (this.UpdateNoteService.updateNote(note)==0){
-        this.globalStatus.setStatus("Data submitted");
-        this.init();
+  getClassName(id : number){
+    var klasse : Class;
+
+    this.GetClassService.getClass(id);
+    if (klasse != null){
+      return klasse.name;
     }else{
-        this.globalStatus.setStatus("ERROR during submitting data");
+      return "not existing";
     }
-  }
-  deleteNote(note : Note){
-    if (this.DeleteNoteService.deleteNote(note)==0){
-        this.globalStatus.setStatus("Data submitted");
-        this.init();
-    }else{
-        this.globalStatus.setStatus("ERROR during submitting data");
-    }
+
   }
 
 onSelect(student: Student): void {
   this.cancelNewStudent();
-  this.selectedStudent = student;
-  this.notes=this.GetNoteService.getEntities(student.id);
+  this.GetNoteService.getEntities(student.id).then(n => this.notes = n)
 }
 
 }

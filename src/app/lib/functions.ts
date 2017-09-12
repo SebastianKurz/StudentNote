@@ -22,6 +22,7 @@ export function filter(array : any[], key: string, value) : any[] {
     return array.filter(o => o[key] === value);
 }
 
-export function update (obj, key, value){
-  return obj[key]=value;
+export function handleError(error: any): Promise<any> {
+  console.error('[ERROR] => ', error);
+  return Promise.reject(error.message || error);
 }
