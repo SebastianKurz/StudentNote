@@ -61,7 +61,7 @@
             <label class="md-input-label">Nachname</label>
           </div>
           <div class="group" style="margin-top:3em;margin-bottom:1em;">
-              <input class="md-input" type="number">
+              <input #c class="md-input" type="number" required [(ngModel)]="selectedStudent.belongsToClass" (change)="updateStudent(selectedStudent,'belongsToClass',c.value)">
               <span class="highlight"></span>
               <span class="bar"></span>
               <label class="md-input-label">Zugeordnet zu Klasse: {{getClassName(selectedStudent.belongsToClass)}}</label>
