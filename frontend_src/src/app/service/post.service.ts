@@ -17,7 +17,7 @@ import * as func from '../lib/functions';
 export class postSchoolService {
   private global : Global;
   private http: Http;
-  private url = 'post/postSchool';
+  private url = 'create/newSchool';
   private headers = new Headers({'Content-Type': 'application/json'});
 constructor (private globalData : Global, private httpImpl: Http){
 this.global=globalData;
@@ -25,7 +25,7 @@ this.http=httpImpl;
 }
   public postSchool(school:School): Promise<number> {
     return this.http
-    .post(this.global.basicUrl, JSON.stringify(school), {headers: this.headers})
+    .post(`${this.global.basicUrl}/${this.url}/${school.name}`,JSON.stringify(school), {headers: this.headers})
     .toPromise()
     .then(res => 0)
     .catch(func.handleError);
@@ -35,7 +35,7 @@ this.http=httpImpl;
 export class postClassService {
   private global : Global;
   private http: Http;
-  private url = 'post/postClass';
+  private url = 'create/newClass';
   private headers = new Headers({'Content-Type': 'application/json'});
 constructor (private globalData : Global, private httpImpl: Http){
 this.global=globalData;
@@ -43,7 +43,7 @@ this.http=httpImpl;
 }
   public postClass(klasse:Class): Promise<number> {
     return this.http
-    .post(this.global.basicUrl, JSON.stringify(klasse), {headers: this.headers})
+    .post(`${this.global.basicUrl}/${this.url}/${klasse.name}/${klasse.level}/${klasse.belongsToSchool}`, JSON.stringify(klasse), {headers: this.headers})
     .toPromise()
     .then(res => 0)
     .catch(func.handleError);
@@ -53,7 +53,7 @@ this.http=httpImpl;
 export class postStudentService {
   private global : Global;
   private http: Http;
-  private url = 'post/postStudent';
+  private url = 'create/newStudent';
   private headers = new Headers({'Content-Type': 'application/json'});
 constructor (private globalData : Global, private httpImpl: Http){
 this.global=globalData;
@@ -61,7 +61,7 @@ this.http=httpImpl;
 }
   public postStudent(student:Student): Promise<number> {
     return this.http
-    .post(this.global.basicUrl, JSON.stringify(student), {headers: this.headers})
+    .post(`${this.global.basicUrl}/${this.url}/${student.firstname}/${student.lastname}/${student.belongsToClass}`, JSON.stringify(student), {headers: this.headers})
     .toPromise()
     .then(res => 0)
     .catch(func.handleError);
@@ -71,7 +71,7 @@ this.http=httpImpl;
 export class postNoteService {
   private global : Global;
   private http: Http;
-  private url = 'post/postNote';
+  private url = 'create/newNote';
   private headers = new Headers({'Content-Type': 'application/json'});
 constructor (private globalData : Global, private httpImpl: Http){
 this.global=globalData;
@@ -79,7 +79,7 @@ this.http=httpImpl;
 }
   public postNote(note:Note): Promise<number> {
     return this.http
-    .post(this.global.basicUrl, JSON.stringify(note), {headers: this.headers})
+    .post(`${this.global.basicUrl}/${this.url}/${note.text}/${note.authorTeacherId}/${note.belongsToStudent}`, JSON.stringify(note), {headers: this.headers})
     .toPromise()
     .then(res => 0)
     .catch(func.handleError);
@@ -89,7 +89,7 @@ this.http=httpImpl;
 export class postTeacherService {
   private global : Global;
   private http: Http;
-  private url = 'post/postTeacher';
+  private url = 'create/newTeacher';
   private headers = new Headers({'Content-Type': 'application/json'});
 constructor (private globalData : Global, private httpImpl: Http){
 this.global=globalData;
@@ -97,7 +97,7 @@ this.http=httpImpl;
 }
   public postTeacher(teacher:Teacher): Promise<number> {
     return this.http
-    .post(this.global.basicUrl, JSON.stringify(teacher), {headers: this.headers})
+    .post(`${this.global.basicUrl}/${this.url}/${teacher.firstname}/${teacher.lastname}/${teacher.mailAddress}/${teacher.password}/${teacher.belongsToSchool}`, JSON.stringify(teacher), {headers: this.headers})
     .toPromise()
     .then(res => 0)
     .catch(func.handleError);

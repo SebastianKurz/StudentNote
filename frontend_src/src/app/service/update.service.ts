@@ -25,7 +25,7 @@ this.http=httpImpl;
 }
   public updateSchool(school:School): Promise<number> {
   return this.http
-    .put(`${this.global.basicUrl}/${this.url}/${school.id}`, JSON.stringify(school), {headers: this.headers})
+    .put(`${this.global.basicUrl}/${this.url}/${school.id}/${school.name}`, JSON.stringify(school), {headers: this.headers})
     .toPromise()
     .then(() => 0)
     .catch(func.handleError);
@@ -43,7 +43,7 @@ this.http=httpImpl;
 }
   public updateClass(klasse:Class): Promise<number> {
   return this.http
-    .put(`${this.global.basicUrl}/${this.url}/${klasse.id}`, JSON.stringify(klasse), {headers: this.headers})
+    .put(`${this.global.basicUrl}/${this.url}/${klasse.id}/${klasse.level}/${klasse.name}`, JSON.stringify(klasse), {headers: this.headers})
     .toPromise()
     .then(() => 0)
     .catch(func.handleError);
@@ -61,7 +61,7 @@ this.http=httpImpl;
 }
   public updateStudent(student:Student): Promise<number> {
   return this.http
-    .put(`${this.global.basicUrl}/${this.url}/${student.id}`, JSON.stringify(student), {headers: this.headers})
+    .put(`${this.global.basicUrl}/${this.url}/${student.id}/${student.belongsToClass}/${student.firstname}/${student.lastname}`, JSON.stringify(student), {headers: this.headers})
     .toPromise()
     .then(() => 0)
     .catch(func.handleError);
@@ -97,7 +97,7 @@ this.http=httpImpl;
 }
   public updateTeacher(teacher:Teacher): Promise<number> {
   return this.http
-    .put(`${this.global.basicUrl}/${this.url}/${teacher.id}`, JSON.stringify(teacher), {headers: this.headers})
+    .put(`${this.global.basicUrl}/${this.url}/${teacher.id}/${teacher.firstname}/${teacher.lastname}/${teacher.mailAddress}/${teacher.password}`, JSON.stringify(teacher), {headers: this.headers})
     .toPromise()
     .then(() => 0)
     .catch(func.handleError);

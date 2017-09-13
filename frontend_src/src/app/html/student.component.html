@@ -61,7 +61,7 @@
             <label class="md-input-label">Nachname</label>
           </div>
           <div class="group" style="margin-top:3em;margin-bottom:1em;">
-              <input #c class="md-input" type="number" required [(ngModel)]="selectedStudent.belongsToClass" (change)="updateStudent(selectedStudent,'belongsToClass',c.value)">
+              <input class="md-input" type="number">
               <span class="highlight"></span>
               <span class="bar"></span>
               <label class="md-input-label">Zugeordnet zu Klasse: {{getClassName(selectedStudent.belongsToClass)}}</label>
@@ -109,7 +109,7 @@
       <div class="del"><i class="fa fa-trash" aria-hidden="true" style="font-weight:600;font-size:150%;" (click)="deleteNote(note)"></i></div>
       <div class="clearfix"></div>
         <textarea #a style="width:90%;height:7em;border:none;padding-top:1em;align:center;"
-          [class.selected]="note === selectedNote" [(ngModel)]="note.text" (change)="updateNote(note,'text',a.value)">
+          [class.selected]="note === selectedNote" readonly [(ngModel)]="note.text">
       </textarea>
       </div>
       </ng-template>

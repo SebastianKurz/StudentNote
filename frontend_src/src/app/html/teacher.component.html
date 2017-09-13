@@ -86,7 +86,7 @@
               <label class="md-input-label">E-Mail Adresse</label>
             </div>
             <div  class="group" style="margin-top:3em;margin-bottom:1em;">
-                <input #d class="md-input" type="number" required [(ngModel)]="selectedTeacher.belongsToSchool" (change)="updateTeacher(selectedTeacher,'belongsToSchool',d.value)">
+                <input class="md-input" type="number">
                 <span class="highlight"></span>
                 <span class="bar"></span>
                 <label class="md-input-label">zugeordnete Schule: {{this.getSchoolName(selectedTeacher.belongsToSchool)}}</label>
