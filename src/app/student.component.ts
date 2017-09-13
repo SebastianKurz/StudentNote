@@ -3,7 +3,7 @@ import {ActivatedRoute} from '@angular/router';
 import { DatePipe } from '@angular/common';
 import * as func from './lib/functions';
 import {Class, Note, School, Student, Teacher } from './types/types';
-import {GlobalSchool,GlobalStatus, GlobalLogin}from './service/local.service';
+import {GlobalSchool,GlobalClass,GlobalStatus, GlobalLogin}from './service/local.service';
 import {getTeacherService, getStudentService, getNoteService, getClassService} from './service/get.service';
 import {updateStudentService, updateNoteService} from './service/update.service';
 import {deleteStudentService, deleteNoteService} from './service/delete.service';
@@ -30,6 +30,7 @@ export class StudentComponent implements OnInit, OnDestroy{
   id: number;
   private sub: any;
   private globalSchool : GlobalSchool;
+  private globalClass : GlobalClass;
   private globalStatus : GlobalStatus;
   private globalLogin : GlobalLogin;
   private PostStudentService: postStudentService;
@@ -56,11 +57,13 @@ export class StudentComponent implements OnInit, OnDestroy{
     private DeleteNoteServiceImpl: deleteNoteService,
     private GetClassServiceImpl:getClassService,
     private globalSchoolImpl : GlobalSchool,
+    private globalClassImpl : GlobalClass,
     private globalStatusImpl : GlobalStatus,
     private globalLoginImpl : GlobalLogin,
   ) {
     this.title='Schülerübersicht';
-    this.globalSchool=globalSchoolImpl;6
+    this.globalSchool=globalSchoolImpl;
+    this.globalClass=globalClassImpl;
       this.globalStatus=globalStatusImpl;
       this.globalLogin=globalLoginImpl;
     this.PostStudentService=PostStudentServiceImpl;
@@ -168,11 +171,9 @@ export class StudentComponent implements OnInit, OnDestroy{
   }
   }
 init(){
-  /*if(this.globalSchool.getSchool() != null ){
-this.students = this.GetStudentService.getEntities(this.globalSchool.getSchool().id);
-}else{*/
-  this.GetStudentService.getStudents().then(s => this.students = s);
-//}
+  if(this.globalSchool.getSchool()){
+  this.GetStudentService.getEntities(this.globalClass.getClass().id).then(s => this.students = s);
+}
 }
   ngOnInit() {
     this.init();
@@ -242,7 +243,7 @@ this.students = this.GetStudentService.getEntities(this.globalSchool.getSchool()
   getClassName(id : number){
     var klasse : Class;
 
-    this.GetClassService.getClass(id);
+    this.GetClassService.getClass(this.globalSchool.getSchool().id,id);
     if (klasse != null){
       return klasse.name;
     }else{

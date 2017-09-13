@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 
-import {GlobalSchool}from './service/local.service';
+import {GlobalSchool, GlobalClass}from './service/local.service';
 import {GlobalLogin}from './service/local.service';
 
 @Component({
@@ -18,9 +18,9 @@ import {GlobalLogin}from './service/local.service';
 <ul>
     <li class="active floatleft" [routerLink]="['/home']" routerLinkActive="active"><i class="fa fa-home" aria-hidden="true"></i></li>
     <!--<li class="active floatleft" [routerLink]="['/schools']" routerLinkActive="active">Schule</li>-->
-    <li class="active floatleft" [routerLink]="['/classes']" routerLinkActive="active">Klasse</li>
-    <li class="active floatleft" [routerLink]="['/teachers']" routerLinkActive="active">Lehrer</li>
-    <li class="active floatleft" [routerLink]="['/students']" routerLinkActive="active">Schüler</li>
+    <li *ngIf="isGlobalSchool()" class="active floatleft" [routerLink]="['/classes']" routerLinkActive="active">Klasse</li>
+    <li *ngIf="isGlobalSchool()" class="active floatleft" [routerLink]="['/teachers']" routerLinkActive="active">Lehrer</li>
+    <li *ngIf="isGlobalClass()" class="active floatleft" [routerLink]="['/students']" routerLinkActive="active">Schüler</li>
     <li style="">&nbsp;</li>
 
     <li class="active floatright" (click)="logoff()"><i class="fa fa-sign-out" aria-hidden="true"></i>
@@ -35,15 +35,18 @@ styleUrls: ['./css/component.css']
 
 export class NavbarComponent {
   private globalSchool : GlobalSchool;
+  private globalClass : GlobalClass;
   private globalLogin : GlobalLogin;
   title = 'Studentnote';
 
   constructor(
     private globalSchoolImpl : GlobalSchool,
-    private globalLoginImpl : GlobalLogin
+    private globalLoginImpl : GlobalLogin,
+    private globalClassImpl:GlobalClass,
   ){
     this.globalSchool=globalSchoolImpl;
     this.globalLogin=globalLoginImpl;
+    this.globalClass=globalClassImpl;
     this.ngOnInit();
   }
 
@@ -57,6 +60,14 @@ export class NavbarComponent {
 
   isGlobalSchool(){
     if(this.globalSchool.getSchool() != null){
+    return true;
+    }
+    else{
+    return false;
+  }
+  }
+  isGlobalClass(){
+    if(this.globalClass.getClass() != null){
     return true;
     }
     else{

@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule }   from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import {HttpClientModule} from '@angular/common/http';
+import { HttpModule, Http }    from '@angular/http';
 
 
 import {ROUTE_CONFIG} from './app.routes';
@@ -17,7 +18,7 @@ import { SchoolComponent } from './school.component';
 import { StudentComponent } from './student.component';
 import { TeacherComponent } from './teacher.component';
 
-import { GlobalSchool } from './service/local.service';
+import { GlobalSchool, GlobalClass} from './service/local.service';
 import { GlobalStatus } from './service/local.service';
 import { GlobalLogin } from './service/local.service';
 import { Global } from './service/local.service';
@@ -72,9 +73,11 @@ import { deleteNoteService} from './service/delete.service';
   ],
   providers: [
     GlobalSchool,
+    GlobalClass,
     GlobalStatus,
     GlobalLogin,
     Global,
+    Http,
 
     postTeacherService,
     postSchoolService,

@@ -109,8 +109,6 @@ deleteTeacher(teacher : Teacher){
 init(){
   if(this.globalSchool.getSchool()){
 this.GetTeacherService.getEntities(this.globalSchool.getSchool().id).then(t => this.teachers = t);
-}else{
-  this.teachers = this.GetTeacherService.getTeachers();
 }
 }
 ngOnInit() {

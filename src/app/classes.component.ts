@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import * as func from './lib/functions';
 import {Class, Note, School, Student, Teacher } from './types/types';
-import {GlobalSchool, GlobalStatus}from './service/local.service';
+import {GlobalSchool, GlobalStatus, GlobalClass}from './service/local.service';
 import {getClassService, getStudentService, getSchoolService} from './service/get.service';
 import {postClassService} from './service/post.service';
 import {updateClassService} from './service/update.service';
@@ -29,6 +29,7 @@ export class ClassesComponent {
   private GetStudentService: getStudentService;
   private GetSchoolService: getSchoolService;
   private globalSchool : GlobalSchool;
+  private globalClass : GlobalClass;
   private globalStatus: GlobalStatus;
 
 constructor(
@@ -39,6 +40,7 @@ constructor(
   private GetStudentServiceImpl: getStudentService,
     private GetSchoolServiceImpl: getSchoolService,
   private globalSchoolImpl : GlobalSchool,
+  private globalClassImpl : GlobalClass,
   private globalStatusImpl: GlobalStatus
 ){
   this.title = 'Klassenübersicht';
@@ -49,6 +51,7 @@ constructor(
   this.GetStudentService=GetStudentServiceImpl;
   this.GetSchoolService=GetSchoolServiceImpl;
   this.globalSchool=globalSchoolImpl;
+  this.globalClass=globalClassImpl;
   this.globalStatus=globalStatusImpl;
   this.showNewClass = false;
 
@@ -56,8 +59,6 @@ constructor(
 init(){
   if(this.globalSchool.getSchool()){
 this.GetClassService.getEntities(this.globalSchool.getSchool().id).then(c => this.classes = c);
-}else{
-this.GetClassService.getClasses().then(c => this.classes = c);
 }
 }
 ngOnInit() {
@@ -139,6 +140,21 @@ newClass(name:string,level:string,belongsToSchool:number){
         return "not existing";
       }
 
+    }
+    isGlobalClass(id:number){
+      if(this.globalClass.getClass() && this.globalClass.getClass().id == id){
+      return true;
+      }
+      else{
+      return false;
+    }
+    }
+    selectKlasse(klasse:Class){
+      if (this.isGlobalClass(klasse.id)){
+        this.globalClass.unsetClass();
+      }else{
+      this.globalClass.setClass(klasse);
+    }
     }
 selectClass(klasse: Class): void {
   this.cancelNewClass();

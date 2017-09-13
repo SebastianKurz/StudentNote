@@ -15,6 +15,7 @@ import {Teacher} from '../types/types';
 import * as func from '../lib/functions';
 
 var globalSchool:School;
+var globalClass:Class;
 var globalLogin:Teacher;
 var globalStatus : string = null;
 
@@ -29,6 +30,18 @@ export class GlobalSchool {
     return 0;}
   public getSchool():School{
     return globalSchool;
+  }
+}
+@Injectable()
+export class GlobalClass {
+  public setClass(klasse:Class): number {
+    globalClass = klasse;
+    return 0;}
+  public unsetClass(): number {
+    globalClass = null;
+    return 0;}
+  public getClass():Class{
+    return globalClass;
   }
 }
 @Injectable()
