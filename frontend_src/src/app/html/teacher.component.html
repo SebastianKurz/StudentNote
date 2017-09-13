@@ -1,0 +1,99 @@
+<navbar></navbar>
+
+<div style="width: 64%;margin: 0 auto;align:center;">
+<div class="pane leftbar">
+<h2>{{title}}</h2>
+<button class="button medium red" type="button" (click) = "toggleNewTeacher()"><i class="fa fa-plus" aria-hidden="true"></i>
+</button>
+<ul class="L">
+<li class="LNO" *ngFor="let teacher of teachers"
+  [class.selected]="teacher === selectedTeacher"
+  (click)="selectTeacher(teacher)">
+  <div class="floatleft pane LPane">
+  <div *ngIf="isLoginTeacher(teacher.id); then B else NB"></div>
+  <ng-template #B>
+  <div class="LBadge LB-Green floatleft" style="text-align:center" (click)="selectLoginTeacher(teacher)">&nbsp;</div>
+  <div class="LText floatleft">{{teacher.lastname}}, {{teacher.firstname}}</div>
+  </ng-template>
+  <ng-template #NB>
+  <div class="LBadge LB-Blue floatleft" style="text-align:center" (click)="selectLoginTeacher(teacher)">&nbsp;</div>
+  <div class="LText floatleft">{{teacher.lastname}}, {{teacher.firstname}}</div>
+  </ng-template>
+  </div>
+</li>
+</ul>
+</div>
+
+    <div class=" floatleft widthnexttobar">
+
+    <div *ngIf="showNewTeacher" class="pane floatleft" style="width:100%;">
+      <h3>Neuen Lehrer erfassen</h3>
+        <div  class="group floatleft" style="margin-top:3em;margin-bottom:1em;">
+          <input #a type="text" class="md-input" required [value]="NewTeacher.firstname">
+          <span class="highlight"></span>
+          <span class="bar"></span>
+          <label class="md-input-label">Vorname</label>
+        </div>
+        <div class="group floatleft" style="margin-top:3em;margin-bottom:1em;">
+            <input #b type="text" class="md-input" required [value]="NewTeacher.lastname">
+            <span class="highlight"></span>
+            <span class="bar"></span>
+            <label class="md-input-label">Nachname</label>
+        </div>
+        <div class="group floatleft" style="margin-top:3em;margin-bottom:1em;">
+              <input #c type="text" class="md-input" required [value]="NewTeacher.mailAddress">
+              <span class="highlight"></span>
+              <span class="bar"></span>
+              <label class="md-input-label">EMail Adresse</label>
+        </div>
+       <div class="group floatleft" style="margin-top:3em;margin-bottom:1em;">
+                <input #d type="password" class="md-input" required [value]="NewTeacher.password">
+                <span class="highlight"></span>
+                <span class="bar"></span>
+                <label class="md-input-label">Passwort</label>
+              </div>
+            <div class="group floatleft" style="margin-top:3em;margin-bottom:1em;">
+                <input #e type="number" class="md-input" required [value]="NewTeacher.belongsToSchool">
+                <span class="highlight"></span>
+                <span class="bar"></span>
+                <label class="md-input-label">Schule</label>
+              </div>
+      <div class="floatright">
+      <button class="button small grey" type="button" (click)="cancelNewTeacher()">Abbrechen</button>
+      <button class="button small blue" style="margin: 0 .3em;" type="button" (click)="newTeacher(a.value,b.value,c.value,d.value,e.value)">Anlegen</button>
+      </div>
+    </div>
+
+    <div *ngIf="selectedTeacher" class="pane" style="width:100%;">
+    <h3 style="width:90%;">Details: {{selectedTeacher.firstname}} {{selectedTeacher.lastname}}</h3>
+    <div class="del"><i class="fa fa-trash" aria-hidden="true" style="font-weight:600;font-size:150%;" (click)="deleteTeacher(selectedTeacher)"></i></div>
+      <div class="group" style="margin-top:3em;margin-bottom:1em;">
+          <input #a class="md-input" type="text" required [(ngModel)]="selectedTeacher.firstname" (change)="updateTeacher(selectedTeacher,'firstname',a.value)">
+          <span class="highlight"></span>
+          <span class="bar"></span>
+          <label class="md-input-label">Vorname</label>
+        </div>
+        <div  class="group" style="margin-top:3em;margin-bottom:1em;">
+            <input #b class="md-input" type="text" required [(ngModel)]="selectedTeacher.lastname" (change)="updateTeacher(selectedTeacher,'lastname',b.value)">
+            <span class="highlight"></span>
+            <span class="bar"></span>
+            <label class="md-input-label">Nachname</label>
+          </div>
+          <div  class="group" style="margin-top:3em;margin-bottom:1em;">
+              <input #c class="md-input" type="text" required [(ngModel)]="selectedTeacher.mailAddress" (change)="updateTeacher(selectedTeacher,'mailAddress',c.value)">
+              <span class="highlight"></span>
+              <span class="bar"></span>
+              <label class="md-input-label">E-Mail Adresse</label>
+            </div>
+            <div  class="group" style="margin-top:3em;margin-bottom:1em;">
+                <input class="md-input" type="number">
+                <span class="highlight"></span>
+                <span class="bar"></span>
+                <label class="md-input-label">zugeordnete Schule: {{this.getSchoolName(selectedTeacher.belongsToSchool)}}</label>
+              </div>
+        <div style="margin-left:5px"><label>id: </label>{{selectedTeacher.id}}</div>
+      </div>
+
+      </div>
+
+</div>

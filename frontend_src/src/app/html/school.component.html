@@ -1,0 +1,59 @@
+<navbar></navbar>
+
+<div style="width: 64%;margin: 0 auto;align:center;">
+<div class="pane leftbar">
+<h2>{{title}}</h2>
+<button class="button medium red" type="button" (click) = "toggleNewSchool()"><i class="fa fa-plus" aria-hidden="true"></i>
+</button>
+<ul class="L">
+<li  class="LNO" *ngFor="let school of schools"
+  [class.selected]="school === selectedSchool"
+  (click)="onSelect(school)">
+  <div class="floatleft pane LPane">
+  <div *ngIf="isGlobalSchool(school.id); then B else NB"></div>
+  <ng-template #B>
+  <div class="LBadge LB-Green floatleft" style="text-align:center" (click)="selectSchool(school)"><i class="fa fa-check-square-o" aria-hidden="true" style="font-weight:600;font-size:120%;"></i></div>
+  <div class="LText floatleft">{{school.name}}</div>
+  </ng-template>
+  <ng-template #NB>
+  <div class="LBadge LB-Blue floatleft" style="text-align:center" (click)="selectSchool(school)"><i class="fa fa-square-o" aria-hidden="true" style="font-weight:600;font-size:120%;"></i></div>
+  <div class="LText floatleft">{{school.name}}</div>
+  </ng-template>
+  </div>
+</li>
+</ul></div>
+
+<div class="floatleft widthnexttobar">
+
+<div *ngIf="showNewSchool" class="pane floatleft" style="width:100%;">
+<h3>Neue Schule erstellen</h3>
+<div class="group floatleft" style="margin-top:3em;margin-bottom:1em;">
+    <input #a type="text" class="md-input" required [value]="NewSchool.name">
+    <span class="highlight"></span>
+    <span class="bar"></span>
+    <label class="md-input-label">Name</label>
+  </div>
+  <div class="floatright">
+  <button class="button small grey" type="button" (click)="cancelNewSchool()">Abbrechen</button>
+  <button class="button small blue" style="margin: 0 .3em;" type="button" (click)="newSchool(a.value)">Anlegen</button>
+  </div>
+</div>
+
+<div *ngIf="selectedSchool" class="pane floatleft" style="width:100%;">
+<h3 style="width:90%;">Details: {{selectedSchool.name}}</h3>
+<div class="del"><i class="fa fa-trash" aria-hidden="true" style="font-weight:600;font-size:150%;" (click)="deleteSchool(selectedSchool)"></i></div>
+<div  class="group" style="margin-top:3em;margin-bottom:1em;">
+    <input #a class="md-input" type="text" required [(ngModel)]="selectedSchool.name" (change)="updateSchool(selectedSchool,'name',a.value)">
+    <span class="highlight"></span>
+    <span class="bar"></span>
+    <label class="md-input-label">Name</label>
+  </div>
+  <div style="margin-left:5px"><label>id: </label>{{selectedSchool.id}}</div>
+  <div class="floatright">
+  <button class="button small blue" style="margin: 0 .3em;" type="button" (click)="selectSchool(selectedSchool)">verwenden</button>
+  </div>
+</div>
+
+</div>
+
+</div>
