@@ -11,6 +11,7 @@ import {ROUTE_CONFIG} from './app.routes';
 
 import { Root } from './root.component';
 import { PageNotFoundComponent } from './404.component';
+import { NoConnectionComponent } from './noconnection.component';
 import { NavbarComponent } from './navbar.component';
 import { LoginComponent} from './login.component';
 import { ClassesComponent } from './classes.component';
@@ -52,6 +53,7 @@ import { deleteNoteService} from './service/delete.service';
   declarations: [
     Root,
     PageNotFoundComponent,
+    NoConnectionComponent,
     NavbarComponent,
     ClassesComponent,
     SchoolComponent,
@@ -67,6 +69,7 @@ import { deleteNoteService} from './service/delete.service';
       { enableTracing: true }
     ),
     HttpClientModule,
+    HttpModule
   ],
   exports: [
     RouterModule
@@ -77,7 +80,6 @@ import { deleteNoteService} from './service/delete.service';
     GlobalStatus,
     GlobalLogin,
     Global,
-    Http,
 
     postTeacherService,
     postSchoolService,

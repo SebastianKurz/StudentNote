@@ -1,8 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Headers, Http } from '@angular/http';
 import { Router } from '@angular/router';
+import {HttpModule} from '@angular/http';
 
 import 'rxjs/add/operator/toPromise';
+import {Observable} from 'rxjs/Observable';
+import 'rxjs/Rx'
 
 import { Class } from '../types/types';
 import { Note } from '../types/types';

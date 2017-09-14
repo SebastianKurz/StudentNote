@@ -1,4 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { HttpModule, Http }    from '@angular/http';
+import {Observable} from 'rxjs/Observable';
 
 import {GlobalSchool, GlobalClass}from './service/local.service';
 import {GlobalLogin}from './service/local.service';
