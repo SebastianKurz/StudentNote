@@ -76,5 +76,5 @@ export class Global {
   public gStudents:Student[] = STUDENTS;
   public gNotes:Note[] = NOTES;
   public gTeachers:Teacher[] = TEACHERS;
-  public basicUrl = 'api/heroes';
+  public basicUrl = 'localhost:8888';
 }

@@ -71,11 +71,14 @@ export class TeacherComponent {
   }
   newTeacher(firstname:string,lastname:string,mailAddress:string,password:string, belongsToSchool:number){
     if (firstname > "" && lastname > "" && mailAddress > "" && password > "" && belongsToSchool > 0){
-      this.PostTeacherService.postTeacher(new Teacher(null,firstname,lastname,mailAddress,password,belongsToSchool));
+      var h:number;
+      this.PostTeacherService.postTeacher(new Teacher(null,firstname,lastname,mailAddress,password,belongsToSchool)).then(s => h = s,()=>  location.href="/404");
+      if(h==0){
       this.showNewTeacher= false;
       this.globalStatus.setStatus("Data submitted");
       //fetch new data
-          this.init();
+          this.init();}
+          else{this.globalStatus.setStatus("[ERROR] submitting data");}
           }
     else{
       this.globalStatus.setStatus("Enter required Values");
@@ -87,7 +90,7 @@ if (teacher != null && key != null && value != null){
   val = value;
   teacher[key]=val;
   var h : number;
-  this.UpdateTeacherService.updateTeacher(teacher).then( r => h = r);
+  this.UpdateTeacherService.updateTeacher(teacher).then( r => h = r,()=>  location.href="/404");
   if (h==0){
       this.globalStatus.setStatus("Data submitted " + teacher[key]);
       this.init();
@@ -98,7 +101,7 @@ if (teacher != null && key != null && value != null){
 }
 deleteTeacher(teacher : Teacher){
   var h : number;
-  this.UpdateTeacherService.updateTeacher(teacher).then( r => h = r);
+  this.UpdateTeacherService.updateTeacher(teacher).then( r => h = r,()=>  location.href="/404");
   if (h==0){
       this.globalStatus.setStatus("Data submitted");
       this.init();
@@ -108,7 +111,7 @@ deleteTeacher(teacher : Teacher){
 }
 init(){
   if(this.globalSchool.getSchool()){
-this.GetTeacherService.getEntities(this.globalSchool.getSchool().id).then(t => this.teachers = t);
+this.GetTeacherService.getEntities(this.globalSchool.getSchool().id).then((t) => this.teachers = t,()=>  location.href="/404");
 }
 }
 ngOnInit() {
@@ -136,7 +139,7 @@ selectLoginTeacher(teacher){
 }
 getSchoolName(id : number){
   var school :School;
-  this.GetSchoolService.getSchool(id).then(s => school = s);
+  this.GetSchoolService.getSchool(id).then((s) => school = s,()=>  location.href="/login");
   if (school!=null){
     return school.name;
   }else{

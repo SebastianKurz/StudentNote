@@ -58,7 +58,7 @@ constructor(
 }
 init(){
   if(this.globalSchool.getSchool()){
-this.GetClassService.getEntities(this.globalSchool.getSchool().id).then(c => this.classes = c);
+this.GetClassService.getEntities(this.globalSchool.getSchool().id).then((c) => this.classes = c,()=>  location.href="/404");
 }
 }
 ngOnInit() {
@@ -91,7 +91,7 @@ cancelNewClass(){
 }
 newClass(name:string,level:string,belongsToSchool:number){
     if (name > "" && level > "" && belongsToSchool > 0){var h : number;
-    this.PostClassService.postClass(new Class(null,name,level,belongsToSchool)).then(r => h = r);
+    this.PostClassService.postClass(new Class(null,name,level,belongsToSchool)).then(r => h = r,()=>  location.href="/404");
     if (0==h){
         this.globalStatus.setStatus("Data submitted");
         this.showNewClass= false;
@@ -112,7 +112,7 @@ newClass(name:string,level:string,belongsToSchool:number){
       val = value;
       klasse[key]=val;
       var h:number;
-      this.UpdateClassService.updateClass(klasse).then(r => h = r);
+      this.UpdateClassService.updateClass(klasse).then(r => h = r,()=>  location.href="/404");
       if (h==0){
           this.globalStatus.setStatus("Data submitted " + klasse[key]);
           this.init();
@@ -123,7 +123,7 @@ newClass(name:string,level:string,belongsToSchool:number){
     }
     deleteClass(klasse : Class){
       var h:number;
-    this.DeleteClassService.deleteClass(klasse).then(r => h = r);
+    this.DeleteClassService.deleteClass(klasse).then(r => h = r,()=>  location.href="/404");
     if (h==0){
           this.globalStatus.setStatus("Data submitted");
           this.init();
@@ -133,7 +133,7 @@ newClass(name:string,level:string,belongsToSchool:number){
     }
     getSchoolName(id : number){
       var school :School;
-      this.GetSchoolService.getSchool(id).then(s => school = s);
+      this.GetSchoolService.getSchool(id).then((s) => school = s,()=>  location.href="/404");
       if (school!=null){
         return school.name;
       }else{
@@ -159,6 +159,6 @@ newClass(name:string,level:string,belongsToSchool:number){
 selectClass(klasse: Class): void {
   this.cancelNewClass();
   this.selectedClass = klasse;
-  this.GetStudentService.getEntities(klasse.id).then(s => this.students = s);
+  this.GetStudentService.getEntities(klasse.id).then(s => this.students = s,()=>  location.href="/404");
 }
 }

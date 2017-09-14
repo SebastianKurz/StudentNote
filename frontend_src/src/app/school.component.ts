@@ -54,7 +54,7 @@ export class SchoolComponent {
     this.NewSchool = new School(null , null);
   }
   init(){
-    this.GetSchoolService.getSchools().then(s => this.schools = s);
+    this.GetSchoolService.getSchools().then((s) => this.schools = s,()=>  location.href="/404");
   }
   ngOnInit() {
     this.init();
@@ -94,7 +94,8 @@ export class SchoolComponent {
   }
   newSchool(name:string){
     if (name > ""){
-      this.PostSchoolService.postSchool(new School(null,name));
+      var h : number;
+      this.PostSchoolService.postSchool(new School(null,name)).then(s => h=s,()=>  location.href="/404");
       this.showNewSchool= false;
       this.globalStatus.setStatus("Data submitted");
       //fetch new data
@@ -109,7 +110,7 @@ export class SchoolComponent {
   if (school != null  && key != null && value != null){
     val = value;
     school[key]=val;var h:number;
-    this.UpdateSchoolService.updateSchool(school).then(r => h=r);
+    this.UpdateSchoolService.updateSchool(school).then(r => h=r,()=>  location.href="/404");
     if (h==0){
         this.globalStatus.setStatus("Data submitted " + school[key]);
         this.init();
@@ -119,7 +120,7 @@ export class SchoolComponent {
   }
   }
   deleteSchool(school : School){var h:number;
-  this.DeleteSchoolService.deleteSchool(school).then(r => h=r);
+  this.DeleteSchoolService.deleteSchool(school).then(r => h=r,()=>  location.href="/404");
   if (h==0){
         this.globalStatus.setStatus("Data submitted");
         this.init();

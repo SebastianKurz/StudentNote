@@ -40,13 +40,13 @@ login(email:string): void {
   if (email >""){
     //Google login will be accessible here. No Session implemented yet.
   var teacher:Teacher;
-  this.GetTeacherService.getTeacherByMail(email).then(t => teacher = t);
+  this.GetTeacherService.getTeacherByMail(email).then(t => teacher = t,()=>  location.href="/404");
   if (!teacher){
     alert("No Permission");
   }else {
     this.globalLogin.setLogin(teacher);
     var s : School;
-    this.GetSchoolService.getSchool(teacher.belongsToSchool).then(r => s=r);
+    this.GetSchoolService.getSchool(teacher.belongsToSchool).then(r => s=r,()=>  location.href="/404");
     this.globalSchool.setSchool(s);
     this.router.navigate(['/home']);
 

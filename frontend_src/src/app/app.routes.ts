@@ -22,5 +22,6 @@ export const ROUTE_CONFIG: Routes = [
     redirectTo: '/login',
     pathMatch: 'full'
   },
+  {path : '404',component: PageNotFoundComponent},
   { path: '**', component: PageNotFoundComponent }
 ];
