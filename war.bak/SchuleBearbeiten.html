@@ -1,0 +1,60 @@
+<html>
+
+	<head>
+		<title>Schule</title>
+		
+		<link rel="stylesheet" href="css/index.css">
+		<link rel="stylesheet" href="css/masken.css">
+		<style type="text/css">
+
+			input{	width:58%;
+					height:10%;}
+
+		</style>
+		
+		<script type="text/javascript" src="js/LinksTo.js">
+		</script>
+		
+		<script type="text/javascript" src="js/logout.js">
+		</script>
+		
+		<script type="text/javascript" src="js/SchuleBearbeiten.js">
+		</script>
+
+	</head>
+
+	<body>
+
+		<div id="container">
+
+			<div id="header">
+				<button onclick="linkToLehrer()" class="links">Lehrer</button>
+				<button onclick="linkToKurse()" class="rechts">Kurse</button>
+
+				<div id="schrift">
+					<h1>Schulverwaltung - Schule bearbeiten</h1>
+				</div>
+			</div>
+
+			<div id="maske">
+
+				<form name="form1">
+					<h3>Name: <input type="text" name="schulname"></h3><p>
+					<button onclick="bearbeiten();" id="maskeButton">speichern</button>
+				</form>
+
+			</div>
+
+			<div id="footer">
+				<button onclick="linkToLogin(); logout();" class="rechts">Logout</button>
+				<div id="schrift">
+					<button onclick="linkToNeuerKurs()" class="links" id="footerLinks">neuer Kurs</button>
+					<button onclick="linkToUserBearbeiten()" class="rechts" id="footerRechts">User</button>
+				</div>
+			</div>			
+
+		</div>
+
+	</body>	
+
+</html>

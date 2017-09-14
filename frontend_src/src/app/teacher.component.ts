@@ -1,7 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
-import { HttpModule, Http }    from '@angular/http';
-import {Observable} from 'rxjs/Observable';
 import * as func from './lib/functions';
 import {Class, Note, Teacher,Student, School } from './types/types';
 import {GlobalSchool, GlobalStatus, GlobalLogin}from './service/local.service';
@@ -73,14 +71,11 @@ export class TeacherComponent {
   }
   newTeacher(firstname:string,lastname:string,mailAddress:string,password:string, belongsToSchool:number){
     if (firstname > "" && lastname > "" && mailAddress > "" && password > "" && belongsToSchool > 0){
-      var h:number;
-      this.PostTeacherService.postTeacher(new Teacher(null,firstname,lastname,mailAddress,password,belongsToSchool)).then(s => h = s,()=>  location.href="/noc");
-      if(h==0){
+      this.PostTeacherService.postTeacher(new Teacher(null,firstname,lastname,mailAddress,password,belongsToSchool));
       this.showNewTeacher= false;
       this.globalStatus.setStatus("Data submitted");
       //fetch new data
-          this.init();}
-          else{this.globalStatus.setStatus("[ERROR] submitting data");}
+          this.init();
           }
     else{
       this.globalStatus.setStatus("Enter required Values");
@@ -92,7 +87,7 @@ if (teacher != null && key != null && value != null){
   val = value;
   teacher[key]=val;
   var h : number;
-  this.UpdateTeacherService.updateTeacher(teacher).then( r => h = r,()=>  location.href="/noc");
+  this.UpdateTeacherService.updateTeacher(teacher).then( r => h = r);
   if (h==0){
       this.globalStatus.setStatus("Data submitted " + teacher[key]);
       this.init();
@@ -103,7 +98,7 @@ if (teacher != null && key != null && value != null){
 }
 deleteTeacher(teacher : Teacher){
   var h : number;
-  this.UpdateTeacherService.updateTeacher(teacher).then( r => h = r,()=>  location.href="/noc");
+  this.UpdateTeacherService.updateTeacher(teacher).then( r => h = r);
   if (h==0){
       this.globalStatus.setStatus("Data submitted");
       this.init();
@@ -113,7 +108,7 @@ deleteTeacher(teacher : Teacher){
 }
 init(){
   if(this.globalSchool.getSchool()){
-this.GetTeacherService.getEntities(this.globalSchool.getSchool().id).then((t) => this.teachers = t,()=>  location.href="/noc");
+this.GetTeacherService.getEntities(this.globalSchool.getSchool().id).then(t => this.teachers = t);
 }
 }
 ngOnInit() {
@@ -141,7 +136,7 @@ selectLoginTeacher(teacher){
 }
 getSchoolName(id : number){
   var school :School;
-  this.GetSchoolService.getSchool(id).then((s) => school = s,()=>  location.href="/login");
+  this.GetSchoolService.getSchool(id).then(s => school = s);
   if (school!=null){
     return school.name;
   }else{

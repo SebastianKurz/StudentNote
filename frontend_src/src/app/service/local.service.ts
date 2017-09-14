@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 
-
 import {SCHOOLS} from '../dummy.data';
 import {CLASSES} from '../dummy.data';
 import {STUDENTS} from '../dummy.data';
@@ -77,5 +76,5 @@ export class Global {
   public gStudents:Student[] = STUDENTS;
   public gNotes:Note[] = NOTES;
   public gTeachers:Teacher[] = TEACHERS;
-  public basicUrl = 'http://localhost:8888';
+  public basicUrl = 'api/heroes';
 }

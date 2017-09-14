@@ -24,5 +24,5 @@ export function filter(array : any[], key: string, value) : any[] {
 
 export function handleError(error: any): Promise<any> {
   console.error('[ERROR] => ', error);
-  return Promise.reject(1);
+  return Promise.reject(error.message || error);
 }

@@ -1,6 +1,4 @@
 import { Component } from '@angular/core';
-import { HttpModule, Http }    from '@angular/http';
-import {Observable} from 'rxjs/Observable';
 
 import * as func from './lib/functions';
 
@@ -56,7 +54,7 @@ export class SchoolComponent {
     this.NewSchool = new School(null , null);
   }
   init(){
-    this.GetSchoolService.getSchools().then((s) => this.schools = s,()=>  location.href="/noc");
+    this.GetSchoolService.getSchools().then(s => this.schools = s);
   }
   ngOnInit() {
     this.init();
@@ -96,8 +94,7 @@ export class SchoolComponent {
   }
   newSchool(name:string){
     if (name > ""){
-      var h : number;
-      this.PostSchoolService.postSchool(new School(null,name)).then(s => h=s,()=>  location.href="/noc");
+      this.PostSchoolService.postSchool(new School(null,name));
       this.showNewSchool= false;
       this.globalStatus.setStatus("Data submitted");
       //fetch new data
@@ -112,7 +109,7 @@ export class SchoolComponent {
   if (school != null  && key != null && value != null){
     val = value;
     school[key]=val;var h:number;
-    this.UpdateSchoolService.updateSchool(school).then(r => h=r,()=>  location.href="/noc");
+    this.UpdateSchoolService.updateSchool(school).then(r => h=r);
     if (h==0){
         this.globalStatus.setStatus("Data submitted " + school[key]);
         this.init();
@@ -122,7 +119,7 @@ export class SchoolComponent {
   }
   }
   deleteSchool(school : School){var h:number;
-  this.DeleteSchoolService.deleteSchool(school).then(r => h=r,()=>  location.href="/noc");
+  this.DeleteSchoolService.deleteSchool(school).then(r => h=r);
   if (h==0){
         this.globalStatus.setStatus("Data submitted");
         this.init();

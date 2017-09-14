@@ -1,7 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
-import { HttpModule, Http }    from '@angular/http';
-import {Observable} from 'rxjs/Observable';
 import { DatePipe } from '@angular/common';
 import * as func from './lib/functions';
 import {Class, Note, School, Student, Teacher } from './types/types';
@@ -109,7 +107,7 @@ export class StudentComponent implements OnInit, OnDestroy{
   newStudent(firstname:string,lastname:string,belongsToClass:number){
     if (firstname > "" && lastname > "" && belongsToClass > 0){
       var h : number;
-      this.PostStudentService.postStudent(new Student(null,firstname,lastname,belongsToClass)).then(r => h = r,()=>  location.href="/noc");
+      this.PostStudentService.postStudent(new Student(null,firstname,lastname,belongsToClass)).then(r => h = r);
       if (0==h){
       this.showNewStudent= false;
       this.globalStatus.setStatus("Data submitted");
@@ -138,7 +136,7 @@ export class StudentComponent implements OnInit, OnDestroy{
   newNote(text:string,timestamp:number,authorTeacherId:number,belongsToStudent:number){
     if (text > "" && timestamp > 0 && authorTeacherId != null && belongsToStudent > 0){
       var h : number;
-      this.PostNoteService.postNote(new Note(null,text,timestamp,authorTeacherId,belongsToStudent)).then(s => h = s,()=>  location.href="/noc");
+      this.PostNoteService.postNote(new Note(null,text,timestamp,authorTeacherId,belongsToStudent));
       if (0==h){
       this.showNewNote= false;
       this.globalStatus.setStatus("Data submitted");
@@ -174,7 +172,7 @@ export class StudentComponent implements OnInit, OnDestroy{
   }
 init(){
   if(this.globalSchool.getSchool()){
-  this.GetStudentService.getEntities(this.globalClass.getClass().id).then((s) => this.students = s,()=>  location.href="/noc");
+  this.GetStudentService.getEntities(this.globalClass.getClass().id).then(s => this.students = s);
 }
 }
   ngOnInit() {
@@ -184,7 +182,7 @@ init(){
          //Ask Webservice
          this.selectedStudent = this.students.find(o => o.id === this.id);
       });
-        if(this.selectedStudent){this.GetNoteService.getEntities(this.selectedStudent.id).then((n) => this.notes = n,()=>  location.href="/noc");
+        if(this.selectedStudent){this.GetNoteService.getEntities(this.selectedStudent.id).then(n => this.notes = n);
         }
     }
     ngOnDestroy():void {
@@ -196,7 +194,7 @@ init(){
     val = value;
     student[key]=val;
     var h:number;
-    this.UpdateStudentService.updateStudent(student).then(r => h=r,()=>  location.href="/noc");
+    this.UpdateStudentService.updateStudent(student).then(r => h=r);
     if (h==0){
         this.globalStatus.setStatus("Data submitted " + student[key]);
         this.init();
@@ -211,7 +209,7 @@ init(){
     return now;
   }
   deleteStudent(student : Student){var h:number;
-  this.DeleteStudentService.deleteStudent(student).then(r => h=r,()=>  location.href="/noc");
+  this.DeleteStudentService.deleteStudent(student).then(r => h=r);
   if (h==0){
         this.globalStatus.setStatus("Data submitted");
         this.init();
@@ -224,7 +222,7 @@ init(){
   if (note != null && key != null && value != null){
     val = value;
     note[key]=val;var h:number;
-    this.UpdateNoteService.updateNote(note).then(r => h=r,()=>  location.href="/noc");
+    this.UpdateNoteService.updateNote(note).then(r => h=r);
     if (h==0){
         this.globalStatus.setStatus("Data submitted " + note[key]);
         this.init();
@@ -234,7 +232,7 @@ init(){
   }
   }
   deleteNote(note : Note){var h:number;
-  this.DeleteNoteService.deleteNote(note).then(r => h=r,()=>  location.href="/noc");
+  this.DeleteNoteService.deleteNote(note).then(r => h=r);
   if (h==0){
         this.globalStatus.setStatus("Data submitted");
         this.init();
@@ -245,7 +243,7 @@ init(){
   getClassName(id : number){
     var klasse : Class;
 
-    this.GetClassService.getClass(this.globalSchool.getSchool().id,id).then((c)=> klasse = c,()=>  location.href="/noc");
+    this.GetClassService.getClass(this.globalSchool.getSchool().id,id);
     if (klasse != null){
       return klasse.name;
     }else{
@@ -256,7 +254,7 @@ init(){
 
 onSelect(student: Student): void {
   this.cancelNewStudent();
-  this.GetNoteService.getEntities(student.id).then((n) => this.notes = n,()=>  location.href="/noc");
+  this.GetNoteService.getEntities(student.id).then(n => this.notes = n)
 }
 
 }

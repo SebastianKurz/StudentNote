@@ -2,7 +2,6 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { Root } from './root.component';
 import { PageNotFoundComponent } from './404.component';
-import { NoConnectionComponent } from './noconnection.component';
 import { NavbarComponent } from './navbar.component';
 import { LoginComponent} from './login.component';
 import { ClassesComponent } from './classes.component';
@@ -23,6 +22,5 @@ export const ROUTE_CONFIG: Routes = [
     redirectTo: '/login',
     pathMatch: 'full'
   },
-  {path : 'noc',component: NoConnectionComponent},
   { path: '**', component: PageNotFoundComponent }
 ];

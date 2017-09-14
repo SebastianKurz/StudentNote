@@ -64,10 +64,17 @@ public class Teacher implements JSONAware{
 	@Override
 	public String toJSONString() {
 		JSONObject obj = new JSONObject();
-		
+		/*
 		obj.put("teacherId", this.teacherId);
 		obj.put("firstName", this.firstName);
 		obj.put("lastName", this.lastName);
+		obj.put("mailAddress", this.mailAddress);
+		obj.put("password", this.password);
+		obj.put("belongsToSchool", this.belongsToSchool);
+		*/
+		obj.put("id", this.teacherId);
+		obj.put("firstname", this.firstName);
+		obj.put("lastname", this.lastName);
 		obj.put("mailAddress", this.mailAddress);
 		obj.put("password", this.password);
 		obj.put("belongsToSchool", this.belongsToSchool);

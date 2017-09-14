@@ -25,6 +25,8 @@ public class LoginService {
 	@Produces("application/json")
 	public String getTeacherByMailAddress(@PathParam("mailAddress") String mailAddress) {
 		
+		System.out.println("Query parameter equals: " + mailAddress);
+		
 		em = EMF.getEntityManager();
 		Query q = em.createQuery("SELECT t FROM Teacher t WHERE t.mailAddress = :mailAddress");
 		q.setParameter("mailAddress", mailAddress);
@@ -34,9 +36,13 @@ public class LoginService {
 		
 		if(t_list.size() > 0) {
 			t = t_list.get(0);
+			System.out.println(t.toJSONString());
 			return t.toJSONString();
 		}
-		else return "{\"info\":\"no entity with this mail address found in storage\"}";
+		else {
+			System.out.println("{\"info\":\"no entity with this mail address found in storage\"}");
+			return "{\"info\":\"no entity with this mail address found in storage\"}";
+		}
 	}
 
 }
