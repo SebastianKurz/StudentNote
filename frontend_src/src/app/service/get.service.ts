@@ -137,7 +137,7 @@ export class getNoteService {
 }
 @Injectable()
 export class getTeacherService {
-    private global: Global; private http: Http; private url = 'get/getTeacher';private router:Router;
+    private global: Global; private http: Http; private url = 'get/getTeacher'; private headers = new Headers({'Content-Type': '*'});private router:Router;
     constructor(private globalData: Global, private httpImpl: Http,private routerImpl: Router) {
       this.global = globalData;
       this.http = httpImpl;
@@ -164,8 +164,9 @@ return func.sort(a,'timestamp','dsc');
     return func.sort(a, 'timestamp', 'dsc');
   }
   public getTeacherByMail(mail: string): Promise<Teacher> {//With Mail Address
-    return this.http.get(`${this.global.basicUrl}/login/login/${mail}`)
-      .toPromise()
+    var a=  this.http.get(`https://studentnotegae-webengii.appspot.com/login/login/bsix@gmail.com`,{headers: this.headers})
+    console.log(a);
+    return   a.toPromise()
       .then(response => response.json().parse as Teacher)
       .catch(func.handleError);
   }

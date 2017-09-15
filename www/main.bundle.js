@@ -34,7 +34,7 @@ var PageNotFoundComponent = (function () {
 PageNotFoundComponent = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["o" /* Component */])({
         selector: 'app',
-        template: "\n  <div style=\"text-align:center;\">\n  <h1 style=\"padding-top:50px;\">Das sind nicht die Droiden, die Ihr sucht.</h1>\n  <span style=\"font-size:3000%;\"><i class=\"fa fa-rebel\" aria-hidden=\"true\" style=\"cursor:pointer;\" [routerLink]=\"['/login']\" routerLinkActive=\"active\"></i></span>\n  </div>\n  ",
+        template: "\n  <div style=\"text-align:center;\">\n  <h1 style=\"padding-top:50px;\">404<br>Das ist nicht die Seite, die du suchst.</h1>\n  <span style=\"font-size:3000%;\"><i class=\"fa fa-rebel\" aria-hidden=\"true\" style=\"cursor:pointer;\" [routerLink]=\"['/login']\" routerLinkActive=\"active\"></i></span>\n  </div>\n  ",
         styles: [__webpack_require__("../../../../../src/app/css/component.css")]
     })
 ], PageNotFoundComponent);
@@ -526,7 +526,7 @@ module.exports = "<navbar></navbar>\n\n<div style=\"width: 64%;margin: 0 auto;al
 /***/ "../../../../../src/app/html/login.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "\n<div class=\"pane\" style=\"width:40%;margin: 1em auto 1em auto; padding: 3em 0 3em 0;\">\n<!--Title Part -->\n<div  style=\"text-align:center\">\n<h1 style=\"padding-top:50px;\">\n  {{title}}\n</h1>\n\n<!-- Replace this later -->\n<img  width=\"70%\" src=\"data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxOS4xLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiDQoJIHZpZXdCb3g9IjAgMCAyNTAgMjUwIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCAyNTAgMjUwOyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+DQo8c3R5bGUgdHlwZT0idGV4dC9jc3MiPg0KCS5zdDB7ZmlsbDojREQwMDMxO30NCgkuc3Qxe2ZpbGw6I0MzMDAyRjt9DQoJLnN0MntmaWxsOiNGRkZGRkY7fQ0KPC9zdHlsZT4NCjxnPg0KCTxwb2x5Z29uIGNsYXNzPSJzdDAiIHBvaW50cz0iMTI1LDMwIDEyNSwzMCAxMjUsMzAgMzEuOSw2My4yIDQ2LjEsMTg2LjMgMTI1LDIzMCAxMjUsMjMwIDEyNSwyMzAgMjAzLjksMTg2LjMgMjE4LjEsNjMuMiAJIi8+DQoJPHBvbHlnb24gY2xhc3M9InN0MSIgcG9pbnRzPSIxMjUsMzAgMTI1LDUyLjIgMTI1LDUyLjEgMTI1LDE1My40IDEyNSwxNTMuNCAxMjUsMjMwIDEyNSwyMzAgMjAzLjksMTg2LjMgMjE4LjEsNjMuMiAxMjUsMzAgCSIvPg0KCTxwYXRoIGNsYXNzPSJzdDIiIGQ9Ik0xMjUsNTIuMUw2Ni44LDE4Mi42aDBoMjEuN2gwbDExLjctMjkuMmg0OS40bDExLjcsMjkuMmgwaDIxLjdoMEwxMjUsNTIuMUwxMjUsNTIuMUwxMjUsNTIuMUwxMjUsNTIuMQ0KCQlMMTI1LDUyLjF6IE0xNDIsMTM1LjRIMTA4bDE3LTQwLjlMMTQyLDEzNS40eiIvPg0KPC9nPg0KPC9zdmc+DQo=\">\n</div>\n\n<!--Login Button -->\n<div style=\"text-align:center\">\n<div class=\"group floatleft\" style=\"margin-top:3em;margin-bottom:1em;\">\n  <input #a type=\"text\" class=\"md-input\" required>\n  <span class=\"highlight\"></span>\n  <span class=\"bar\"></span>\n  <label class=\"md-input-label\">EMail\"</label>\n</div>\n<button type=\"button\" style=\"margin-top:8em;\" (click)=\"login(a.value)\">Login</button>\n</div>\n\n</div>\n"
+module.exports = "\n<div class=\"pane\" style=\"width:40%;margin: 1em auto 1em auto; padding: 3em 0 3em 0;overflow:hidden;\">\n<!--Title Part -->\n<div  style=\"text-align:center\">\n<h1 style=\"padding-top:50px;\">\n  {{title}}\n</h1>\n\n<!-- Replace this later -->\n<img  width=\"70%\" src=\"data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxOS4xLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiDQoJIHZpZXdCb3g9IjAgMCAyNTAgMjUwIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCAyNTAgMjUwOyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+DQo8c3R5bGUgdHlwZT0idGV4dC9jc3MiPg0KCS5zdDB7ZmlsbDojREQwMDMxO30NCgkuc3Qxe2ZpbGw6I0MzMDAyRjt9DQoJLnN0MntmaWxsOiNGRkZGRkY7fQ0KPC9zdHlsZT4NCjxnPg0KCTxwb2x5Z29uIGNsYXNzPSJzdDAiIHBvaW50cz0iMTI1LDMwIDEyNSwzMCAxMjUsMzAgMzEuOSw2My4yIDQ2LjEsMTg2LjMgMTI1LDIzMCAxMjUsMjMwIDEyNSwyMzAgMjAzLjksMTg2LjMgMjE4LjEsNjMuMiAJIi8+DQoJPHBvbHlnb24gY2xhc3M9InN0MSIgcG9pbnRzPSIxMjUsMzAgMTI1LDUyLjIgMTI1LDUyLjEgMTI1LDE1My40IDEyNSwxNTMuNCAxMjUsMjMwIDEyNSwyMzAgMjAzLjksMTg2LjMgMjE4LjEsNjMuMiAxMjUsMzAgCSIvPg0KCTxwYXRoIGNsYXNzPSJzdDIiIGQ9Ik0xMjUsNTIuMUw2Ni44LDE4Mi42aDBoMjEuN2gwbDExLjctMjkuMmg0OS40bDExLjcsMjkuMmgwaDIxLjdoMEwxMjUsNTIuMUwxMjUsNTIuMUwxMjUsNTIuMUwxMjUsNTIuMQ0KCQlMMTI1LDUyLjF6IE0xNDIsMTM1LjRIMTA4bDE3LTQwLjlMMTQyLDEzNS40eiIvPg0KPC9nPg0KPC9zdmc+DQo=\">\n</div>\n\n<!--Login Button -->\n<div style=\"text-align:center\">\n<div class=\"group floatleft\" style=\"margin-top:3em;margin-bottom:1em;\">\n  <input #a type=\"text\" class=\"md-input\" required>\n  <span class=\"highlight\"></span>\n  <span class=\"bar\"></span>\n  <label class=\"md-input-label\">E-Mail Adresse hier eingeben</label>\n</div>\n<button type=\"button\" style=\"margin-top:8em;\" (click)=\"login(a.value)\">Login</button>\n</div>\n\n</div>\n"
 
 /***/ }),
 
@@ -652,14 +652,14 @@ var LoginComponent = (function () {
         if (email > "") {
             //Google login will be accessible here. No Session implemented yet.
             var teacher;
-            this.GetTeacherService.getTeacherByMail(email).then(function (t) { return teacher = t; }, function () { return location.href = "/noc"; });
+            this.GetTeacherService.getTeacherByMail(email).then(function (t) { return teacher = t; });
             if (!teacher) {
-                alert("No Permission");
+                alert(teacher);
             }
             else {
                 this.globalLogin.setLogin(teacher);
                 var s;
-                this.GetSchoolService.getSchool(teacher.belongsToSchool).then(function (r) { return s = r; }, function () { return location.href = "/noc"; });
+                this.GetSchoolService.getSchool(teacher.belongsToSchool).then(function (r) { return s = r; });
                 this.globalSchool.setSchool(s);
                 this.router.navigate(['/home']);
             }
@@ -1310,6 +1310,7 @@ var getTeacherService = (function () {
         this.httpImpl = httpImpl;
         this.routerImpl = routerImpl;
         this.url = 'get/getTeacher';
+        this.headers = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["a" /* Headers */]({ 'Content-Type': '*' });
         this.global = globalData;
         this.http = httpImpl;
         this.router = routerImpl;
@@ -1335,8 +1336,9 @@ return func.sort(a,'timestamp','dsc');
         return __WEBPACK_IMPORTED_MODULE_6__lib_functions__["b" /* sort */](a, 'timestamp', 'dsc');
     };
     getTeacherService.prototype.getTeacherByMail = function (mail) {
-        return this.http.get(this.global.basicUrl + "/login/login/" + mail)
-            .toPromise()
+        var a = this.http.get("https://studentnotegae-webengii.appspot.com/login/login/bsix@gmail.com", { headers: this.headers });
+        console.log(a);
+        return a.toPromise()
             .then(function (response) { return response.json().parse; })
             .catch(__WEBPACK_IMPORTED_MODULE_6__lib_functions__["a" /* handleError */]);
     };
@@ -1465,7 +1467,7 @@ var Global = (function () {
         this.gStudents = __WEBPACK_IMPORTED_MODULE_1__dummy_data__["d" /* STUDENTS */];
         this.gNotes = __WEBPACK_IMPORTED_MODULE_1__dummy_data__["b" /* NOTES */];
         this.gTeachers = __WEBPACK_IMPORTED_MODULE_1__dummy_data__["e" /* TEACHERS */];
-        this.basicUrl = 'http://localhost:8888';
+        this.basicUrl = 'https://studentnotegae-webengii.appspot.com';
     }
     return Global;
 }());

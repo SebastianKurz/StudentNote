@@ -77,5 +77,5 @@ export class Global {
   public gStudents:Student[] = STUDENTS;
   public gNotes:Note[] = NOTES;
   public gTeachers:Teacher[] = TEACHERS;
-  public basicUrl = 'http://localhost:8888';
+  public basicUrl = 'https://studentnotegae-webengii.appspot.com';
 }
