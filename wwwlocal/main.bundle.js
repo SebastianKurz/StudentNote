@@ -1336,7 +1336,7 @@ return func.sort(a,'timestamp','dsc');
         return __WEBPACK_IMPORTED_MODULE_6__lib_functions__["b" /* sort */](a, 'timestamp', 'dsc');
     };
     getTeacherService.prototype.getTeacherByMail = function (mail) {
-        var a = this.http.get("http://localhost:8888/login/login/bsix@gmail.com", { headers: this.headers });
+        var a = this.http.get("http://localhost:8888/login/login/bsix@gmail.com");
         console.log(a);
         return a.toPromise()
             .then(function (response) { return response.json().parse; })
