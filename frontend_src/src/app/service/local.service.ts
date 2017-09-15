@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-
+import {HttpModule} from '@angular/http';
 
 import {SCHOOLS} from '../dummy.data';
 import {CLASSES} from '../dummy.data';

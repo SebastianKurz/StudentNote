@@ -31,7 +31,7 @@ export class getSchoolService {
   public getSchools(): Promise<School[]> {
     return this.http.get(`${this.global.basicUrl}/${this.url}`)
       .toPromise()
-      .then(response => response.json().data as School[])
+      .then(response => response.json().parse as School[])
       .catch(func.handleError);
   }
 
@@ -40,7 +40,7 @@ export class getSchoolService {
   public getSchool(id: number): Promise<School> {// With School ID
     return this.http.get(`${this.global.basicUrl}/${this.url}/${id}`)
       .toPromise()
-      .then(response => response.json().data as School)
+      .then(response => response.json().parse as School)
       .catch(func.handleError);
   }
 }
@@ -57,20 +57,20 @@ export class getClassService {
 
     return this.http.get(`${this.global.basicUrl}/${this.url}`)
              .toPromise()
-             .then(response => response.json().data as Class[])
+             .then(response => response.json().parse as Class[])
              .catch(func.handleError);
     //return func.sort(this.global.gClasses,'level','asc');
   }*/
   public getClass(schoolid: number, id: number): Promise<Class> {// With Class ID
     return this.http.get(`${this.global.basicUrl}/${this.url}/${schoolid}/${id}`)
       .toPromise()
-      .then(response => response.json().data as Class)
+      .then(response => response.json().parse as Class)
       .catch(func.handleError);
   }
   public getEntities(id: number): Promise<Class[]> {// With School ID
     return this.http.get(`${this.global.basicUrl}/${this.url}/${id}`)
       .toPromise()
-      .then(response => response.json().data as Class[])
+      .then(response => response.json().parse as Class[])
       .catch(func.handleError);
   }
 }
@@ -87,20 +87,20 @@ export class getStudentService {
 
     return this.http.get(`${this.global.basicUrl}/${this.url}`)
              .toPromise()
-             .then(response => response.json().data as Student[])
+             .then(response => response.json().parse as Student[])
              .catch(func.handleError);
     //return func.sort(this.global.gStudents,'level','asc');
   }*/
   public getStudent(classid: number, id: number): Promise<Student> {// With Student ID
     return this.http.get(`${this.global.basicUrl}/${this.url}/${classid}/${id}`)
       .toPromise()
-      .then(response => response.json().data as Student)
+      .then(response => response.json().parse as Student)
       .catch(func.handleError);
   }
   public getEntities(id: number): Promise<Student[]> {// With Class ID
     return this.http.get(`${this.global.basicUrl}/${this.url}/${id}`)
       .toPromise()
-      .then(response => response.json().data as Student[])
+      .then(response => response.json().parse as Student[])
       .catch(func.handleError);
   }
 }
@@ -117,20 +117,20 @@ export class getNoteService {
 
     var a= this.http.get(`${this.global.basicUrl}/${this.url}`)
              .toPromise()
-             .then(response => response.json().data as Note[])
+             .then(response => response.json().parse as Note[])
              .catch(func.handleError);
   return func.sort(a,'timestamp','dsc');
 }*/
   public getNote(studentid: number, id: number): Promise<Note> {// With Note ID
     return this.http.get(`${this.global.basicUrl}/${this.url}/${studentid}/${id}`)
       .toPromise()
-      .then(response => response.json().data as Note[])
+      .then(response => response.json().parse as Note[])
       .catch(func.handleError);
   }
   public getEntities(id: number): Promise<Note[]> {// With Student ID
     var a = this.http.get(`${this.global.basicUrl}/${this.url}/${id}`)
       .toPromise()
-      .then(response => response.json().data as Note[])
+      .then(response => response.json().parse as Note[])
       .catch(func.handleError);
     return func.sort(a, 'timestamp', 'dsc');
   }
@@ -153,20 +153,20 @@ return func.sort(a,'timestamp','dsc');
   public getTeacher(id: number): Promise<Teacher> {// With Teacher ID
     return this.http.get(`${this.global.basicUrl}/${this.url}/${id}`)
       .toPromise()
-      .then(response => response.json().data as Teacher)
+      .then(response => response.json().parse as Teacher)
       .catch(func.handleError);
   }
   public getEntities(id: number): Promise<Teacher[]> {//With School ID
     var a = this.http.get(`${this.global.basicUrl}/${this.url}/${id}`)
       .toPromise()
-      .then(response => response.json().data as Teacher[])
+      .then(response => response.json().parse as Teacher[])
       .catch(func.handleError);
     return func.sort(a, 'timestamp', 'dsc');
   }
   public getTeacherByMail(mail: string): Promise<Teacher> {//With Mail Address
     return this.http.get(`${this.global.basicUrl}/login/login/${mail}`)
       .toPromise()
-      .then(response => response.json().data as Teacher)
+      .then(response => response.json().parse as Teacher)
       .catch(func.handleError);
   }
 }
