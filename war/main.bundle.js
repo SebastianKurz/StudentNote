@@ -1336,7 +1336,7 @@ return func.sort(a,'timestamp','dsc');
         return __WEBPACK_IMPORTED_MODULE_6__lib_functions__["b" /* sort */](a, 'timestamp', 'dsc');
     };
     getTeacherService.prototype.getTeacherByMail = function (mail) {
-        var a = this.http.get("https://studentnotegae-webengii.appspot.com/login/login/bsix@gmail.com", { headers: this.headers });
+        var a = this.http.get("http://localhost:8888/login/login/bsix@gmail.com", { headers: this.headers });
         console.log(a);
         return a.toPromise()
             .then(function (response) { return response.json().parse; })
@@ -1467,7 +1467,7 @@ var Global = (function () {
         this.gStudents = __WEBPACK_IMPORTED_MODULE_1__dummy_data__["d" /* STUDENTS */];
         this.gNotes = __WEBPACK_IMPORTED_MODULE_1__dummy_data__["b" /* NOTES */];
         this.gTeachers = __WEBPACK_IMPORTED_MODULE_1__dummy_data__["e" /* TEACHERS */];
-        this.basicUrl = 'https://studentnotegae-webengii.appspot.com';
+        this.basicUrl = 'http://localhost:8888';
     }
     return Global;
 }());
