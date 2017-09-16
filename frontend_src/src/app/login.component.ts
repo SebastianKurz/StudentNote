@@ -41,11 +41,13 @@ this.GetSchoolService=GetSchoolServiceImpl;
 login(email:string): void {
   if (email >""){
     //Google login will be accessible here.
-  var teacher:any;
+  var teacher;
   this.GetTeacherService.getTeacherByMail(email).then(t => teacher = t,() => location.href="noc");
   console.log(teacher);
   console.log(JSON.stringify(teacher));
   if (!teacher){
+    console.log(teacher);
+    console.log(JSON.stringify(teacher));
     alert(JSON.stringify(teacher));
   }else {
     this.globalLogin.setLogin(teacher);

@@ -656,6 +656,8 @@ var LoginComponent = (function () {
             console.log(teacher);
             console.log(JSON.stringify(teacher));
             if (!teacher) {
+                console.log(teacher);
+                console.log(JSON.stringify(teacher));
                 alert(JSON.stringify(teacher));
             }
             else {
