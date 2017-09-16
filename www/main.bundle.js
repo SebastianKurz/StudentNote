@@ -34,7 +34,7 @@ var PageNotFoundComponent = (function () {
 PageNotFoundComponent = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["o" /* Component */])({
         selector: 'app',
-        template: "\n  <div style=\"text-align:center;\">\n  <h1 style=\"padding-top:50px;\">404<br>Das ist nicht die Seite, die du suchst.</h1>\n  <span style=\"font-size:3000%;\"><i class=\"fa fa-rebel\" aria-hidden=\"true\" style=\"cursor:pointer;\" [routerLink]=\"['/login']\" routerLinkActive=\"active\"></i></span>\n  </div>\n  ",
+        template: "\n  <div style=\"text-align:center;\">\n  <h1 style=\"padding-top:50px;\">404<br>Das ist nicht die Seite, die du suchst.</h1>\n  <span style=\"font-size:3000%;\"><i class=\"fa fa-rebel\" aria-hidden=\"true\" style=\"cursor:pointer;\" [routerLink]=\"['/loginPage']\" routerLinkActive=\"active\"></i></span>\n  </div>\n  ",
         styles: [__webpack_require__("../../../../../src/app/css/component.css")]
     })
 ], PageNotFoundComponent);
@@ -198,7 +198,7 @@ AppModule = __decorate([
 
 
 var ROUTE_CONFIG = [
-    { path: 'login', component: __WEBPACK_IMPORTED_MODULE_2__login_component__["a" /* LoginComponent */] },
+    { path: 'loginPage', component: __WEBPACK_IMPORTED_MODULE_2__login_component__["a" /* LoginComponent */] },
     { path: 'home', component: __WEBPACK_IMPORTED_MODULE_4__school_component__["a" /* SchoolComponent */] },
     { path: 'classes', component: __WEBPACK_IMPORTED_MODULE_3__classes_component__["a" /* ClassesComponent */] },
     { path: 'schools', component: __WEBPACK_IMPORTED_MODULE_4__school_component__["a" /* SchoolComponent */] },
@@ -207,7 +207,7 @@ var ROUTE_CONFIG = [
     { path: 'students', component: __WEBPACK_IMPORTED_MODULE_5__student_component__["a" /* StudentComponent */] },
     { path: 'student/:id', component: __WEBPACK_IMPORTED_MODULE_5__student_component__["a" /* StudentComponent */] },
     { path: '',
-        redirectTo: '/login',
+        redirectTo: '/loginPage',
         pathMatch: 'full'
     },
     { path: 'noc', component: __WEBPACK_IMPORTED_MODULE_1__noconnection_component__["a" /* NoConnectionComponent */] },
@@ -653,16 +653,18 @@ var LoginComponent = (function () {
             //Google login will be accessible here. No Session implemented yet.
             var teacher;
             this.GetTeacherService.getTeacherByMail(email).then(function (t) { return teacher = t; });
-            if (!teacher) {
-                alert(teacher);
-            }
-            else {
-                this.globalLogin.setLogin(teacher);
-                var s;
-                this.GetSchoolService.getSchool(teacher.belongsToSchool).then(function (r) { return s = r; });
-                this.globalSchool.setSchool(s);
-                this.router.navigate(['/home']);
-            }
+            console.log(teacher);
+            console.log(JSON.stringify(teacher));
+            /*if (!teacher){
+              alert(JSON.stringify(teacher));
+            }else {
+              this.globalLogin.setLogin(teacher);
+              var s : School;
+              this.GetSchoolService.getSchool(teacher.belongsToSchool).then(r => s=r);
+              this.globalSchool.setSchool(s);
+              this.router.navigate(['/home']);
+          
+            }*/
         }
         else {
             alert("Enter your Email address");
@@ -738,7 +740,7 @@ var NavbarComponent = (function () {
         }
     };
     NavbarComponent.prototype.logoff = function () {
-        location.href = "/login";
+        location.href = "/loginPage";
     };
     return NavbarComponent;
 }());
@@ -777,7 +779,7 @@ var NoConnectionComponent = (function () {
 NoConnectionComponent = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["o" /* Component */])({
         selector: 'app',
-        template: "\n  <div style=\"text-align:center;\">\n  <h1 style=\"padding-top:50px;\">Keine Verbindung zum Datenhaltungssystem. Versuche es sp\u00E4ter nochmal.</h1>\n  <span style=\"font-size:3000%;\"><i class=\"fa fa-chain-broken\" aria-hidden=\"true\" style=\"cursor:pointer;\" [routerLink]=\"['/login']\" routerLinkActive=\"active\"></i></span>\n  </div>\n  ",
+        template: "\n  <div style=\"text-align:center;\">\n  <h1 style=\"padding-top:50px;\">Keine Verbindung zum Datenhaltungssystem. Versuche es sp\u00E4ter nochmal.</h1>\n  <span style=\"font-size:3000%;\"><i class=\"fa fa-chain-broken\" aria-hidden=\"true\" style=\"cursor:pointer;\" [routerLink]=\"['/loginPage']\" routerLinkActive=\"active\"></i></span>\n  </div>\n  ",
         styles: [__webpack_require__("../../../../../src/app/css/component.css")]
     })
 ], NoConnectionComponent);
@@ -1336,9 +1338,9 @@ return func.sort(a,'timestamp','dsc');
         return __WEBPACK_IMPORTED_MODULE_6__lib_functions__["b" /* sort */](a, 'timestamp', 'dsc');
     };
     getTeacherService.prototype.getTeacherByMail = function (mail) {
-        var a = this.http.get("https://studentnotegae-webengii.appspot.com/login/login/bsix@gmail.com", { headers: this.headers });
-        console.log(a);
-        return a.toPromise()
+        return this.http.get("https://studentnotegae-webengii.appspot.com/login/login/bsix@gmail.com", { headers: this.headers })
+            .do(console.log)
+            .toPromise()
             .then(function (response) { return response.json().parse; })
             .catch(__WEBPACK_IMPORTED_MODULE_6__lib_functions__["a" /* handleError */]);
     };
@@ -1467,7 +1469,7 @@ var Global = (function () {
         this.gStudents = __WEBPACK_IMPORTED_MODULE_1__dummy_data__["d" /* STUDENTS */];
         this.gNotes = __WEBPACK_IMPORTED_MODULE_1__dummy_data__["b" /* NOTES */];
         this.gTeachers = __WEBPACK_IMPORTED_MODULE_1__dummy_data__["e" /* TEACHERS */];
-        this.basicUrl = 'https://studentnotegae-webengii.appspot.com';
+        this.basicUrl = 'http://localhost:8888';
     }
     return Global;
 }());
@@ -2192,7 +2194,7 @@ var TeacherComponent = (function () {
     };
     TeacherComponent.prototype.getSchoolName = function (id) {
         var school;
-        this.GetSchoolService.getSchool(id).then(function (s) { return school = s; }, function () { return location.href = "/login"; });
+        this.GetSchoolService.getSchool(id).then(function (s) { return school = s; }, function () { return location.href = "/noc"; });
         if (school != null) {
             return school.name;
         }
