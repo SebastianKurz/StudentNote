@@ -20,7 +20,7 @@ export const ROUTE_CONFIG: Routes = [
   { path: 'students',component: StudentComponent},
   { path: 'student/:id',component: StudentComponent},
   { path: '',
-    redirectTo: '/loginPage',
+    redirectTo: 'loginPage',
     pathMatch: 'full'
   },
   {path : 'noc',component: NoConnectionComponent},
