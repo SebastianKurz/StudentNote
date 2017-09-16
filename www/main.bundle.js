@@ -650,9 +650,9 @@ var LoginComponent = (function () {
     }
     LoginComponent.prototype.login = function (email) {
         if (email > "") {
-            //Google login will be accessible here. No Session implemented yet.
+            //Google login will be accessible here.
             var teacher;
-            this.GetTeacherService.getTeacherByMail(email).then(function (t) { return teacher = t; });
+            this.GetTeacherService.getTeacherByMail(email).then(function (t) { return teacher = t; }, function () { return location.href = "noc"; });
             console.log(teacher);
             console.log(JSON.stringify(teacher));
             if (!teacher) {
@@ -661,7 +661,7 @@ var LoginComponent = (function () {
             else {
                 this.globalLogin.setLogin(teacher);
                 var s;
-                this.GetSchoolService.getSchool(teacher.belongsToSchool).then(function (r) { return s = r; });
+                this.GetSchoolService.getSchool(teacher.belongsToSchool).then(function (r) { return s = r; }, function () { return location.href = "noc"; });
                 this.globalSchool.setSchool(s);
                 this.router.navigate(['/home']);
             }
@@ -1339,7 +1339,6 @@ return func.sort(a,'timestamp','dsc');
     };
     getTeacherService.prototype.getTeacherByMail = function (mail) {
         return this.http.get(this.global.basicUrl + "/login/login/" + mail)
-            .do(console.log)
             .toPromise()
             .then(function (response) { return response.json().parse; })
             .catch(__WEBPACK_IMPORTED_MODULE_6__lib_functions__["a" /* handleError */]);
