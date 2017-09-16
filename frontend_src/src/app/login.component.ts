@@ -44,17 +44,19 @@ login(email:string): void {
   var teacher;
   this.GetTeacherService.getTeacherByMail(email).then(t => teacher = t,() => location.href="noc");
   console.log(teacher);
+  console.log(teacher.json());
   console.log(JSON.stringify(teacher));
   if (!teacher){
     console.log(teacher);
     console.log(JSON.stringify(teacher));
-    alert(JSON.stringify(teacher));
+    alert("nix da");
   }else {
-    this.globalLogin.setLogin(teacher);
+    /*this.globalLogin.setLogin(teacher);
     var s : School;
     this.GetSchoolService.getSchool(teacher.belongsToSchool).then(r => s=r,() => location.href="noc");
     this.globalSchool.setSchool(s);
     this.router.navigate(['/home']);
+    */
 
   }
 

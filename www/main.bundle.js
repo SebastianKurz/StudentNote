@@ -654,18 +654,20 @@ var LoginComponent = (function () {
             var teacher;
             this.GetTeacherService.getTeacherByMail(email).then(function (t) { return teacher = t; }, function () { return location.href = "noc"; });
             console.log(teacher);
+            console.log(teacher.json());
             console.log(JSON.stringify(teacher));
             if (!teacher) {
                 console.log(teacher);
                 console.log(JSON.stringify(teacher));
-                alert(JSON.stringify(teacher));
+                alert("nix da");
             }
             else {
-                this.globalLogin.setLogin(teacher);
-                var s;
-                this.GetSchoolService.getSchool(teacher.belongsToSchool).then(function (r) { return s = r; }, function () { return location.href = "noc"; });
+                /*this.globalLogin.setLogin(teacher);
+                var s : School;
+                this.GetSchoolService.getSchool(teacher.belongsToSchool).then(r => s=r,() => location.href="noc");
                 this.globalSchool.setSchool(s);
                 this.router.navigate(['/home']);
+                */
             }
         }
         else {
@@ -1340,11 +1342,12 @@ return func.sort(a,'timestamp','dsc');
         return __WEBPACK_IMPORTED_MODULE_6__lib_functions__["b" /* sort */](a, 'timestamp', 'dsc');
     };
     getTeacherService.prototype.getTeacherByMail = function (mail) {
-        return this.http.get(this.global.basicUrl + "/login/login/" + mail)
-            .do(console.log)
+        var a;
+        this.http.get(this.global.basicUrl + "/login/login/" + mail)
             .toPromise()
-            .then(function (response) { return response.json(); })
+            .then(function (response) { return a = response; })
             .catch(__WEBPACK_IMPORTED_MODULE_6__lib_functions__["a" /* handleError */]);
+        return a;
     };
     return getTeacherService;
 }());
