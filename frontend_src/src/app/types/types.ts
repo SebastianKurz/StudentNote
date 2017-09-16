@@ -68,4 +68,6 @@ export class Teacher {
     this.password=password;
     this.belongsToSchool=belongsToSchool;
   }
+  toString(){
+    return this.id + this.firstname + this.lastname + this.mailAddress + this.password + this.belongsToSchool }
 }

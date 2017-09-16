@@ -163,7 +163,7 @@ return func.sort(a,'timestamp','dsc');
       .catch(func.handleError);
     return func.sort(a, 'timestamp', 'dsc');
   }
-  public getTeacherByMail(mail: string): Promise<any> {//With Mail Address
+  public getTeacherByMail(mail: string): Promise<Teacher> {//With Mail Address
     var a;
     return this.http.get(`${this.global.basicUrl}/login/login/${mail}`)
     .do(console.log)

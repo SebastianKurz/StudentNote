@@ -650,10 +650,12 @@ var LoginComponent = (function () {
     }
     LoginComponent.prototype.login = function (email) {
         /*
-        var x= '{"id":1234,"firstname":"bsi"}';
-        alert(x);
-        var y = JSON.parse(x);
-        alert(JSON.stringify(y));*/
+          var x= '{"firstname":"Bernhardt","password":"12345","mailAddress":"bsix@gmail.com","id":5576722976079872,"belongsToSchool":13579,"lastname":"Six"}';
+          alert(x);
+          var z : Teacher = JSON.parse(x) as Teacher;
+          alert(z);
+          alert(z.id + z.firstname + z.lastname);
+          alert(JSON.stringify(z));*/
         if (email > "") {
             //Google login will be accessible here.
             var teacher;
@@ -2290,6 +2292,9 @@ var Teacher = (function () {
         this.password = password;
         this.belongsToSchool = belongsToSchool;
     }
+    Teacher.prototype.toString = function () {
+        return this.id + this.firstname + this.lastname + this.mailAddress + this.password + this.belongsToSchool;
+    };
     return Teacher;
 }());
 
