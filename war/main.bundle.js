@@ -653,16 +653,18 @@ var LoginComponent = (function () {
             //Google login will be accessible here. No Session implemented yet.
             var teacher;
             this.GetTeacherService.getTeacherByMail(email).then(function (t) { return teacher = t; });
-            if (!teacher) {
-                alert(JSON.stringify(teacher));
-            }
-            else {
-                this.globalLogin.setLogin(teacher);
-                var s;
-                this.GetSchoolService.getSchool(teacher.belongsToSchool).then(function (r) { return s = r; });
-                this.globalSchool.setSchool(s);
-                this.router.navigate(['/home']);
-            }
+            console.log(teacher);
+            console.log(JSON.stringify(teacher));
+            /*if (!teacher){
+              alert(JSON.stringify(teacher));
+            }else {
+              this.globalLogin.setLogin(teacher);
+              var s : School;
+              this.GetSchoolService.getSchool(teacher.belongsToSchool).then(r => s=r);
+              this.globalSchool.setSchool(s);
+              this.router.navigate(['/home']);
+          
+            }*/
         }
         else {
             alert("Enter your Email address");

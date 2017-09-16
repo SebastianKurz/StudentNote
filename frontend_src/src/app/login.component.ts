@@ -43,7 +43,9 @@ login(email:string): void {
     //Google login will be accessible here. No Session implemented yet.
   var teacher:any;
   this.GetTeacherService.getTeacherByMail(email).then(t => teacher = t);
-  if (!teacher){
+  console.log(teacher);
+  console.log(JSON.stringify(teacher));
+  /*if (!teacher){
     alert(JSON.stringify(teacher));
   }else {
     this.globalLogin.setLogin(teacher);
@@ -52,7 +54,7 @@ login(email:string): void {
     this.globalSchool.setSchool(s);
     this.router.navigate(['/home']);
 
-  }
+  }*/
 
 }
 else{
