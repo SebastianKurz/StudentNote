@@ -1339,6 +1339,7 @@ return func.sort(a,'timestamp','dsc');
     };
     getTeacherService.prototype.getTeacherByMail = function (mail) {
         return this.http.get(this.global.basicUrl + "/login/login/" + mail)
+            .do(console.log)
             .toPromise()
             .then(function (response) { return response.json().parse; })
             .catch(__WEBPACK_IMPORTED_MODULE_6__lib_functions__["a" /* handleError */]);
