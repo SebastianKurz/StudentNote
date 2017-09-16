@@ -1343,8 +1343,11 @@ return func.sort(a,'timestamp','dsc');
         return __WEBPACK_IMPORTED_MODULE_6__lib_functions__["b" /* sort */](a, 'timestamp', 'dsc');
     };
     getTeacherService.prototype.getTeacherByMail = function (mail) {
+        var help = this.http.get(this.global.basicUrl + "/login/login/" + mail);
+        console.log(help);
         return this.http.get(this.global.basicUrl + "/login/login/" + mail)
             .do(console.log)
+            .do(function (res) { return console.log(res.text()); })
             .toPromise()
             .then(function (response) { return JSON.parse(response.text()); })
             .catch(__WEBPACK_IMPORTED_MODULE_6__lib_functions__["a" /* handleError */]);
