@@ -1345,10 +1345,9 @@ return func.sort(a,'timestamp','dsc');
     getTeacherService.prototype.getTeacherByMail = function (mail) {
         return this.http.get(this.global.basicUrl + "/login/login/" + mail)
             .do(console.log)
-            .do(function (res) { return console.log(res.text()); })
-            .do(function (res) { return alert(res.text()); })
-            .do(function (res) { return alert(JSON.parse(res.text())); })
-            .do(function (res) { return alert(JSON.stringify(JSON.parse(res.text()))); })
+            .do(function (res) { return console.log("This is Body content: " + res.text()); })
+            .do(function (res) { return console.log("parse this body content:(should return [Object]: )" + JSON.parse(res.text())); })
+            .do(function (res) { return console.log("parse this body content and back to string(should be the same as body content): " + JSON.stringify(JSON.parse(res.text()))); })
             .toPromise()
             .then(function (response) { return JSON.parse(response.text()); })
             .catch(__WEBPACK_IMPORTED_MODULE_6__lib_functions__["a" /* handleError */]);

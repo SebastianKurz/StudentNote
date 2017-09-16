@@ -166,10 +166,9 @@ return func.sort(a,'timestamp','dsc');
   public getTeacherByMail(mail: string): Promise<any> {//With Mail Address
     return  this.http.get(`${this.global.basicUrl}/login/login/${mail}`)
     .do(console.log)
-    .do(res => console.log(res.text()))
-    .do(res => alert(res.text()))
-    .do(res => alert(JSON.parse(res.text())))
-    .do(res => alert(JSON.stringify(JSON.parse(res.text()))))
+    .do(res => console.log("This is Body content: " + res.text()))
+    .do(res => console.log("parse this body content:(should return [Object]: )" + JSON.parse(res.text())))
+    .do(res => console.log("parse this body content and back to string(should be the same as body content): " + JSON.stringify(JSON.parse(res.text()))))
     .toPromise()
       .then(response => JSON.parse(response.text()))
       .catch(func.handleError);
