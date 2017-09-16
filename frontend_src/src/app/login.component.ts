@@ -44,7 +44,7 @@ login(email:string): void {
   var teacher:any;
   this.GetTeacherService.getTeacherByMail(email).then(t => teacher = t);
   if (!teacher){
-    alert(teacher);
+    alert(JSON.stringify(teacher));
   }else {
     this.globalLogin.setLogin(teacher);
     var s : School;

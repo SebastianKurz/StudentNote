@@ -11,7 +11,7 @@ import { StudentComponent } from './student.component';
 import { TeacherComponent } from './teacher.component';
 
 export const ROUTE_CONFIG: Routes = [
-  { path: 'login', component: LoginComponent },
+  { path: 'loginPage', component: LoginComponent },
   { path: 'home',component: SchoolComponent},
   { path: 'classes',component: ClassesComponent},
   { path: 'schools',component: SchoolComponent},
@@ -20,7 +20,7 @@ export const ROUTE_CONFIG: Routes = [
   { path: 'students',component: StudentComponent},
   { path: 'student/:id',component: StudentComponent},
   { path: '',
-    redirectTo: '/login',
+    redirectTo: '/loginPage',
     pathMatch: 'full'
   },
   {path : 'noc',component: NoConnectionComponent},

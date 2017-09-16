@@ -141,7 +141,7 @@ selectLoginTeacher(teacher){
 }
 getSchoolName(id : number){
   var school :School;
-  this.GetSchoolService.getSchool(id).then((s) => school = s,()=>  location.href="/login");
+  this.GetSchoolService.getSchool(id).then((s) => school = s,()=>  location.href="/noc");
   if (school!=null){
     return school.name;
   }else{

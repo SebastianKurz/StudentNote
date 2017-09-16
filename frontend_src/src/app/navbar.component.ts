@@ -78,6 +78,6 @@ export class NavbarComponent {
   }
 
   logoff():void{
-    location.href="/login";
+    location.href="/loginPage";
   }
 }
