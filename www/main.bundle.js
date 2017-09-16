@@ -1346,7 +1346,7 @@ return func.sort(a,'timestamp','dsc');
         return this.http.get(this.global.basicUrl + "/login/login/" + mail)
             .do(console.log)
             .toPromise()
-            .then(function (response) { return JSON.parse(response); })
+            .then(function (response) { return JSON.parse(response.text()); })
             .catch(__WEBPACK_IMPORTED_MODULE_6__lib_functions__["a" /* handleError */]);
     };
     return getTeacherService;
