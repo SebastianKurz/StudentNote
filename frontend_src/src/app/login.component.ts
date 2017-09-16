@@ -39,6 +39,11 @@ this.GetSchoolService=GetSchoolServiceImpl;
   }
 
 login(email:string): void {
+  /*
+  var x= '{"id":1234,"firstname":"bsi"}';
+  alert(x);
+  var y = JSON.parse(x);
+  alert(JSON.stringify(y));*/
   if (email >""){
     //Google login will be accessible here.
   var teacher:any;

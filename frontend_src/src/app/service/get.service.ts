@@ -167,7 +167,7 @@ return func.sort(a,'timestamp','dsc');
     return  this.http.get(`${this.global.basicUrl}/login/login/${mail}`)
     .do(console.log)
     .toPromise()
-      .then(response => response.json() as any)
+      .then(response => JSON.parse(response))
       .catch(func.handleError);
   }
 }

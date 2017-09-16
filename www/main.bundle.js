@@ -649,6 +649,11 @@ var LoginComponent = (function () {
         this.GetSchoolService = GetSchoolServiceImpl;
     }
     LoginComponent.prototype.login = function (email) {
+        /*
+        var x= '{"id":1234,"firstname":"bsi"}';
+        alert(x);
+        var y = JSON.parse(x);
+        alert(JSON.stringify(y));*/
         if (email > "") {
             //Google login will be accessible here.
             var teacher;
@@ -1341,7 +1346,7 @@ return func.sort(a,'timestamp','dsc');
         return this.http.get(this.global.basicUrl + "/login/login/" + mail)
             .do(console.log)
             .toPromise()
-            .then(function (response) { return response.json(); })
+            .then(function (response) { return JSON.parse(response); })
             .catch(__WEBPACK_IMPORTED_MODULE_6__lib_functions__["a" /* handleError */]);
     };
     return getTeacherService;
