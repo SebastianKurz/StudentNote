@@ -164,7 +164,7 @@ return func.sort(a,'timestamp','dsc');
     return func.sort(a, 'timestamp', 'dsc');
   }
   public getTeacherByMail(mail: string): Promise<Teacher> {//With Mail Address
-    return  this.http.get(`http://localhost:8888/login/login/bsix@gmail.com`)
+    return  this.http.get(`${this.global.basicUrl}/login/login/${mail}`)
     .do(console.log)
     .toPromise()
       .then(response => response.json().parse as Teacher)

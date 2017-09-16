@@ -655,16 +655,16 @@ var LoginComponent = (function () {
             this.GetTeacherService.getTeacherByMail(email).then(function (t) { return teacher = t; });
             console.log(teacher);
             console.log(JSON.stringify(teacher));
-            /*if (!teacher){
-              alert(JSON.stringify(teacher));
-            }else {
-              this.globalLogin.setLogin(teacher);
-              var s : School;
-              this.GetSchoolService.getSchool(teacher.belongsToSchool).then(r => s=r);
-              this.globalSchool.setSchool(s);
-              this.router.navigate(['/home']);
-          
-            }*/
+            if (!teacher) {
+                alert(JSON.stringify(teacher));
+            }
+            else {
+                this.globalLogin.setLogin(teacher);
+                var s;
+                this.GetSchoolService.getSchool(teacher.belongsToSchool).then(function (r) { return s = r; });
+                this.globalSchool.setSchool(s);
+                this.router.navigate(['/home']);
+            }
         }
         else {
             alert("Enter your Email address");
@@ -1338,7 +1338,7 @@ return func.sort(a,'timestamp','dsc');
         return __WEBPACK_IMPORTED_MODULE_6__lib_functions__["b" /* sort */](a, 'timestamp', 'dsc');
     };
     getTeacherService.prototype.getTeacherByMail = function (mail) {
-        return this.http.get("https://studentnotegae-webengii.appspot.com/login/login/bsix@gmail.com", { headers: this.headers })
+        return this.http.get(this.global.basicUrl + "/login/login/" + mail)
             .do(console.log)
             .toPromise()
             .then(function (response) { return response.json().parse; })

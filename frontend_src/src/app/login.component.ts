@@ -45,7 +45,7 @@ login(email:string): void {
   this.GetTeacherService.getTeacherByMail(email).then(t => teacher = t);
   console.log(teacher);
   console.log(JSON.stringify(teacher));
-  /*if (!teacher){
+  if (!teacher){
     alert(JSON.stringify(teacher));
   }else {
     this.globalLogin.setLogin(teacher);
@@ -54,7 +54,7 @@ login(email:string): void {
     this.globalSchool.setSchool(s);
     this.router.navigate(['/home']);
 
-  }*/
+  }
 
 }
 else{
