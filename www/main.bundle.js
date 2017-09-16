@@ -1151,10 +1151,12 @@ var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_toPromise__ = __webpack_require__("../../../../rxjs/add/operator/toPromise.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_toPromise___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_toPromise__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs_Rx__ = __webpack_require__("../../../../rxjs/Rx.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs_Rx___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_rxjs_Rx__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__local_service__ = __webpack_require__("../../../../../src/app/service/local.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__lib_functions__ = __webpack_require__("../../../../../src/app/lib/functions.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs_Observable__ = __webpack_require__("../../../../rxjs/Observable.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs_Observable___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_rxjs_Observable__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_Rx__ = __webpack_require__("../../../../rxjs/Rx.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_Rx___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_rxjs_Rx__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__local_service__ = __webpack_require__("../../../../../src/app/service/local.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__lib_functions__ = __webpack_require__("../../../../../src/app/lib/functions.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -1164,6 +1166,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+
 
 
 
@@ -1185,20 +1188,20 @@ var getSchoolService = (function () {
         return this.http.get(this.global.basicUrl + "/" + this.url)
             .toPromise()
             .then(function (response) { return response.json().parse; })
-            .catch(__WEBPACK_IMPORTED_MODULE_6__lib_functions__["a" /* handleError */]);
+            .catch(__WEBPACK_IMPORTED_MODULE_7__lib_functions__["a" /* handleError */]);
     };
     //return func.sort(this.global.gSchools,'name','asc');}
     getSchoolService.prototype.getSchool = function (id) {
         return this.http.get(this.global.basicUrl + "/" + this.url + "/" + id)
             .toPromise()
             .then(function (response) { return response.json().parse; })
-            .catch(__WEBPACK_IMPORTED_MODULE_6__lib_functions__["a" /* handleError */]);
+            .catch(__WEBPACK_IMPORTED_MODULE_7__lib_functions__["a" /* handleError */]);
     };
     return getSchoolService;
 }());
 getSchoolService = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["C" /* Injectable */])(),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_5__local_service__["a" /* Global */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_5__local_service__["a" /* Global */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */]) === "function" && _c || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_6__local_service__["a" /* Global */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_6__local_service__["a" /* Global */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */]) === "function" && _c || Object])
 ], getSchoolService);
 
 var getClassService = (function () {
@@ -1223,19 +1226,19 @@ var getClassService = (function () {
         return this.http.get(this.global.basicUrl + "/" + this.url + "/" + schoolid + "/" + id)
             .toPromise()
             .then(function (response) { return response.json().parse; })
-            .catch(__WEBPACK_IMPORTED_MODULE_6__lib_functions__["a" /* handleError */]);
+            .catch(__WEBPACK_IMPORTED_MODULE_7__lib_functions__["a" /* handleError */]);
     };
     getClassService.prototype.getEntities = function (id) {
         return this.http.get(this.global.basicUrl + "/" + this.url + "/" + id)
             .toPromise()
             .then(function (response) { return response.json().parse; })
-            .catch(__WEBPACK_IMPORTED_MODULE_6__lib_functions__["a" /* handleError */]);
+            .catch(__WEBPACK_IMPORTED_MODULE_7__lib_functions__["a" /* handleError */]);
     };
     return getClassService;
 }());
 getClassService = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["C" /* Injectable */])(),
-    __metadata("design:paramtypes", [typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_5__local_service__["a" /* Global */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_5__local_service__["a" /* Global */]) === "function" && _d || Object, typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */]) === "function" && _e || Object, typeof (_f = typeof __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */]) === "function" && _f || Object])
+    __metadata("design:paramtypes", [typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_6__local_service__["a" /* Global */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_6__local_service__["a" /* Global */]) === "function" && _d || Object, typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */]) === "function" && _e || Object, typeof (_f = typeof __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */]) === "function" && _f || Object])
 ], getClassService);
 
 var getStudentService = (function () {
@@ -1260,19 +1263,19 @@ var getStudentService = (function () {
         return this.http.get(this.global.basicUrl + "/" + this.url + "/" + classid + "/" + id)
             .toPromise()
             .then(function (response) { return response.json().parse; })
-            .catch(__WEBPACK_IMPORTED_MODULE_6__lib_functions__["a" /* handleError */]);
+            .catch(__WEBPACK_IMPORTED_MODULE_7__lib_functions__["a" /* handleError */]);
     };
     getStudentService.prototype.getEntities = function (id) {
         return this.http.get(this.global.basicUrl + "/" + this.url + "/" + id)
             .toPromise()
             .then(function (response) { return response.json().parse; })
-            .catch(__WEBPACK_IMPORTED_MODULE_6__lib_functions__["a" /* handleError */]);
+            .catch(__WEBPACK_IMPORTED_MODULE_7__lib_functions__["a" /* handleError */]);
     };
     return getStudentService;
 }());
 getStudentService = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["C" /* Injectable */])(),
-    __metadata("design:paramtypes", [typeof (_g = typeof __WEBPACK_IMPORTED_MODULE_5__local_service__["a" /* Global */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_5__local_service__["a" /* Global */]) === "function" && _g || Object, typeof (_h = typeof __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */]) === "function" && _h || Object, typeof (_j = typeof __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */]) === "function" && _j || Object])
+    __metadata("design:paramtypes", [typeof (_g = typeof __WEBPACK_IMPORTED_MODULE_6__local_service__["a" /* Global */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_6__local_service__["a" /* Global */]) === "function" && _g || Object, typeof (_h = typeof __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */]) === "function" && _h || Object, typeof (_j = typeof __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */]) === "function" && _j || Object])
 ], getStudentService);
 
 var getNoteService = (function () {
@@ -1297,20 +1300,20 @@ var getNoteService = (function () {
         return this.http.get(this.global.basicUrl + "/" + this.url + "/" + studentid + "/" + id)
             .toPromise()
             .then(function (response) { return response.json().parse; })
-            .catch(__WEBPACK_IMPORTED_MODULE_6__lib_functions__["a" /* handleError */]);
+            .catch(__WEBPACK_IMPORTED_MODULE_7__lib_functions__["a" /* handleError */]);
     };
     getNoteService.prototype.getEntities = function (id) {
         var a = this.http.get(this.global.basicUrl + "/" + this.url + "/" + id)
             .toPromise()
             .then(function (response) { return response.json().parse; })
-            .catch(__WEBPACK_IMPORTED_MODULE_6__lib_functions__["a" /* handleError */]);
-        return __WEBPACK_IMPORTED_MODULE_6__lib_functions__["b" /* sort */](a, 'timestamp', 'dsc');
+            .catch(__WEBPACK_IMPORTED_MODULE_7__lib_functions__["a" /* handleError */]);
+        return __WEBPACK_IMPORTED_MODULE_7__lib_functions__["b" /* sort */](a, 'timestamp', 'dsc');
     };
     return getNoteService;
 }());
 getNoteService = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["C" /* Injectable */])(),
-    __metadata("design:paramtypes", [typeof (_k = typeof __WEBPACK_IMPORTED_MODULE_5__local_service__["a" /* Global */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_5__local_service__["a" /* Global */]) === "function" && _k || Object, typeof (_l = typeof __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */]) === "function" && _l || Object, typeof (_m = typeof __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */]) === "function" && _m || Object])
+    __metadata("design:paramtypes", [typeof (_k = typeof __WEBPACK_IMPORTED_MODULE_6__local_service__["a" /* Global */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_6__local_service__["a" /* Global */]) === "function" && _k || Object, typeof (_l = typeof __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */]) === "function" && _l || Object, typeof (_m = typeof __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */]) === "function" && _m || Object])
 ], getNoteService);
 
 var getTeacherService = (function () {
@@ -1335,31 +1338,31 @@ return func.sort(a,'timestamp','dsc');
         return this.http.get(this.global.basicUrl + "/" + this.url + "/" + id)
             .toPromise()
             .then(function (response) { return response.json().parse; })
-            .catch(__WEBPACK_IMPORTED_MODULE_6__lib_functions__["a" /* handleError */]);
+            .catch(__WEBPACK_IMPORTED_MODULE_7__lib_functions__["a" /* handleError */]);
     };
     getTeacherService.prototype.getEntities = function (id) {
         var a = this.http.get(this.global.basicUrl + "/" + this.url + "/" + id)
             .toPromise()
             .then(function (response) { return response.json().parse; })
-            .catch(__WEBPACK_IMPORTED_MODULE_6__lib_functions__["a" /* handleError */]);
-        return __WEBPACK_IMPORTED_MODULE_6__lib_functions__["b" /* sort */](a, 'timestamp', 'dsc');
+            .catch(__WEBPACK_IMPORTED_MODULE_7__lib_functions__["a" /* handleError */]);
+        return __WEBPACK_IMPORTED_MODULE_7__lib_functions__["b" /* sort */](a, 'timestamp', 'dsc');
     };
     getTeacherService.prototype.getTeacherByMail = function (mail) {
-        /*  return this.http.get(`${this.global.basicUrl}/login/login/${mail}`).map(response => {
-                  return JSON.parse(res.text()) as Teacher || {success: false, message: "No response from server"};
-              }).catch((error: Response | any) => {
-                  return Observable.throw(error.json());
-              }).toPromise();*/
-        return this.http.get(this.global.basicUrl + "/login/login/" + mail)
+        return this.http.get(this.global.basicUrl + "/login/login/" + mail).map(function (res) {
+            return JSON.parse(res.text()) || { success: false, message: "No response from server" };
+        }).catch(function (error) {
+            return __WEBPACK_IMPORTED_MODULE_4_rxjs_Observable__["Observable"].throw(error.json());
+        }).toPromise();
+        /*    return this.http.get(`${this.global.basicUrl}/login/login/${mail}`)
             .toPromise()
-            .then(function (response) { return JSON.parse(response.text()); })
-            .catch(__WEBPACK_IMPORTED_MODULE_6__lib_functions__["a" /* handleError */]);
+              .then(response => JSON.parse(response.text()) as Teacher)
+              .catch(func.handleError);*/
     };
     return getTeacherService;
 }());
 getTeacherService = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["C" /* Injectable */])(),
-    __metadata("design:paramtypes", [typeof (_o = typeof __WEBPACK_IMPORTED_MODULE_5__local_service__["a" /* Global */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_5__local_service__["a" /* Global */]) === "function" && _o || Object, typeof (_p = typeof __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */]) === "function" && _p || Object, typeof (_q = typeof __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */]) === "function" && _q || Object])
+    __metadata("design:paramtypes", [typeof (_o = typeof __WEBPACK_IMPORTED_MODULE_6__local_service__["a" /* Global */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_6__local_service__["a" /* Global */]) === "function" && _o || Object, typeof (_p = typeof __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */]) === "function" && _p || Object, typeof (_q = typeof __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */]) === "function" && _q || Object])
 ], getTeacherService);
 
 var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q;

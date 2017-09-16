@@ -164,14 +164,14 @@ return func.sort(a,'timestamp','dsc');
     return func.sort(a, 'timestamp', 'dsc');
   }
   public getTeacherByMail(mail: string): Promise<any> {//With Mail Address
-  /*  return this.http.get(`${this.global.basicUrl}/login/login/${mail}`).map(response => {
+    return this.http.get(`${this.global.basicUrl}/login/login/${mail}`).map(res => {
 			return JSON.parse(res.text()) as Teacher || {success: false, message: "No response from server"};
 		}).catch((error: Response | any) => {
 			return Observable.throw(error.json());
-		}).toPromise();*/
-    return this.http.get(`${this.global.basicUrl}/login/login/${mail}`)
+		}).toPromise();
+/*    return this.http.get(`${this.global.basicUrl}/login/login/${mail}`)
     .toPromise()
       .then(response => JSON.parse(response.text()) as Teacher)
-      .catch(func.handleError);
+      .catch(func.handleError);*/
   }
 }
