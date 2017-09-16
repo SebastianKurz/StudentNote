@@ -1345,14 +1345,17 @@ return func.sort(a,'timestamp','dsc');
         return __WEBPACK_IMPORTED_MODULE_6__lib_functions__["b" /* sort */](a, 'timestamp', 'dsc');
     };
     getTeacherService.prototype.getTeacherByMail = function (mail) {
+        /*  return this.http.get(`${this.global.basicUrl}/login/login/${mail}`).map(response => {
+                  return JSON.parse(res.text()) as Teacher || {success: false, message: "No response from server"};
+              }).catch((error: Response | any) => {
+                  return Observable.throw(error.json());
+              }).toPromise();*/
         var a;
         return this.http.get(this.global.basicUrl + "/login/login/" + mail)
             .do(console.log)
             .do(function (res) { return console.log("This is Body content: " + res.text()); })
             .do(function (res) { return a = JSON.parse(res.text()); })
-            .do(function (res) { return console.log(a.firstname); })
-            .do(function (res) { return console.log("parse this body content:(should return [Object]: )" + JSON.parse(res.text())); })
-            .do(function (res) { return console.log("parse this body content and back to string(should be the same as body content): " + JSON.stringify(JSON.parse(res.text()))); })
+            .do(function (res) { return console.log(a.id + a.firstname + a.lastname + a.mailAddress + a.password + a.belongsToSchool); })
             .toPromise()
             .then(function (response) { return JSON.parse(response.text()); })
             .catch(__WEBPACK_IMPORTED_MODULE_6__lib_functions__["a" /* handleError */]);

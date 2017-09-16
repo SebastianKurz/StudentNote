@@ -163,15 +163,18 @@ return func.sort(a,'timestamp','dsc');
       .catch(func.handleError);
     return func.sort(a, 'timestamp', 'dsc');
   }
-  public getTeacherByMail(mail: string): Promise<Teacher> {//With Mail Address
+  public getTeacherByMail(mail: string): Promise<any> {//With Mail Address
+  /*  return this.http.get(`${this.global.basicUrl}/login/login/${mail}`).map(response => {
+			return JSON.parse(res.text()) as Teacher || {success: false, message: "No response from server"};
+		}).catch((error: Response | any) => {
+			return Observable.throw(error.json());
+		}).toPromise();*/
     var a;
     return this.http.get(`${this.global.basicUrl}/login/login/${mail}`)
     .do(console.log)
     .do(res => console.log("This is Body content: " + res.text()))
       .do(res => a = JSON.parse(res.text()) as Teacher)
-      .do(res => console.log(a.firstname))
-    .do(res => console.log("parse this body content:(should return [Object]: )" + (JSON.parse(res.text()) as Teacher)))
-    .do(res => console.log("parse this body content and back to string(should be the same as body content): " + JSON.stringify(JSON.parse(res.text()))))
+      .do(res => console.log(a.id + a.firstname + a.lastname + a.mailAddress + a.password + a.belongsToSchool) )
     .toPromise()
       .then(response => JSON.parse(response.text()) as Teacher)
       .catch(func.handleError);
