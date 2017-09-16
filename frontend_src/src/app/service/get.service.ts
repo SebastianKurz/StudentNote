@@ -169,12 +169,7 @@ return func.sort(a,'timestamp','dsc');
 		}).catch((error: Response | any) => {
 			return Observable.throw(error.json());
 		}).toPromise();*/
-    var a;
     return this.http.get(`${this.global.basicUrl}/login/login/${mail}`)
-    .do(console.log)
-    .do(res => console.log("This is Body content: " + res.text()))
-      .do(res => a = JSON.parse(res.text()) as Teacher)
-      .do(res => console.log(a.id + a.firstname + a.lastname + a.mailAddress + a.password + a.belongsToSchool) )
     .toPromise()
       .then(response => JSON.parse(response.text()) as Teacher)
       .catch(func.handleError);

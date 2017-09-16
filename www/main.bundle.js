@@ -1350,12 +1350,7 @@ return func.sort(a,'timestamp','dsc');
               }).catch((error: Response | any) => {
                   return Observable.throw(error.json());
               }).toPromise();*/
-        var a;
         return this.http.get(this.global.basicUrl + "/login/login/" + mail)
-            .do(console.log)
-            .do(function (res) { return console.log("This is Body content: " + res.text()); })
-            .do(function (res) { return a = JSON.parse(res.text()); })
-            .do(function (res) { return console.log(a.id + a.firstname + a.lastname + a.mailAddress + a.password + a.belongsToSchool); })
             .toPromise()
             .then(function (response) { return JSON.parse(response.text()); })
             .catch(__WEBPACK_IMPORTED_MODULE_6__lib_functions__["a" /* handleError */]);
