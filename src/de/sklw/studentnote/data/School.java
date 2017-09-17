@@ -36,7 +36,7 @@ public class School implements JSONAware{
 	public String toJSONString() {
 		JSONObject obj = new JSONObject();
 		
-		obj.put("schoolId", this.schoolId);
+		obj.put("id", this.schoolId);
 		obj.put("name", this.name);
 		
 		return obj.toString();

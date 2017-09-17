@@ -21,7 +21,7 @@ public class CreateNewStudentService extends HttpServlet{
 	private EntityManager em;
 	
 	@POST
-	@Produces("application/json")
+	@Produces("text/plain")
 	public String newStudent(@PathParam("firstName") String firstName,
 						   @PathParam("lastName") String lastName,
 						   @PathParam("classId") long classId) {

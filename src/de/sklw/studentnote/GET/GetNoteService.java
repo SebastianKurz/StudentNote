@@ -22,7 +22,7 @@ public class GetNoteService extends HttpServlet{
 	private List<Note> n_list;
 	
 	@GET
-	@Produces("application/json")
+	@Produces("text/plain")
 	public String allNotes(@PathParam("studentId") long studentId) {
 		
 		em = EMF.getEntityManager();
@@ -51,7 +51,7 @@ public class GetNoteService extends HttpServlet{
 	
 	@GET
 	@Path("{noteId}")
-	@Produces("application/json")
+	@Produces("text/plain")
 	public String specificNote(@PathParam("studentId") long studentId ,@PathParam("noteId") long noteId) {
 		em = EMF.getEntityManager();
 		

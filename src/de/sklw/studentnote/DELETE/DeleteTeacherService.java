@@ -17,7 +17,7 @@ public class DeleteTeacherService extends HttpServlet{
 	private EntityManager em;
 	
 	@DELETE
-	@Produces("application/json")
+	@Produces("text/plain")
 	public String deleteTeacher(@PathParam("teacherId") long teacherId) {
 		
 		em = EMF.getEntityManager();

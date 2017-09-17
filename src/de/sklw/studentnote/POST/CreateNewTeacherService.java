@@ -22,7 +22,7 @@ public class CreateNewTeacherService extends HttpServlet{
 	private EntityManager em;
 	
 	@POST
-	@Produces("application/json")
+	@Produces("text/plain")
 	public String newTeacher(@PathParam("firstName") String firstName,
 						   @PathParam("lastName") String lastName,
 						   @PathParam("mailaddress") String mailaddress,

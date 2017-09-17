@@ -55,7 +55,7 @@ public class Note implements JSONAware{
 	public String toJSONString() {
 		JSONObject obj = new JSONObject();
 		
-		obj.put("noteId", this.noteId);
+		obj.put("id", this.noteId);
 		obj.put("text", this.text);
 		obj.put("timestamp", this.timestamp.toString());
 		obj.put("authorTeacherId", this.authorTeacherId);

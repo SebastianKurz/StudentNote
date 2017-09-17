@@ -13,8 +13,8 @@ import {GlobalLogin}from './service/local.service';
 
   <div *ngIf="isGlobalSchool(); then  TitleWSchool  else Title"></div>
 
-<ng-template #Title><h1 class="title" style="margin:.6em;" [routerLink]="['/home']" routerLinkActive="active">{{title}}</h1></ng-template>
-<ng-template #TitleWSchool><h1 class="title" style="margin:.6em;" [routerLink]="['/home']" routerLinkActive="active">{{title}} for {{this.globalSchool.getSchool().name}}</h1></ng-template>
+<ng-template #Title><h1 class="title" style="margin:.6em;" [routerLink]="['home']" routerLinkActive="active">{{title}}</h1></ng-template>
+<ng-template #TitleWSchool><h1 class="title" style="margin:.6em;" [routerLink]="['home']" routerLinkActive="active">{{title}} for {{this.globalSchool.getSchool().name}}</h1></ng-template>
 
 
 <nav class="pane" style="padding: 0 0;margin: 0 0;">

@@ -23,7 +23,7 @@ public class CreateNewClassService extends HttpServlet{
 	
 	
 	@POST
-	@Produces("application/json")
+	@Produces("text/plain")
 	public String newClass(@PathParam("name") String name, 
 						 @PathParam("level") String level,
 						 @PathParam("schoolId") long schoolId) {

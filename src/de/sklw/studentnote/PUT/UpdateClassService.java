@@ -18,7 +18,7 @@ public class UpdateClassService extends HttpServlet{
 	private SchoolClass s;
 	
 	@PUT
-	@Produces("application/json")
+	@Produces("text/plain")
 	public String updateClass(@PathParam("name") String name, 
 			 			 @PathParam("level") String level,
 			 			 @PathParam("classId") long classId) {

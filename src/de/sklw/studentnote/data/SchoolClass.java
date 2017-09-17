@@ -59,7 +59,7 @@ public class SchoolClass implements JSONAware{
 		
 		JSONObject obj = new JSONObject();
 		
-		obj.put("classId", this.classId);
+		obj.put("id", this.classId);
 		obj.put("name", this.name);
 		obj.put("level", this.level);
 		obj.put("belongsToSchool", this.belongsToSchool);
