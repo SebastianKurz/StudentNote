@@ -87,7 +87,7 @@ export class StudentComponent implements OnInit, OnDestroy{
 
   }
   isNotes(){
-   if (this.notes.length > 0){
+   if (this.notes){
       return true;
     }else{
       return false;
@@ -328,8 +328,8 @@ else{
 onSelect(student: Student): void {
   this.cancelNewStudent();
   this.selectedStudent=student;
+  this.notes = null;
   this.GetClassService.getEntities(this.globalSchool.getSchool().id).subscribe(s => this.classes = s);
-  if(this.selectedStudent){
   this.GetNoteService.getEntities(this.selectedStudent.id).subscribe(s => {
 if(s != null){
  this.notes = s;
@@ -337,7 +337,6 @@ if(s != null){
  this.notes = null;
 }
     });
-  }
 }
 
 }

@@ -1910,7 +1910,7 @@ var StudentComponent = (function () {
         this.NewNote = new __WEBPACK_IMPORTED_MODULE_3__types_types__["b" /* Note */](null, null, null, null, null);
     }
     StudentComponent.prototype.isNotes = function () {
-        if (this.notes.length > 0) {
+        if (this.notes) {
             return true;
         }
         else {
@@ -2165,17 +2165,16 @@ var StudentComponent = (function () {
         var _this = this;
         this.cancelNewStudent();
         this.selectedStudent = student;
+        this.notes = null;
         this.GetClassService.getEntities(this.globalSchool.getSchool().id).subscribe(function (s) { return _this.classes = s; });
-        if (this.selectedStudent) {
-            this.GetNoteService.getEntities(this.selectedStudent.id).subscribe(function (s) {
-                if (s != null) {
-                    _this.notes = s;
-                }
-                else {
-                    _this.notes = null;
-                }
-            });
-        }
+        this.GetNoteService.getEntities(this.selectedStudent.id).subscribe(function (s) {
+            if (s != null) {
+                _this.notes = s;
+            }
+            else {
+                _this.notes = null;
+            }
+        });
     };
     return StudentComponent;
 }());
