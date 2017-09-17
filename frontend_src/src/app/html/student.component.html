@@ -103,7 +103,7 @@
 
         <div *ngFor="let note of notes" class="pane floatleft" style="width:100%;margin-bottom:.3em;">
           <div class="floatleft" style="width:40%;font-weight:600;">{{note.timestamp | date: 'dd.MM.yyyy HH:mm'}}</div>
-          <div class="floatleft" style="width:40%;font-weight:600;">erstellt von: {{this.getTeacherName(this.GetTeacherService.getTeacher(note.authorTeacherId))}}</div>
+          <div class="floatleft" style="width:40%;font-weight:600;">erstellt von: {{this.getTeacherName(note.authorTeacherId)}}</div>
           <div class="del"><i class="fa fa-trash" aria-hidden="true" style="font-weight:600;font-size:150%;" (click)="deleteNote(note)"></i></div>
           <div class="clearfix"></div>
           <textarea #a style="width:90%;height:7em;border:none;padding-top:1em;align:center;" [class.selected]="note === selectedNote" readonly [(ngModel)]="note.text">

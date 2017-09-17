@@ -175,6 +175,7 @@ newClass(name:string,level:string,belongsToSchool:number){
 selectClass(klasse: Class): void {
   this.cancelNewClass();
   this.selectedClass = klasse;
+  this.students = null;
   this.GetStudentService.getEntities(klasse.id).subscribe(s => this.students = s);
 }
 }

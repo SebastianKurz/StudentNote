@@ -154,13 +154,18 @@ export class StudentComponent implements OnInit, OnDestroy{
     }
 }
 
-  getTeacherName(teacher : Teacher){
-    return teacher.firstname + ' ' + teacher.lastname;
+  getTeacherName(id : number){
+    var teacher = func.find(this.teachers,'id',id);
+    if (teacher != null){
+      return teacher.firstname + " "+ teacher.lastname;
+    }else{
+      return "";
+    }
   }
   getLoginName(){
     var teacher = this.globalLogin.getLogin();
     if (teacher != null){
-    return this.getTeacherName(teacher);
+    return teacher.firstname +" "+teacher.lastname;
   }else{
     return "Not logged in!";
   }
@@ -177,6 +182,7 @@ init(){
   if(this.globalSchool.getSchool()){
 this.GetStudentService.getEntities(this.globalClass.getClass().id).subscribe(s => { this.students = s});
 this.GetClassService.getEntities(this.globalSchool.getSchool().id).subscribe(s => this.classes = s);
+this.GetTeacherService.getEntities(this.globalSchool.getSchool().id).subscribe(s => this.teachers = s);
 }
 }
   ngOnInit() {

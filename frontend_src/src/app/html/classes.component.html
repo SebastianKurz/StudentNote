@@ -68,7 +68,7 @@
       <label class="md-input-label">Stufe</label>
     </div>
     <div class="group" style="margin-top:3em;margin-bottom:1em;">
-        <input class="md-input" type="number">
+        <input class="md-input" type="number" readonly [(ngModel)]="selectedSchool.belongsToSchool">
         <span class="highlight"></span>
         <span class="bar"></span>
         <label class="md-input-label">Zugeordnet zu Schule: {{this.getSchoolName(selectedClass.belongsToSchool)}}</label>
