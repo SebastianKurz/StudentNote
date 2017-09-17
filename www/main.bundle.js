@@ -550,7 +550,7 @@ module.exports = "<navbar></navbar>\n\n<div style=\"width: 64%;margin: 0 auto;al
 /***/ "../../../../../src/app/html/login.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "\n<div class=\"pane\" style=\"width:40%;max-width:720px;margin: 1em auto 1em auto; padding: 3em 0 3em 0;overflow:hidden;\">\n<!--Title Part -->\n<div  style=\"text-align:center\">\n<h1 style=\"padding-top:50px;\">\n  {{title}}\n</h1>\n\n<!-- Replace this later -->\n<i style=\"font-size:2000%;\" class=\"fa fa-graduation-cap\" aria-hidden=\"true\"></i>\n\n</div>\n\n<div style=\"height:2em;\">\n<div *ngIf=\"wait\" style=\"text-align:center;font-size:140%;\">please wait...</div>\n</div>\n<!--Login Button -->\n<div style=\"text-align:center;margin-top:2em;\">\n<div class=\"group\" style=\"margin: 2em auto;max-width:300px;\">\n  <input #a type=\"text\" class=\"md-input\" required>\n  <span class=\"highlight\"></span>\n  <span class=\"bar\"></span>\n  <label class=\"md-input-label\">E-Mail Adresse hier eingeben</label>\n</div>\n  <div class=\"group\" style=\"margin: 2em auto;max-width:300px;\">\n  <input #b type=\"password\" class=\"md-input\" required>\n  <span class=\"highlight\"></span>\n  <span class=\"bar\"></span>\n  <label class=\"md-input-label\">Passwort</label>\n</div>\n<button type=\"button\" style=\"margin-top:2em;\" (click)=\"getLoginUser(a.value, b.value)\">Login</button>\n</div>\n\n</div>\n"
+module.exports = "\n<div class=\"pane\" style=\"width:40%;max-width:720px;margin: 1em auto 1em auto; padding: 3em 0 3em 0;overflow:hidden;\">\n<!--Title Part -->\n<div  style=\"text-align:center\">\n<h1 style=\"padding-top:50px;\">\n  {{title}}\n</h1>\n\n<!-- Replace this later -->\n<i style=\"font-size:2000%;\" class=\"fa fa-graduation-cap\" aria-hidden=\"true\"></i>\n\n</div>\n\n<div style=\"height:2em;\">\n<div *ngIf=\"wait\" style=\"text-align:center;font-size:140%;\">please wait...</div>\n</div>\n<!--Login Button -->\n<div style=\"text-align:center;margin-top:2em;\">\n<div class=\"group\" style=\"margin: 2em auto;max-width:300px;\">\n  <input #a type=\"text\" class=\"md-input\" required>\n  <span class=\"highlight\"></span>\n  <span class=\"bar\"></span>\n  <label class=\"md-input-label\">E-Mail Adresse hier eingeben</label>\n</div>\n  <div class=\"group\" style=\"margin: 2em auto;max-width:300px;\">\n  <input #b type=\"password\" class=\"md-input\" required>\n  <span class=\"highlight\"></span>\n  <span class=\"bar\"></span>\n  <label class=\"md-input-label\">Passwort</label>\n</div>\n<button type=\"button\" style=\"margin-top:2em;\" (click)=\"getLoginUser(a.value, b.value)\"><i class=\"fa fa-sign-in\" aria-hidden=\"true\"></i> Login</button>\n</div>\n\n</div>\n"
 
 /***/ }),
 
@@ -764,6 +764,15 @@ var NavbarComponent = (function () {
     };
     NavbarComponent.prototype.ngOnDestroy = function () {
     };
+    NavbarComponent.prototype.getCurrentTeacherName = function () {
+        var x = JSON.parse(localStorage.getItem('CurrentTeacher'));
+        if (x) {
+            return x.lastname;
+        }
+        else {
+            return "";
+        }
+    };
     NavbarComponent.prototype.isGlobalSchool = function () {
         if (this.globalSchool.getSchool() != null) {
             return true;
@@ -791,7 +800,7 @@ var NavbarComponent = (function () {
 NavbarComponent = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["o" /* Component */])({
         selector: 'navbar',
-        template: "\n  <div class=\"pane headerpicture\" style=\"width: 64%;margin: 1.3em auto 1em auto;align:center;padding:2% 0 1% 0;\">\n\n  <div *ngIf=\"isGlobalSchool(); then  TitleWSchool  else Title\"></div>\n\n<ng-template #Title><h1 class=\"title\" style=\"margin:.6em;\" [routerLink]=\"['home']\" routerLinkActive=\"active\">{{title}}</h1></ng-template>\n<ng-template #TitleWSchool><h1 class=\"title\" style=\"margin:.6em;\" [routerLink]=\"['home']\" routerLinkActive=\"active\">{{title}} for {{this.globalSchool.getSchool().name}}</h1></ng-template>\n\n\n<nav class=\"pane\" style=\"padding: 0 0;margin: 0 0;\">\n<ul>\n    <li class=\"active floatleft\" [routerLink]=\"['/home']\" routerLinkActive=\"active\"><i class=\"fa fa-home\" aria-hidden=\"true\"></i></li>\n    <!--<li class=\"active floatleft\" [routerLink]=\"['/schools']\" routerLinkActive=\"active\">Schule</li>-->\n    <li *ngIf=\"isGlobalSchool()\" class=\"active floatleft\" [routerLink]=\"['/classes']\" routerLinkActive=\"active\">Klasse</li>\n    <li *ngIf=\"isGlobalSchool()\" class=\"active floatleft\" [routerLink]=\"['/teachers']\" routerLinkActive=\"active\">Lehrer</li>\n    <li *ngIf=\"isGlobalClass()\" class=\"active floatleft\" [routerLink]=\"['/students']\" routerLinkActive=\"active\">Sch\u00FCler</li>\n    <li style=\"\">&nbsp;</li>\n\n    <li class=\"active floatright\" (click)=\"logoff()\"><i class=\"fa fa-sign-out\" aria-hidden=\"true\"></i>\n</li>\n</ul>\n</nav>\n</div>\n\n",
+        template: "\n  <div class=\"pane headerpicture\" style=\"width: 64%;margin: 1.3em auto 1em auto;align:center;padding:2% 0 1% 0;\">\n\n  <div *ngIf=\"isGlobalSchool(); then  TitleWSchool  else Title\"></div>\n\n<ng-template #Title><h1 class=\"title\" style=\"margin:.6em;\" [routerLink]=\"['home']\" routerLinkActive=\"active\">{{title}}</h1></ng-template>\n<ng-template #TitleWSchool><h1 class=\"title\" style=\"margin:.6em;\" [routerLink]=\"['home']\" routerLinkActive=\"active\">{{title}} for {{this.globalSchool.getSchool().name}}</h1></ng-template>\n\n\n<nav class=\"pane\" style=\"padding: 0 0;margin: 0 0;\">\n<ul>\n    <li class=\"active floatleft\" [routerLink]=\"['/home']\" routerLinkActive=\"active\"><i class=\"fa fa-home\" aria-hidden=\"true\"></i></li>\n    <!--<li class=\"active floatleft\" [routerLink]=\"['/schools']\" routerLinkActive=\"active\">Schule</li>-->\n    <li *ngIf=\"isGlobalSchool()\" class=\"active floatleft\" [routerLink]=\"['/classes']\" routerLinkActive=\"active\">Klasse</li>\n    <li *ngIf=\"isGlobalSchool()\" class=\"active floatleft\" [routerLink]=\"['/teachers']\" routerLinkActive=\"active\">Lehrer</li>\n    <li *ngIf=\"isGlobalClass()\" class=\"active floatleft\" [routerLink]=\"['/students']\" routerLinkActive=\"active\">Sch\u00FCler</li>\n    <li style=\"\">&nbsp;</li>\n\n    <li class=\"active floatright\" (click)=\"logoff()\">{{getCurrentTeacherName()}}<i class=\"fa fa-sign-out\" aria-hidden=\"true\"></i>\n</li>\n</ul>\n</nav>\n</div>\n\n",
         styles: [__webpack_require__("../../../../../src/app/css/component.css")]
     }),
     __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__service_local_service__["d" /* GlobalSchool */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__service_local_service__["d" /* GlobalSchool */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__service_local_service__["c" /* GlobalLogin */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__service_local_service__["c" /* GlobalLogin */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_2__service_local_service__["b" /* GlobalClass */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__service_local_service__["b" /* GlobalClass */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["b" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["b" /* Router */]) === "function" && _d || Object])
@@ -853,6 +862,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var Root = (function () {
     function Root(globalstatusImpl) {
         this.globalstatusImpl = globalstatusImpl;
+        this.copy = "2017 | Lucas Wiemers, Sebastian Kurz";
         this.globalstatus = globalstatusImpl;
     }
     Root.prototype.isStatus = function () {
@@ -871,7 +881,7 @@ var Root = (function () {
 Root = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["o" /* Component */])({
         selector: 'root',
-        template: "\n<router-outlet></router-outlet>\n\n<div  *ngIf=\"isStatus()\" class=\"status\" style=\"text-align:center;\" (click)=\"unsetStatus()\">\n{{this.globalstatus.getStatus()}}\n</div>\n",
+        template: "\n<router-outlet></router-outlet>\n\n<div style=\"text-align:center;color:#b0b0b0\">\n&copy; {{copy}}\n</div>\n\n<div  *ngIf=\"isStatus()\" class=\"status\" style=\"text-align:center;\" (click)=\"unsetStatus()\">\n{{this.globalstatus.getStatus()}}\n</div>\n",
         styles: [__webpack_require__("../../../../../src/app/css/component.css")]
     }),
     __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__service_local_service__["e" /* GlobalStatus */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__service_local_service__["e" /* GlobalStatus */]) === "function" && _a || Object])
