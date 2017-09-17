@@ -57,7 +57,7 @@ getLoginUser(email:string, password:string): void {
   if (email >""){
     //Google login will be accessible here.
     this.wait=true;
-   this.GetTeacherService.getTeacherByMail(email,password).subscribe(t=> {this.teacher = t;});
+   this.GetTeacherService.getTeacherByMail(email,password).subscribe(t=> {this.teacher = t;this.globalLogin.setLogin(t);});
    if(this.wait){
      setTimeout(() => this.Login(), 2000);
    }}
@@ -68,12 +68,13 @@ getLoginUser(email:string, password:string): void {
 
  Login(){
    this.wait=false;
-  if (!this.teacher.id){
+   console.log(this.teacher);
+  if (!(JSON.parse(localStorage.getItem('CurrentTeacher')) && JSON.parse(localStorage.getItem('CurrentTeacher')).id)){
     this.globalStatus.setStatus("No Permission");
   }else {
     this.globalLogin.setLogin(this.teacher);
-    this.GetSchoolService.getSchool(this.teacher.belongsToSchool).subscribe(s => {this.globalSchool.setSchool(s);});
-    this.router.navigate(['/home']);
+    this.GetSchoolService.getSchool(this.teacher.belongsToSchool).subscribe(s => {console.log(s);this.globalSchool.setSchool(s);});
+    //this.router.navigate(['/home']);
   }
 }
 }

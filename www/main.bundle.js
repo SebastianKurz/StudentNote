@@ -681,7 +681,7 @@ var LoginComponent = (function () {
         if (email > "") {
             //Google login will be accessible here.
             this.wait = true;
-            this.GetTeacherService.getTeacherByMail(email, password).subscribe(function (t) { _this.teacher = t; });
+            this.GetTeacherService.getTeacherByMail(email, password).subscribe(function (t) { _this.teacher = t; _this.globalLogin.setLogin(t); });
             if (this.wait) {
                 setTimeout(function () { return _this.Login(); }, 2000);
             }
@@ -693,13 +693,14 @@ var LoginComponent = (function () {
     LoginComponent.prototype.Login = function () {
         var _this = this;
         this.wait = false;
-        if (!this.teacher.id) {
+        console.log(this.teacher);
+        if (!(JSON.parse(localStorage.getItem('CurrentTeacher')) && JSON.parse(localStorage.getItem('CurrentTeacher')).id)) {
             this.globalStatus.setStatus("No Permission");
         }
         else {
             this.globalLogin.setLogin(this.teacher);
-            this.GetSchoolService.getSchool(this.teacher.belongsToSchool).subscribe(function (s) { _this.globalSchool.setSchool(s); });
-            this.router.navigate(['/home']);
+            this.GetSchoolService.getSchool(this.teacher.belongsToSchool).subscribe(function (s) { console.log(s); _this.globalSchool.setSchool(s); });
+            //this.router.navigate(['/home']);
         }
     };
     return LoginComponent;
@@ -1378,7 +1379,7 @@ return func.sort(a,'timestamp','dsc');
         });
     };
     getTeacherService.prototype.getTeacherByMail = function (mail, password) {
-        return this.http.get(this.global.basicUrl + "/login/login/" + mail + "/" + password)
+        return this.http.get(this.global.basicUrl + "/login/login/" + mail)
             .map(function (response) {
             var t = response.json();
             localStorage.setItem('CurrentTeacher', JSON.stringify(t));
