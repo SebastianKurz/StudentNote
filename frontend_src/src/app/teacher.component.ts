@@ -137,7 +137,7 @@ this.init();
     this.sub = this.route.params.subscribe(params => {
        this.id = +params['id']; // (+) converts string 'id' to a number
        //Ask Webservice
-       if (this.selectedTeacher){
+       if (this.id){
        setTimeout(() => {this.selectedTeacher = this.teachers.find(o => o.id === this.id);}, 2000);
      }
 
@@ -145,7 +145,6 @@ this.init();
 
   }
   ngOnDestroy() {
-  this.sub.unsubscribe();
 }
 isLoginTeacher(id : number) {
   if (this.globalLogin.getLogin() && this.globalLogin.getLogin().id == id){

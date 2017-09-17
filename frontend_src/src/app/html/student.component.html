@@ -31,7 +31,7 @@
         <label class="md-input-label">Nachname</label>
       </div>
       <div class="group floatleft" style="margin-top:3em;margin-bottom:1em;">
-        <input #c type="number" class="md-input" required [value]="NewStudent.belongsToClass">
+        <input #c type="number" class="md-input" required [value]="getCurrentClass().id">
         <span class="highlight"></span>
         <span class="bar"></span>
         <label class="md-input-label">Klasse</label>

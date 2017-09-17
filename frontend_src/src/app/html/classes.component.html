@@ -91,7 +91,7 @@
 <h3>Schüler dieser Klasse</h3>
 <ul class="L">
 <li class="LNO" *ngFor="let student of students"
-  [class.selected]="student === selectedStudent" [routerLink]="['student',student.id]" routerLinkActive="active">
+  [class.selected]="student === selectedStudent" [routerLink]="['/student',student.id]" routerLinkActive="active">
   <div class="floatleft pane LPane">
   <div class="LText floatleft">{{student.firstname}} {{student.lastname}}</div>
   </div>

@@ -184,13 +184,13 @@ this.GetClassService.getEntities(this.globalSchool.getSchool().id).subscribe(s =
         this.sub = this.route.params.subscribe(params => {
          this.id = +params['id']; // (+) converts string 'id' to a number
          //Ask Webservice
-         this.selectedStudent = this.students.find(o => o.id === this.id);
+         if (this.id){
+         setTimeout(() => {this.selectedStudent = this.students.find(o => o.id === this.id);this.GetNoteService.getEntities(this.selectedStudent.id).subscribe(s => {this.notes = s});}, 2000);
+       }
+
       });
-        if(this.selectedStudent){this.GetNoteService.getEntities(this.selectedStudent.id).subscribe(s => {this.notes = s});
-        }
     }
     ngOnDestroy():void {
-    this.sub.unsubscribe();
   }
   updateStudent(student :Student,key:string,value){
     var val :  any;
@@ -279,9 +279,13 @@ else{
       return "";
     }
   }
+  getCurrentClass(){
+    return this.globalClass.getClass();
+  }
 
 onSelect(student: Student): void {
   this.cancelNewStudent();
+  this.selectedStudent=student;
   this.GetClassService.getEntities(this.globalSchool.getSchool().id).subscribe(s => this.classes = s);
    this.GetNoteService.getEntities(student.id).subscribe(s => this.notes = s);
 }
