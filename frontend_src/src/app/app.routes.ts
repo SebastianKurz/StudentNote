@@ -12,17 +12,22 @@ import { TeacherComponent } from './teacher.component';
 
 export const ROUTE_CONFIG: Routes = [
   { path: 'loginPage', component: LoginComponent },
+  { path: '/loginPage', component: LoginComponent },
   { path: 'home',component: SchoolComponent},
+  { path: '/home',component: SchoolComponent},
   { path: 'classes',component: ClassesComponent},
-  { path: 'schools',component: SchoolComponent},
+  { path: '/classes',component: ClassesComponent},
   { path: 'teachers',component: TeacherComponent},
+  { path: '/teachers',component: TeacherComponent},
   //{ path: 'teacher/:id',component: TeacherComponent},
   { path: 'students',component: StudentComponent},
+  { path: '/students',component: StudentComponent},
   { path: 'student/:id',component: StudentComponent},
   { path: '',
     redirectTo: 'loginPage',
     pathMatch: 'full'
   },
   {path : 'noc',component: NoConnectionComponent},
+  {path : '/noc',component: NoConnectionComponent},
   { path: '**', component: PageNotFoundComponent }
 ];

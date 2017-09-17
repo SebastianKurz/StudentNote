@@ -199,18 +199,23 @@ AppModule = __decorate([
 
 var ROUTE_CONFIG = [
     { path: 'loginPage', component: __WEBPACK_IMPORTED_MODULE_2__login_component__["a" /* LoginComponent */] },
+    { path: '/loginPage', component: __WEBPACK_IMPORTED_MODULE_2__login_component__["a" /* LoginComponent */] },
     { path: 'home', component: __WEBPACK_IMPORTED_MODULE_4__school_component__["a" /* SchoolComponent */] },
+    { path: '/home', component: __WEBPACK_IMPORTED_MODULE_4__school_component__["a" /* SchoolComponent */] },
     { path: 'classes', component: __WEBPACK_IMPORTED_MODULE_3__classes_component__["a" /* ClassesComponent */] },
-    { path: 'schools', component: __WEBPACK_IMPORTED_MODULE_4__school_component__["a" /* SchoolComponent */] },
+    { path: '/classes', component: __WEBPACK_IMPORTED_MODULE_3__classes_component__["a" /* ClassesComponent */] },
     { path: 'teachers', component: __WEBPACK_IMPORTED_MODULE_6__teacher_component__["a" /* TeacherComponent */] },
+    { path: '/teachers', component: __WEBPACK_IMPORTED_MODULE_6__teacher_component__["a" /* TeacherComponent */] },
     //{ path: 'teacher/:id',component: TeacherComponent},
     { path: 'students', component: __WEBPACK_IMPORTED_MODULE_5__student_component__["a" /* StudentComponent */] },
+    { path: '/students', component: __WEBPACK_IMPORTED_MODULE_5__student_component__["a" /* StudentComponent */] },
     { path: 'student/:id', component: __WEBPACK_IMPORTED_MODULE_5__student_component__["a" /* StudentComponent */] },
     { path: '',
         redirectTo: 'loginPage',
         pathMatch: 'full'
     },
     { path: 'noc', component: __WEBPACK_IMPORTED_MODULE_1__noconnection_component__["a" /* NoConnectionComponent */] },
+    { path: '/noc', component: __WEBPACK_IMPORTED_MODULE_1__noconnection_component__["a" /* NoConnectionComponent */] },
     { path: '**', component: __WEBPACK_IMPORTED_MODULE_0__404_component__["a" /* PageNotFoundComponent */] }
 ];
 //# sourceMappingURL=app.routes.js.map
@@ -750,7 +755,7 @@ var NavbarComponent = (function () {
         this.ngOnInit();
     }
     NavbarComponent.prototype.ngOnInit = function () {
-        if (JSON.parse(localStorage.getItem('CurrentTeacher')).id) {
+        if (!(JSON.parse(localStorage.getItem('CurrentTeacher')).id)) {
             this.logoff();
         }
     };
