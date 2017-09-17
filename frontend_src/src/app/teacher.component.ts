@@ -1,5 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
+import { HttpModule, Http }    from '@angular/http';
+import {Observable} from 'rxjs/Observable';
 import * as func from './lib/functions';
 import {Class, Note, Teacher,Student, School } from './types/types';
 import {GlobalSchool, GlobalStatus, GlobalLogin}from './service/local.service';
@@ -18,6 +20,7 @@ import {deleteTeacherService} from './service/delete.service';
 export class TeacherComponent {
   title : string;
   teachers : Teacher[];
+  schools : School[];
   selectedTeacher: Teacher;
   showNewTeacher : Boolean;
   NewTeacher : Teacher;
@@ -71,12 +74,17 @@ export class TeacherComponent {
   }
   newTeacher(firstname:string,lastname:string,mailAddress:string,password:string, belongsToSchool:number){
     if (firstname > "" && lastname > "" && mailAddress > "" && password > "" && belongsToSchool > 0){
-      this.PostTeacherService.postTeacher(new Teacher(null,firstname,lastname,mailAddress,password,belongsToSchool));
-      this.showNewTeacher= false;
-      this.globalStatus.setStatus("Data submitted");
-      //fetch new data
+      this.PostTeacherService.postTeacher(new Teacher(null,firstname,lastname,mailAddress,password,belongsToSchool)).subscribe(res => {
+        if(res.id){
+          this.showNewTeacher= false;
+          this.globalStatus.setStatus("Data submitted");
           this.init();
-          }
+        }
+        else{
+          this.globalStatus.setStatus(res.error);
+        }
+      });
+    }
     else{
       this.globalStatus.setStatus("Enter required Values");
     }
@@ -87,28 +95,41 @@ if (teacher != null && key != null && value != null){
   val = value;
   teacher[key]=val;
   var h : number;
-  this.UpdateTeacherService.updateTeacher(teacher).then( r => h = r);
-  if (h==0){
-      this.globalStatus.setStatus("Data submitted " + teacher[key]);
+  this.UpdateTeacherService.updateTeacher(teacher).subscribe(res => {
+    if(res.id){
+      this.globalStatus.setStatus("Data submitted");
       this.init();
-  }else{
-      this.globalStatus.setStatus("ERROR during submitting data");
-  }
+    }
+    else{
+      this.globalStatus.setStatus(res.error);
+    }
+  });
+}
+else{
+  this.globalStatus.setStatus("No changes");
 }
 }
 deleteTeacher(teacher : Teacher){
   var h : number;
-  this.UpdateTeacherService.updateTeacher(teacher).then( r => h = r);
-  if (h==0){
+  if(teacher.id > 0) {
+  this.DeleteTeacherService.deleteTeacher(teacher).subscribe(res => {
+    if(res.id){
       this.globalStatus.setStatus("Data submitted");
       this.init();
-  }else{
-      this.globalStatus.setStatus("ERROR during submitting data");
-  }
+    }
+    else{
+      this.globalStatus.setStatus(res.error);
+    }
+  });
+}
+else{
+  this.globalStatus.setStatus("Nothing to delete!");
+}
 }
 init(){
   if(this.globalSchool.getSchool()){
-this.GetTeacherService.getEntities(this.globalSchool.getSchool().id).then(t => this.teachers = t);
+this.GetTeacherService.getEntities(this.globalSchool.getSchool().id).subscribe( s => this.teachers =  s);
+this.GetSchoolService.getSchools().subscribe(s => this.schools = s );
 }
 }
 ngOnInit() {
@@ -116,12 +137,14 @@ this.init();
     this.sub = this.route.params.subscribe(params => {
        this.id = +params['id']; // (+) converts string 'id' to a number
        //Ask Webservice
-       this.selectedTeacher = this.teachers.find(o => o.id === this.id);
+       if (this.id){
+       setTimeout(() => {this.selectedTeacher = this.teachers.find(o => o.id === this.id);}, 2000);
+     }
+
     });
 
   }
   ngOnDestroy() {
-  this.sub.unsubscribe();
 }
 isLoginTeacher(id : number) {
   if (this.globalLogin.getLogin() && this.globalLogin.getLogin().id == id){
@@ -135,14 +158,16 @@ selectLoginTeacher(teacher){
   this.globalStatus.setStatus("You cannot change your user. Please relogin with the desired user.");
 }
 getSchoolName(id : number){
-  var school :School;
-  this.GetSchoolService.getSchool(id).then(s => school = s);
+  var school = func.find(this.schools, 'id' ,id);
   if (school!=null){
     return school.name;
   }else{
-    return "not existing";
+    return "";
   }
 
+}
+getCurrentSchool(){
+  return this.globalSchool.getSchool();
 }
 
 selectTeacher(teacher: Teacher): void {

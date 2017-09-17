@@ -1,4 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
+import { HttpModule, Http }    from '@angular/http';
+import {Observable} from 'rxjs/Observable';
 
 import {GlobalSchool, GlobalClass}from './service/local.service';
 import {GlobalLogin}from './service/local.service';
@@ -10,8 +13,8 @@ import {GlobalLogin}from './service/local.service';
 
   <div *ngIf="isGlobalSchool(); then  TitleWSchool  else Title"></div>
 
-<ng-template #Title><h1 class="title" style="margin:.6em;" [routerLink]="['/home']" routerLinkActive="active">{{title}}</h1></ng-template>
-<ng-template #TitleWSchool><h1 class="title" style="margin:.6em;" [routerLink]="['/home']" routerLinkActive="active">{{title}} for {{this.globalSchool.getSchool().name}}</h1></ng-template>
+<ng-template #Title><h1 class="title" style="margin:.6em;" [routerLink]="['home']" routerLinkActive="active">{{title}}</h1></ng-template>
+<ng-template #TitleWSchool><h1 class="title" style="margin:.6em;" [routerLink]="['home']" routerLinkActive="active">{{title}} for {{this.globalSchool.getSchool().name}}</h1></ng-template>
 
 
 <nav class="pane" style="padding: 0 0;margin: 0 0;">
@@ -23,7 +26,7 @@ import {GlobalLogin}from './service/local.service';
     <li *ngIf="isGlobalClass()" class="active floatleft" [routerLink]="['/students']" routerLinkActive="active">Schüler</li>
     <li style="">&nbsp;</li>
 
-    <li class="active floatright" (click)="logoff()"><i class="fa fa-sign-out" aria-hidden="true"></i>
+    <li class="active floatright" (click)="logoff()">{{getCurrentTeacherName()}}<i style="margin-left:1em;" class="fa fa-sign-out" aria-hidden="true"></i>
 </li>
 </ul>
 </nav>
@@ -37,26 +40,38 @@ export class NavbarComponent {
   private globalSchool : GlobalSchool;
   private globalClass : GlobalClass;
   private globalLogin : GlobalLogin;
+  private router : Router;
   title = 'Studentnote';
 
   constructor(
     private globalSchoolImpl : GlobalSchool,
     private globalLoginImpl : GlobalLogin,
     private globalClassImpl:GlobalClass,
+    private routerImpl:Router
   ){
     this.globalSchool=globalSchoolImpl;
     this.globalLogin=globalLoginImpl;
     this.globalClass=globalClassImpl;
+    this.router=routerImpl;
     this.ngOnInit();
   }
 
   ngOnInit() {
-    if (!this.globalLogin.getLogin()){
+    if (!(JSON.parse(localStorage.getItem('CurrentTeacher')).id)){
     this.logoff();
-    }
+  }
     }
     ngOnDestroy():void {
   }
+
+getCurrentTeacherName(){
+  var x = JSON.parse(localStorage.getItem('CurrentTeacher'));
+  if (x){
+    return x.lastname;
+  }else{
+    return "";
+  }
+}
 
   isGlobalSchool(){
     if(this.globalSchool.getSchool() != null){
@@ -76,6 +91,9 @@ export class NavbarComponent {
   }
 
   logoff():void{
-    location.href="/login";
+    localStorage.removeItem('CurrentTeacher');
+    localStorage.removeItem('CurrentSchool');
+    localStorage.removeItem('CurrentClass');
+    this.router.navigate(['/loginPage']);
   }
 }

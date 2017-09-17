@@ -22,7 +22,7 @@ public class GetClassService extends HttpServlet{
 	private List<SchoolClass> cl_list;
 
 	@GET
-	@Produces("application/json")
+	@Produces("text/plain")
 	public String allClasses(@PathParam("schoolId") long schoolId) {
 		
 		em = EMF.getEntityManager();
@@ -53,7 +53,7 @@ public class GetClassService extends HttpServlet{
 	
 	@GET
 	@Path("{classId}")
-	@Produces("application/json")
+	@Produces("text/plain")
 	public String specificClass(@PathParam("classId") long classId) {
 		
 		em = EMF.getEntityManager();

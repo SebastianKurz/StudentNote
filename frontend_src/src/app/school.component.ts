@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { HttpModule, Http }    from '@angular/http';
+import {Observable} from 'rxjs/Observable';
 
 import * as func from './lib/functions';
 
@@ -24,7 +26,7 @@ import {deleteSchoolService}from './service/delete.service';
 
 export class SchoolComponent {
   title : string;
-  schools : School[];
+  schools : School[] = [];
   selectedSchool: School;
   showNewSchool : Boolean;
   NewSchool : School;
@@ -54,7 +56,7 @@ export class SchoolComponent {
     this.NewSchool = new School(null , null);
   }
   init(){
-    this.GetSchoolService.getSchools().then(s => this.schools = s);
+     this.GetSchoolService.getSchools().subscribe(s => {this.schools = s});
   }
   ngOnInit() {
     this.init();
@@ -94,12 +96,17 @@ export class SchoolComponent {
   }
   newSchool(name:string){
     if (name > ""){
-      this.PostSchoolService.postSchool(new School(null,name));
-      this.showNewSchool= false;
-      this.globalStatus.setStatus("Data submitted");
-      //fetch new data
+      this.PostSchoolService.postSchool(new School(null,name)).subscribe(res => {
+        if(res.id){
+          this.showNewSchool= false;
+          this.globalStatus.setStatus("Data submitted");
           this.init();
-          }
+        }
+        else{
+          this.globalStatus.setStatus(res.error);
+        }
+      });
+    }
     else{
       this.globalStatus.setStatus("Enter required Values");
     }
@@ -109,24 +116,37 @@ export class SchoolComponent {
   if (school != null  && key != null && value != null){
     val = value;
     school[key]=val;var h:number;
-    this.UpdateSchoolService.updateSchool(school).then(r => h=r);
-    if (h==0){
-        this.globalStatus.setStatus("Data submitted " + school[key]);
-        this.init();
-    }else{
-        this.globalStatus.setStatus("ERROR during submitting data");
-    }
-  }
-  }
-  deleteSchool(school : School){var h:number;
-  this.DeleteSchoolService.deleteSchool(school).then(r => h=r);
-  if (h==0){
+    this.UpdateSchoolService.updateSchool(school).subscribe(res => {
+      if(res.id){
         this.globalStatus.setStatus("Data submitted");
         this.init();
-    }else{
-        this.globalStatus.setStatus("ERROR during submitting data");
-    }
+      }
+      else{
+        this.globalStatus.setStatus(res.error);
+      }
+    });
   }
+  else{
+    this.globalStatus.setStatus("No changes");
+  }
+  }
+  deleteSchool(school : School){
+    var h:number;
+    if(school.id > 0){
+  this.DeleteSchoolService.deleteSchool(school).subscribe(res => {
+    if(res.id){
+      this.globalStatus.setStatus("Data submitted");
+      this.init();
+    }
+    else{
+      this.globalStatus.setStatus(res.error);
+    }
+  });
+}
+else{
+  this.globalStatus.setStatus("Nothing to delete!");
+}
+}
 
 onSelect(school: School): void {
   this.cancelNewSchool();

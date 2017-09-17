@@ -21,7 +21,7 @@ public class GetSchoolService extends HttpServlet{
 	private EntityManager em;
 	
 	@GET
-	@Produces("application/json")
+	@Produces("text/plain")
 	public String allSchools() {
 		
 		em = EMF.getEntityManager();
@@ -48,7 +48,7 @@ public class GetSchoolService extends HttpServlet{
 	
 	@GET
 	@Path("{schoolId}")
-	@Produces("application/json")
+	@Produces("text/plain")
 	public String specificSchool(@PathParam("schoolId") long schoolId) {
 		
 		em = EMF.getEntityManager();

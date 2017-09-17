@@ -9,14 +9,14 @@
 <li class="LNO" *ngFor="let klasse of classes"
   [class.selected]="klasse === selectedClass"
   (click)="selectClass(klasse)">
-  <div class="floatleft pane LPane">
+  <div class="floatleft pane LPane" (click)="selectKlasse(klasse)">
     <div *ngIf="isGlobalClass(klasse.id); then B else NB"></div>
     <ng-template #B>
-    <div class="LBadge LB-Green floatleft" style="text-align:center" (click)="selectKlasse(klasse)">{{klasse.level}}</div>
+    <div class="LBadge LB-Green floatleft" style="text-align:center" >{{klasse.level}}</div>
     <div class="LText floatleft">{{klasse.name}}</div>
     </ng-template>
     <ng-template #NB>
-    <div class="LBadge LB-Blue floatleft" style="text-align:center" (click)="selectKlasse(klasse)">{{klasse.level}}</div>
+    <div class="LBadge LB-Blue floatleft" style="text-align:center">{{klasse.level}}</div>
     <div class="LText floatleft">{{klasse.name}}</div>
     </ng-template>
   </div>
@@ -39,7 +39,7 @@
       <label class="md-input-label">Stufe</label>
     </div>
       <div class="group floatleft" style="margin-top:3em;margin-bottom:1em;">
-          <input #belongsToSchool type="number" class="md-input" required>
+          <input #belongsToSchool type="number" class="md-input" required  [value]="getCurrentSchool().id">
           <span class="highlight"></span>
           <span class="bar"></span>
           <label class="md-input-label">Schule: {{this.getSchoolName(belongsToSchool.value)}}</label>
@@ -68,22 +68,13 @@
       <label class="md-input-label">Stufe</label>
     </div>
     <div class="group" style="margin-top:3em;margin-bottom:1em;">
-        <input class="md-input" type="number">
+        <!--<input class="md-input" type="number" required [(ngModel)]="selectedClass.belongsToSchool">
         <span class="highlight"></span>
-        <span class="bar"></span>
-        <label class="md-input-label">Zugeordnet zu Schule: {{this.getSchoolName(selectedClass.belongsToSchool)}}</label>
+        <span class="bar"></span>-->
+        <label >Zugeordnet zu Schule: {{this.getSchoolName(selectedClass.belongsToSchool)}}</label>
       </div>
   <div style="margin-left:5px"><label>id: </label>{{selectedClass.id}}</div>
 </div>
-
-<!--
-<div *ngIf="selectedClass" class="pane floatleft widthnexttobar">
-<h3> Lehrer</h3>
-<ul class="listing">
-  <li class="nobadge" *ngFor="let teacher of teachers"
-    [class.selected]="teacher === selectedTeacher" [routerLink]="['/teacher',teacher.id]" routerLinkActive="active">{{teacher.firstname}} {{teacher.lastname}}
-</li></ul></div>
--->
 
 <div *ngIf="selectedClass" class="floatleft" style="width:100%;">
 

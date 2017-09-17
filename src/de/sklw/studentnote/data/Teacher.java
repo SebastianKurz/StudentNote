@@ -22,7 +22,7 @@ public class Teacher implements JSONAware{
 	private long belongsToSchool;
 	
 	
-	public long getTeacherId() {
+	public Long getTeacherId() {
 		return teacherId;
 	}
 	public String getFirstName() {

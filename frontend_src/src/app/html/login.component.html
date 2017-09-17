@@ -1,5 +1,5 @@
 
-<div class="pane" style="width:40%;margin: 1em auto 1em auto; padding: 3em 0 3em 0;">
+<div class="pane" style="width:40%;max-width:720px;margin: 1em auto 1em auto; padding: 3em 0 3em 0;overflow:hidden;">
 <!--Title Part -->
 <div  style="text-align:center">
 <h1 style="padding-top:50px;">
@@ -7,18 +7,28 @@
 </h1>
 
 <!-- Replace this later -->
-<img  width="450px" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxOS4xLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiDQoJIHZpZXdCb3g9IjAgMCAyNTAgMjUwIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCAyNTAgMjUwOyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+DQo8c3R5bGUgdHlwZT0idGV4dC9jc3MiPg0KCS5zdDB7ZmlsbDojREQwMDMxO30NCgkuc3Qxe2ZpbGw6I0MzMDAyRjt9DQoJLnN0MntmaWxsOiNGRkZGRkY7fQ0KPC9zdHlsZT4NCjxnPg0KCTxwb2x5Z29uIGNsYXNzPSJzdDAiIHBvaW50cz0iMTI1LDMwIDEyNSwzMCAxMjUsMzAgMzEuOSw2My4yIDQ2LjEsMTg2LjMgMTI1LDIzMCAxMjUsMjMwIDEyNSwyMzAgMjAzLjksMTg2LjMgMjE4LjEsNjMuMiAJIi8+DQoJPHBvbHlnb24gY2xhc3M9InN0MSIgcG9pbnRzPSIxMjUsMzAgMTI1LDUyLjIgMTI1LDUyLjEgMTI1LDE1My40IDEyNSwxNTMuNCAxMjUsMjMwIDEyNSwyMzAgMjAzLjksMTg2LjMgMjE4LjEsNjMuMiAxMjUsMzAgCSIvPg0KCTxwYXRoIGNsYXNzPSJzdDIiIGQ9Ik0xMjUsNTIuMUw2Ni44LDE4Mi42aDBoMjEuN2gwbDExLjctMjkuMmg0OS40bDExLjcsMjkuMmgwaDIxLjdoMEwxMjUsNTIuMUwxMjUsNTIuMUwxMjUsNTIuMUwxMjUsNTIuMQ0KCQlMMTI1LDUyLjF6IE0xNDIsMTM1LjRIMTA4bDE3LTQwLjlMMTQyLDEzNS40eiIvPg0KPC9nPg0KPC9zdmc+DQo=">
+<i style="font-size:2000%;" class="fa fa-graduation-cap" aria-hidden="true"></i>
+
 </div>
 
+<div style="height:2em;">
+<div *ngIf="wait" style="text-align:center;font-size:140%;">please wait...</div>
+</div>
 <!--Login Button -->
-<div style="text-align:center">
-<div class="group floatleft" style="margin-top:3em;margin-bottom:1em;">
+<div style="text-align:center;margin-top:2em;">
+<div class="group" style="margin: 2em auto;max-width:300px;">
   <input #a type="text" class="md-input" required>
   <span class="highlight"></span>
   <span class="bar"></span>
-  <label class="md-input-label">EMail"</label>
+  <label class="md-input-label">E-Mail Adresse hier eingeben</label>
 </div>
-<button type="button" style="margin-top:8em;" (click)="login(a.value)">Login</button>
+  <div class="group" style="margin: 2em auto;max-width:300px;">
+  <input #b type="password" class="md-input" required>
+  <span class="highlight"></span>
+  <span class="bar"></span>
+  <label class="md-input-label">Passwort</label>
+</div>
+<button type="button" style="margin-top:2em;" (click)="getLoginUser(a.value, b.value)"><i class="fa fa-sign-in" aria-hidden="true"></i> Login</button>
 </div>
 
 </div>

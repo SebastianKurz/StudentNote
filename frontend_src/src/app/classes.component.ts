@@ -1,4 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { HttpModule, Http }    from '@angular/http';
+import {Observable} from 'rxjs/Observable';
 import * as func from './lib/functions';
 import {Class, Note, School, Student, Teacher } from './types/types';
 import {GlobalSchool, GlobalStatus, GlobalClass}from './service/local.service';
@@ -18,6 +20,7 @@ export class ClassesComponent {
   title : String;
   classes : Class[];
   students : Student[];
+  schools : School[];
   teachers : Teacher[];
   selectedClass: Class;
   bbs : number;
@@ -58,7 +61,8 @@ constructor(
 }
 init(){
   if(this.globalSchool.getSchool()){
-this.GetClassService.getEntities(this.globalSchool.getSchool().id).then(c => this.classes = c);
+this.GetClassService.getEntities(this.globalSchool.getSchool().id).subscribe(s => this.classes = s);
+this.GetSchoolService.getSchools().subscribe(s => this.schools = s);
 }
 }
 ngOnInit() {
@@ -69,7 +73,7 @@ ngOnInit() {
 
 }
 isStudents(){
- if (this.students.length > 0){
+ if (this.students){
     return true;
   }else{
     return false;
@@ -91,56 +95,65 @@ cancelNewClass(){
 }
 newClass(name:string,level:string,belongsToSchool:number){
     if (name > "" && level > "" && belongsToSchool > 0){var h : number;
-    this.PostClassService.postClass(new Class(null,name,level,belongsToSchool)).then(r => h = r);
-    if (0==h){
-        this.globalStatus.setStatus("Data submitted");
+    this.PostClassService.postClass(new Class(null,name,level,belongsToSchool)).subscribe(res => {
+      if(res.id){
         this.showNewClass= false;
-        //refesh Data
+        this.globalStatus.setStatus("Data submitted");
         this.init();
       }
       else{
-        this.globalStatus.setStatus("[ERROR] submitting data");
+        this.globalStatus.setStatus(res.error);
       }
-    }
-    else{
-    this.globalStatus.setStatus("enter some Values");
-    }
+    });
   }
+  else{
+    this.globalStatus.setStatus("Enter required Values");
+  }
+}
     updateClass(klasse : Class, key, value){
       var val :  any;
     if (klasse != null && key != null && value != null){
       val = value;
       klasse[key]=val;
-      var h:number;
-      this.UpdateClassService.updateClass(klasse).then(r => h = r);
-      if (h==0){
-          this.globalStatus.setStatus("Data submitted " + klasse[key]);
+      this.UpdateClassService.updateClass(klasse).subscribe(res => {
+        if(res.id){
+          this.globalStatus.setStatus("Data submitted");
           this.init();
-      }else{
-          this.globalStatus.setStatus("[ERROR] submitting data");
-      }
+        }
+        else{
+          this.globalStatus.setStatus(res.error);
+        }
+      });
+    }
+    else{
+      this.globalStatus.setStatus("No changes");
     }
     }
     deleteClass(klasse : Class){
       var h:number;
-    this.DeleteClassService.deleteClass(klasse).then(r => h = r);
-    if (h==0){
-          this.globalStatus.setStatus("Data submitted");
-          this.init();
-      }else{
-          this.globalStatus.setStatus("[ERROR] submitting data");
+      if (klasse.id >0){
+    this.DeleteClassService.deleteClass(klasse).subscribe(res => {
+      if(res.id){
+        this.globalStatus.setStatus("Data submitted");
+        this.init();
       }
-    }
+      else{
+        this.globalStatus.setStatus(res.error);
+      }
+    });
+  }
+  else{
+    this.globalStatus.setStatus("Nothing to delete!");
+  }
+  }
     getSchoolName(id : number){
-      var school :School;
-      this.GetSchoolService.getSchool(id).then(s => school = s);
-      if (school!=null){
-        return school.name;
-      }else{
-        return "not existing";
+       var school = func.find(this.schools,'id',id);
+       if (school!=null){
+         return school.name;
+       }else{
+         return "";
+       }
       }
-
-    }
     isGlobalClass(id:number){
       if(this.globalClass.getClass() && this.globalClass.getClass().id == id){
       return true;
@@ -148,6 +161,9 @@ newClass(name:string,level:string,belongsToSchool:number){
       else{
       return false;
     }
+    }
+    getCurrentSchool(){
+      return this.globalSchool.getSchool();
     }
     selectKlasse(klasse:Class){
       if (this.isGlobalClass(klasse.id)){
@@ -159,6 +175,14 @@ newClass(name:string,level:string,belongsToSchool:number){
 selectClass(klasse: Class): void {
   this.cancelNewClass();
   this.selectedClass = klasse;
-  this.GetStudentService.getEntities(klasse.id).then(s => this.students = s);
+  this.students = null;
+  this.GetStudentService.getEntities(klasse.id).subscribe(s => {
+    if(s != null){
+      this.students = s;
+    }
+    else{
+      this.students = null;
+    }
+    });
 }
 }

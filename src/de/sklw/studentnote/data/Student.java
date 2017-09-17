@@ -56,9 +56,9 @@ public class Student implements JSONAware{
 	public String toJSONString() {
 		JSONObject obj = new JSONObject();
 		
-		obj.put("studentId", this.studentId);
-		obj.put("firstName", this.firstName);
-		obj.put("lastName", this.lastName);
+		obj.put("id", this.studentId);
+		obj.put("firstname", this.firstName);
+		obj.put("lastname", this.lastName);
 		obj.put("belongsToClass", this.belongsToClass);
 		
 		return obj.toString();

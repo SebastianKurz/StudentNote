@@ -17,7 +17,7 @@ public class DeleteNoteService extends HttpServlet{
 	private EntityManager em;
 	
 	@DELETE
-	@Produces("application/json")
+	@Produces("text/plain")
 	public String deleteNote(@PathParam("noteId") long noteId) {
 		
 		em = EMF.getEntityManager();

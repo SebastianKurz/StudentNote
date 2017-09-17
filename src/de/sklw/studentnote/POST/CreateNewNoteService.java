@@ -18,7 +18,7 @@ public class CreateNewNoteService extends HttpServlet{
 	private Note n;
 	
 	@POST
-	@Produces("application/json")
+	@Produces("text/plain")
 	public String newNote(@PathParam("text") String text,
 						@PathParam("authorId") long authorId,
 						@PathParam("studentId") long studentId) {

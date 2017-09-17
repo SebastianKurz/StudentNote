@@ -7,7 +7,11 @@ import { GlobalStatus } from './service/local.service';
   template: `
 <router-outlet></router-outlet>
 
-<div  *ngIf="isStatus()" class="status" (click)="unsetStatus()">
+<div style="text-align:center;color:#b0b0b0;display:block;position:fixed;bottom:0;width:100%;height:2em;font-size:1,5em;">
+&copy; {{copy}}
+</div>
+
+<div  *ngIf="isStatus()" class="status" style="text-align:center;" (click)="unsetStatus()">
 {{this.globalstatus.getStatus()}}
 </div>
 `,
@@ -15,6 +19,7 @@ styleUrls: ['./css/component.css']
 })
 
 export class Root {
+  copy="2017 | Lucas Wiemers, Sebastian Kurz";
   status;
   private globalstatus : GlobalStatus;
 

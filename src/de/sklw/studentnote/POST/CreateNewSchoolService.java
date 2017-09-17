@@ -23,7 +23,7 @@ public class CreateNewSchoolService extends HttpServlet{
 	private EntityManager em;
 	
 	@POST
-	@Produces("application/json")
+	@Produces("text/plain")
 	public String newSchool(@PathParam("name") String name) {
 		
 		em = EMF.getEntityManager();

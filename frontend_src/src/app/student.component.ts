@@ -1,5 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
+import { HttpModule, Http }    from '@angular/http';
+import {Observable} from 'rxjs/Observable';
 import { DatePipe } from '@angular/common';
 import * as func from './lib/functions';
 import {Class, Note, School, Student, Teacher } from './types/types';
@@ -21,6 +23,7 @@ export class StudentComponent implements OnInit, OnDestroy{
   students : Student[];
   notes : Note[];
   teachers : Teacher[];
+  classes : Class[];
   teacher : Teacher;
   selectedStudent: Student;
   showNewStudent : Boolean;
@@ -84,7 +87,7 @@ export class StudentComponent implements OnInit, OnDestroy{
 
   }
   isNotes(){
-   if (this.notes.length > 0){
+   if (this.notes){
       return true;
     }else{
       return false;
@@ -106,21 +109,21 @@ export class StudentComponent implements OnInit, OnDestroy{
   }
   newStudent(firstname:string,lastname:string,belongsToClass:number){
     if (firstname > "" && lastname > "" && belongsToClass > 0){
-      var h : number;
-      this.PostStudentService.postStudent(new Student(null,firstname,lastname,belongsToClass)).then(r => h = r);
-      if (0==h){
-      this.showNewStudent= false;
-      this.globalStatus.setStatus("Data submitted");
-      //fetch new data
+      this.PostStudentService.postStudent(new Student(null,firstname,lastname,belongsToClass)).subscribe(res => {
+        if(res.id){
+          this.showNewStudent= false;
+          this.globalStatus.setStatus("Data submitted");
           this.init();
         }
         else{
-          this.globalStatus.setStatus("[ERROR] submitting data");
-        }}
+          this.globalStatus.setStatus(res.error);
+        }
+      });
+    }
     else{
       this.globalStatus.setStatus("Enter required Values");
     }
-  }
+}
   toggleNewNote():void{
         if(this.showNewNote==false){
                 this.showNewNote=true;
@@ -135,29 +138,35 @@ export class StudentComponent implements OnInit, OnDestroy{
   }
   newNote(text:string,timestamp:number,authorTeacherId:number,belongsToStudent:number){
     if (text > "" && timestamp > 0 && authorTeacherId != null && belongsToStudent > 0){
-      var h : number;
-      this.PostNoteService.postNote(new Note(null,text,timestamp,authorTeacherId,belongsToStudent));
-      if (0==h){
-      this.showNewNote= false;
-      this.globalStatus.setStatus("Data submitted");
-      //fetch new data
+      this.PostNoteService.postNote(new Note(null,text,timestamp,authorTeacherId,belongsToStudent)).subscribe(res => {
+        if(res.id){
+          this.showNewNote= false;
+          this.globalStatus.setStatus("Data submitted");
           this.init();
-        }else{
-          this.globalStatus.setStatus("[ERROR] submitting data");
-      }
-      }
+          this.onSelect(this.selectedStudent);
+        }
+        else{
+          this.globalStatus.setStatus(res.error);
+        }
+      });
+    }
     else{
       this.globalStatus.setStatus("Enter required Values");
     }
 }
 
-  getTeacherName(teacher : Teacher){
-    return teacher.firstname + ' ' + teacher.lastname;
+  getTeacherName(id : number){
+    var teacher = func.find(this.teachers,'id',id);
+    if (teacher != null){
+      return teacher.firstname + " "+ teacher.lastname;
+    }else{
+      return "";
+    }
   }
   getLoginName(){
     var teacher = this.globalLogin.getLogin();
     if (teacher != null){
-    return this.getTeacherName(teacher);
+    return teacher.firstname +" "+teacher.lastname;
   }else{
     return "Not logged in!";
   }
@@ -167,12 +176,14 @@ export class StudentComponent implements OnInit, OnDestroy{
     if (teacher != null){
     return teacher.id;
   }else{
-    return "-1";
+    return "";
   }
   }
 init(){
   if(this.globalSchool.getSchool()){
-  this.GetStudentService.getEntities(this.globalClass.getClass().id).then(s => this.students = s);
+this.GetStudentService.getEntities(this.globalClass.getClass().id).subscribe(s => { this.students = s});
+this.GetClassService.getEntities(this.globalSchool.getSchool().id).subscribe(s => this.classes = s);
+this.GetTeacherService.getEntities(this.globalSchool.getSchool().id).subscribe(s => this.teachers = s);
 }
 }
   ngOnInit() {
@@ -180,13 +191,13 @@ init(){
         this.sub = this.route.params.subscribe(params => {
          this.id = +params['id']; // (+) converts string 'id' to a number
          //Ask Webservice
-         this.selectedStudent = this.students.find(o => o.id === this.id);
+         if (this.id){
+         setTimeout(() => {this.selectedStudent = this.students.find(o => o.id === this.id);this.GetNoteService.getEntities(this.selectedStudent.id).subscribe(s => {this.notes = s});}, 2000);
+       }
+
       });
-        if(this.selectedStudent){this.GetNoteService.getEntities(this.selectedStudent.id).then(n => this.notes = n);
-        }
     }
     ngOnDestroy():void {
-    this.sub.unsubscribe();
   }
   updateStudent(student :Student,key:string,value){
     var val :  any;
@@ -194,13 +205,18 @@ init(){
     val = value;
     student[key]=val;
     var h:number;
-    this.UpdateStudentService.updateStudent(student).then(r => h=r);
-    if (h==0){
-        this.globalStatus.setStatus("Data submitted " + student[key]);
+    this.UpdateStudentService.updateStudent(student).subscribe(res => {
+      if(res.id){
+        this.globalStatus.setStatus("Data submitted");
         this.init();
-    }else{
-        this.globalStatus.setStatus("ERROR during submitting data");
-    }
+      }
+      else{
+        this.globalStatus.setStatus(res.error);
+      }
+    });
+  }
+  else{
+    this.globalStatus.setStatus("No changes");
   }
   }
 
@@ -209,52 +225,85 @@ init(){
     return now;
   }
   deleteStudent(student : Student){var h:number;
-  this.DeleteStudentService.deleteStudent(student).then(r => h=r);
-  if (h==0){
-        this.globalStatus.setStatus("Data submitted");
-        this.init();
-    }else{
-        this.globalStatus.setStatus("ERROR during submitting data");
+    if(student.id > 0){
+  this.DeleteStudentService.deleteStudent(student).subscribe(res => {
+    if(res.id){
+      this.globalStatus.setStatus("Data submitted");
+      this.init();
     }
-  }
+    else{
+      this.globalStatus.setStatus(res.error);
+    }
+  });
+}
+else{
+  this.globalStatus.setStatus("Nothing to delete!");
+}
+}
   updateNote(note :Note,key:string,value){
     var val :  any;
   if (note != null && key != null && value != null){
     val = value;
-    note[key]=val;var h:number;
-    this.UpdateNoteService.updateNote(note).then(r => h=r);
-    if (h==0){
-        this.globalStatus.setStatus("Data submitted " + note[key]);
-        this.init();
-    }else{
-        this.globalStatus.setStatus("ERROR during submitting data");
-    }
-  }
-  }
-  deleteNote(note : Note){var h:number;
-  this.DeleteNoteService.deleteNote(note).then(r => h=r);
-  if (h==0){
+    note[key]=val;
+
+    this.UpdateNoteService.updateNote(note).subscribe(res => {
+      if(res.id){
+        this.showNewNote= false;
         this.globalStatus.setStatus("Data submitted");
         this.init();
+        this.onSelect(this.selectedStudent);
+        }
+      else{
+        this.globalStatus.setStatus(res.error);
+      }
+    });
+  }
+  else{
+    this.globalStatus.setStatus("No changes");
+  }
+}
+  deleteNote(note : Note){var h:number;
+    if(note.id > 0){
+  this.DeleteNoteService.deleteNote(note).subscribe(res => {
+    if(res.id){
+      this.showNewNote= false;
+      this.globalStatus.setStatus("Data submitted");
+      this.init();
+      this.onSelect(this.selectedStudent);
+      }
+    else{
+      this.globalStatus.setStatus(res.error);
+    }
+  });
+}
+else{
+  this.globalStatus.setStatus("Nothing to delete!");
+}
+}
+  getClassName(id : number){
+    var klasse = func.find(this.classes,'id',id);
+    if (klasse != null){
+      return klasse.level + " "+ klasse.name;
     }else{
-        this.globalStatus.setStatus("ERROR during submitting data");
+      return "";
     }
   }
-  getClassName(id : number){
-    var klasse : Class;
-
-    this.GetClassService.getClass(this.globalSchool.getSchool().id,id);
-    if (klasse != null){
-      return klasse.name;
-    }else{
-      return "not existing";
-    }
-
+  getCurrentClass(){
+    return this.globalClass.getClass();
   }
 
 onSelect(student: Student): void {
   this.cancelNewStudent();
-  this.GetNoteService.getEntities(student.id).then(n => this.notes = n)
+  this.selectedStudent=student;
+  this.notes = null;
+  this.GetClassService.getEntities(this.globalSchool.getSchool().id).subscribe(s => this.classes = s);
+  this.GetNoteService.getEntities(this.selectedStudent.id).subscribe(s => {
+if(s != null){
+ this.notes = s;
+}else{
+ this.notes = null;
+}
+    });
 }
 
 }

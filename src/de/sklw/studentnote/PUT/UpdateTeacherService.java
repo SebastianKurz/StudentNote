@@ -18,7 +18,7 @@ public class UpdateTeacherService extends HttpServlet{
 	private Teacher t;
 	
 	@PUT
-	@Produces("application/json")
+	@Produces("text/plain")
 	public String updateTeacher(@PathParam("teacherId") long teacherId,
 							  @PathParam("firstName") String firstName,
 							  @PathParam("lastName") String lastName,
