@@ -59,7 +59,7 @@ getLoginUser(email:string, password:string): void {
     this.wait=true;
    this.GetTeacherService.getTeacherByMail(email,password).subscribe(t=> {this.teacher = t;this.globalLogin.setLogin(t);});
    if(this.wait){
-     setTimeout(() => this.Login(), 2000);
+     setTimeout(() => this.Login(), 3000);
    }}
  else{
    this.globalStatus.setStatus("Enter your Email address");
@@ -74,7 +74,7 @@ getLoginUser(email:string, password:string): void {
   }else {
     this.globalLogin.setLogin(this.teacher);
     this.GetSchoolService.getSchool(this.teacher.belongsToSchool).subscribe(s => {console.log(s);this.globalSchool.setSchool(s);});
-    //this.router.navigate(['/home']);
+    this.router.navigate(['home']);
   }
 }
 }

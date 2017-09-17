@@ -683,7 +683,7 @@ var LoginComponent = (function () {
             this.wait = true;
             this.GetTeacherService.getTeacherByMail(email, password).subscribe(function (t) { _this.teacher = t; _this.globalLogin.setLogin(t); });
             if (this.wait) {
-                setTimeout(function () { return _this.Login(); }, 2000);
+                setTimeout(function () { return _this.Login(); }, 3000);
             }
         }
         else {
@@ -700,7 +700,7 @@ var LoginComponent = (function () {
         else {
             this.globalLogin.setLogin(this.teacher);
             this.GetSchoolService.getSchool(this.teacher.belongsToSchool).subscribe(function (s) { console.log(s); _this.globalSchool.setSchool(s); });
-            //this.router.navigate(['/home']);
+            this.router.navigate(['home']);
         }
     };
     return LoginComponent;
