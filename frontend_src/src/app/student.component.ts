@@ -109,21 +109,21 @@ export class StudentComponent implements OnInit, OnDestroy{
   }
   newStudent(firstname:string,lastname:string,belongsToClass:number){
     if (firstname > "" && lastname > "" && belongsToClass > 0){
-      var h : number;
-      this.PostStudentService.postStudent(new Student(null,firstname,lastname,belongsToClass)).then(r => h = r,()=>  location.href="/noc");
-      if (0==h){
-      this.showNewStudent= false;
-      this.globalStatus.setStatus("Data submitted");
-      //fetch new data
+      this.PostStudentService.postStudent(new Student(null,firstname,lastname,belongsToClass)).subscribe(res => {
+        if(res.id){
+          this.showNewStudent= false;
+          this.globalStatus.setStatus("Data submitted");
           this.init();
         }
         else{
-          this.globalStatus.setStatus("[ERROR] submitting data");
-        }}
+          this.globalStatus.setStatus(res.error);
+        }
+      });
+    }
     else{
       this.globalStatus.setStatus("Enter required Values");
     }
-  }
+}
   toggleNewNote():void{
         if(this.showNewNote==false){
                 this.showNewNote=true;
@@ -138,17 +138,17 @@ export class StudentComponent implements OnInit, OnDestroy{
   }
   newNote(text:string,timestamp:number,authorTeacherId:number,belongsToStudent:number){
     if (text > "" && timestamp > 0 && authorTeacherId != null && belongsToStudent > 0){
-      var h : number;
-      this.PostNoteService.postNote(new Note(null,text,timestamp,authorTeacherId,belongsToStudent)).then(s => h = s,()=>  location.href="/noc");
-      if (0==h){
-      this.showNewNote= false;
-      this.globalStatus.setStatus("Data submitted");
-      //fetch new data
+      this.PostNoteService.postNote(new Note(null,text,timestamp,authorTeacherId,belongsToStudent)).subscribe(res => {
+        if(res.id){
+          this.showNewNote= false;
+          this.globalStatus.setStatus("Data submitted");
           this.init();
-        }else{
-          this.globalStatus.setStatus("[ERROR] submitting data");
-      }
-      }
+        }
+        else{
+          this.globalStatus.setStatus(res.error);
+        }
+      });
+    }
     else{
       this.globalStatus.setStatus("Enter required Values");
     }
@@ -198,13 +198,18 @@ this.GetClassService.getEntities(this.globalSchool.getSchool().id).subscribe(s =
     val = value;
     student[key]=val;
     var h:number;
-    this.UpdateStudentService.updateStudent(student).then(r => h=r,()=>  location.href="/noc");
-    if (h==0){
-        this.globalStatus.setStatus("Data submitted " + student[key]);
+    this.UpdateStudentService.updateStudent(student).subscribe(res => {
+      if(res.id){
+        this.globalStatus.setStatus("Data submitted");
         this.init();
-    }else{
-        this.globalStatus.setStatus("ERROR during submitting data");
-    }
+      }
+      else{
+        this.globalStatus.setStatus(res.error);
+      }
+    });
+  }
+  else{
+    this.globalStatus.setStatus("No changes");
   }
   }
 
@@ -213,37 +218,59 @@ this.GetClassService.getEntities(this.globalSchool.getSchool().id).subscribe(s =
     return now;
   }
   deleteStudent(student : Student){var h:number;
-  this.DeleteStudentService.deleteStudent(student).then(r => h=r,()=>  location.href="/noc");
-  if (h==0){
-        this.globalStatus.setStatus("Data submitted");
-        this.init();
-    }else{
-        this.globalStatus.setStatus("ERROR during submitting data");
+    if(student.id > 0){
+  this.DeleteStudentService.deleteStudent(student).subscribe(res => {
+    if(res.id){
+      this.globalStatus.setStatus("Data submitted");
+      this.init();
     }
-  }
+    else{
+      this.globalStatus.setStatus(res.error);
+    }
+  });
+}
+else{
+  this.globalStatus.setStatus("Nothing to delete!");
+}
+}
   updateNote(note :Note,key:string,value){
     var val :  any;
   if (note != null && key != null && value != null){
     val = value;
-    note[key]=val;var h:number;
-    this.UpdateNoteService.updateNote(note).then(r => h=r,()=>  location.href="/noc");
-    if (h==0){
-        this.globalStatus.setStatus("Data submitted " + note[key]);
-        this.init();
-    }else{
-        this.globalStatus.setStatus("ERROR during submitting data");
-    }
-  }
-  }
-  deleteNote(note : Note){var h:number;
-  this.DeleteNoteService.deleteNote(note).then(r => h=r,()=>  location.href="/noc");
-  if (h==0){
+    note[key]=val;
+
+    this.UpdateNoteService.updateNote(note).subscribe(res => {
+      if(res.id){
+        this.showNewNote= false;
         this.globalStatus.setStatus("Data submitted");
         this.init();
-    }else{
-        this.globalStatus.setStatus("ERROR during submitting data");
-    }
+      }
+      else{
+        this.globalStatus.setStatus(res.error);
+      }
+    });
   }
+  else{
+    this.globalStatus.setStatus("No changes");
+  }
+}
+  deleteNote(note : Note){var h:number;
+    if(note.id > 0){
+  this.DeleteNoteService.deleteNote(note).subscribe(res => {
+    if(res.id){
+      this.showNewNote= false;
+      this.globalStatus.setStatus("Data submitted");
+      this.init();
+    }
+    else{
+      this.globalStatus.setStatus(res.error);
+    }
+  });
+}
+else{
+  this.globalStatus.setStatus("Nothing to delete!");
+}
+}
   getClassName(id : number){
     return func.find(this.classes,'id',id);
   }

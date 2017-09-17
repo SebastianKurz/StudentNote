@@ -53,7 +53,7 @@
                 <label class="md-input-label">Passwort</label>
               </div>
             <div class="group floatleft" style="margin-top:3em;margin-bottom:1em;">
-                <input #e type="number" class="md-input" required [value]="NewTeacher.belongsToSchool">
+                <input #e type="number" class="md-input" required [value]="getCurrentSchool().id">
                 <span class="highlight"></span>
                 <span class="bar"></span>
                 <label class="md-input-label">Schule</label>

@@ -39,7 +39,7 @@
       <label class="md-input-label">Stufe</label>
     </div>
       <div class="group floatleft" style="margin-top:3em;margin-bottom:1em;">
-          <input #belongsToSchool type="number" class="md-input" required>
+          <input #belongsToSchool type="number" class="md-input" required  [value]="getCurrentSchool().id">
           <span class="highlight"></span>
           <span class="bar"></span>
           <label class="md-input-label">Schule: {{this.getSchoolName(belongsToSchool.value)}}</label>

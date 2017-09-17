@@ -96,13 +96,17 @@ export class SchoolComponent {
   }
   newSchool(name:string){
     if (name > ""){
-      var h : number;
-      this.PostSchoolService.postSchool(new School(null,name)).then(s => h=s,()=>  location.href="/noc");
-      this.showNewSchool= false;
-      this.globalStatus.setStatus("Data submitted");
-      //fetch new data
+      this.PostSchoolService.postSchool(new School(null,name)).subscribe(res => {
+        if(res.id){
+          this.showNewSchool= false;
+          this.globalStatus.setStatus("Data submitted");
           this.init();
-          }
+        }
+        else{
+          this.globalStatus.setStatus(res.error);
+        }
+      });
+    }
     else{
       this.globalStatus.setStatus("Enter required Values");
     }
@@ -112,24 +116,37 @@ export class SchoolComponent {
   if (school != null  && key != null && value != null){
     val = value;
     school[key]=val;var h:number;
-    this.UpdateSchoolService.updateSchool(school).then(r => h=r,()=>  location.href="/noc");
-    if (h==0){
-        this.globalStatus.setStatus("Data submitted " + school[key]);
-        this.init();
-    }else{
-        this.globalStatus.setStatus("ERROR during submitting data");
-    }
-  }
-  }
-  deleteSchool(school : School){var h:number;
-  this.DeleteSchoolService.deleteSchool(school).then(r => h=r,()=>  location.href="/noc");
-  if (h==0){
+    this.UpdateSchoolService.updateSchool(school).subscribe(res => {
+      if(res.id){
         this.globalStatus.setStatus("Data submitted");
         this.init();
-    }else{
-        this.globalStatus.setStatus("ERROR during submitting data");
-    }
+      }
+      else{
+        this.globalStatus.setStatus(res.error);
+      }
+    });
   }
+  else{
+    this.globalStatus.setStatus("No changes");
+  }
+  }
+  deleteSchool(school : School){
+    var h:number;
+    if(school.id > 0){
+  this.DeleteSchoolService.deleteSchool(school).subscribe(res => {
+    if(res.id){
+      this.globalStatus.setStatus("Data submitted");
+      this.init();
+    }
+    else{
+      this.globalStatus.setStatus(res.error);
+    }
+  });
+}
+else{
+  this.globalStatus.setStatus("Nothing to delete!");
+}
+}
 
 onSelect(school: School): void {
   this.cancelNewSchool();

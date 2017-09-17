@@ -95,46 +95,57 @@ cancelNewClass(){
 }
 newClass(name:string,level:string,belongsToSchool:number){
     if (name > "" && level > "" && belongsToSchool > 0){var h : number;
-    this.PostClassService.postClass(new Class(null,name,level,belongsToSchool)).then(r => h = r,()=>  location.href="/noc");
-    if (0==h){
-        this.globalStatus.setStatus("Data submitted");
+    this.PostClassService.postClass(new Class(null,name,level,belongsToSchool)).subscribe(res => {
+      if(res.id){
         this.showNewClass= false;
-        //refesh Data
+        this.globalStatus.setStatus("Data submitted");
         this.init();
       }
       else{
-        this.globalStatus.setStatus("[ERROR] submitting data");
+        this.globalStatus.setStatus(res.error);
       }
-    }
-    else{
-    this.globalStatus.setStatus("enter some Values");
-    }
+    });
   }
+  else{
+    this.globalStatus.setStatus("Enter required Values");
+  }
+}
     updateClass(klasse : Class, key, value){
       var val :  any;
     if (klasse != null && key != null && value != null){
       val = value;
       klasse[key]=val;
-      var h:number;
-      this.UpdateClassService.updateClass(klasse).then(r => h = r,()=>  location.href="/noc");
-      if (h==0){
-          this.globalStatus.setStatus("Data submitted " + klasse[key]);
+      this.UpdateClassService.updateClass(klasse).subscribe(res => {
+        if(res.id){
+          this.globalStatus.setStatus("Data submitted");
           this.init();
-      }else{
-          this.globalStatus.setStatus("[ERROR] submitting data");
-      }
+        }
+        else{
+          this.globalStatus.setStatus(res.error);
+        }
+      });
+    }
+    else{
+      this.globalStatus.setStatus("No changes");
     }
     }
     deleteClass(klasse : Class){
       var h:number;
-    this.DeleteClassService.deleteClass(klasse).then(r => h = r,()=>  location.href="/noc");
-    if (h==0){
-          this.globalStatus.setStatus("Data submitted");
-          this.init();
-      }else{
-          this.globalStatus.setStatus("[ERROR] submitting data");
+      if (klasse.id >0){
+    this.DeleteClassService.deleteClass(klasse).subscribe(res => {
+      if(res.id){
+        this.globalStatus.setStatus("Data submitted");
+        this.init();
       }
-    }
+      else{
+        this.globalStatus.setStatus(res.error);
+      }
+    });
+  }
+  else{
+    this.globalStatus.setStatus("Nothing to delete!");
+  }
+  }
     getSchoolName(id : number){
        return func.find(this.schools,'id',id);
       }
@@ -145,6 +156,9 @@ newClass(name:string,level:string,belongsToSchool:number){
       else{
       return false;
     }
+    }
+    getCurrentSchool(){
+      return this.globalSchool.getSchool();
     }
     selectKlasse(klasse:Class){
       if (this.isGlobalClass(klasse.id)){

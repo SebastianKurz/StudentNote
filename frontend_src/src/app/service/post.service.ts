@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Headers, Http } from '@angular/http';
+import { Headers, Http , Response, RequestOptions} from '@angular/http';
 import {HttpModule} from '@angular/http';
 
 import 'rxjs/add/operator/toPromise';
@@ -26,11 +26,9 @@ constructor (private globalData : Global, private httpImpl: Http){
 this.global=globalData;
 this.http=httpImpl;
 }
-  public postSchool(school:School): Promise<number> {
-    return this.http
-    .post(`${this.global.basicUrl}/${this.url}/${school.name}`,JSON.stringify(school), {headers: this.headers})
-    .toPromise()
-    .then(res => 0)
+  public postSchool(school:School): Observable<any> {
+    return this.http.post(`${this.global.basicUrl}/${this.url}/${school.name}`,JSON.stringify(school), {headers: this.headers})
+    .map( (response : Response) =>  response.json())
     .catch(func.handleError);
 }
 }
@@ -44,11 +42,9 @@ constructor (private globalData : Global, private httpImpl: Http){
 this.global=globalData;
 this.http=httpImpl;
 }
-  public postClass(klasse:Class): Promise<number> {
-    return this.http
-    .post(`${this.global.basicUrl}/${this.url}/${klasse.name}/${klasse.level}/${klasse.belongsToSchool}`, JSON.stringify(klasse), {headers: this.headers})
-    .toPromise()
-    .then(res => 0)
+  public postClass(klasse:Class): Observable<any> {
+    return this.http.post(`${this.global.basicUrl}/${this.url}/${klasse.name}/${klasse.level}/${klasse.belongsToSchool}`, JSON.stringify(klasse), {headers: this.headers})
+    .map( (response : Response) =>  response.json())
     .catch(func.handleError);
 }
 }
@@ -62,11 +58,9 @@ constructor (private globalData : Global, private httpImpl: Http){
 this.global=globalData;
 this.http=httpImpl;
 }
-  public postStudent(student:Student): Promise<number> {
-    return this.http
-    .post(`${this.global.basicUrl}/${this.url}/${student.firstname}/${student.lastname}/${student.belongsToClass}`, JSON.stringify(student), {headers: this.headers})
-    .toPromise()
-    .then(res => 0)
+  public postStudent(student:Student): Observable<any> {
+    return this.http.post(`${this.global.basicUrl}/${this.url}/${student.firstname}/${student.lastname}/${student.belongsToClass}`, JSON.stringify(student), {headers: this.headers})
+    .map( (response : Response) =>  response.json())
     .catch(func.handleError);
 }
 }
@@ -80,11 +74,9 @@ constructor (private globalData : Global, private httpImpl: Http){
 this.global=globalData;
 this.http=httpImpl;
 }
-  public postNote(note:Note): Promise<number> {
-    return this.http
-    .post(`${this.global.basicUrl}/${this.url}/${note.text}/${note.authorTeacherId}/${note.belongsToStudent}`, JSON.stringify(note), {headers: this.headers})
-    .toPromise()
-    .then(res => 0)
+  public postNote(note:Note): Observable<any> {
+    return this.http.post(`${this.global.basicUrl}/${this.url}/${note.text}/${note.authorTeacherId}/${note.belongsToStudent}`, JSON.stringify(note), {headers: this.headers})
+    .map( (response : Response) =>  response.json())
     .catch(func.handleError);
 }
 }
@@ -98,11 +90,9 @@ constructor (private globalData : Global, private httpImpl: Http){
 this.global=globalData;
 this.http=httpImpl;
 }
-  public postTeacher(teacher:Teacher): Promise<number> {
-    return this.http
-    .post(`${this.global.basicUrl}/${this.url}/${teacher.firstname}/${teacher.lastname}/${teacher.mailAddress}/${teacher.password}/${teacher.belongsToSchool}`, JSON.stringify(teacher), {headers: this.headers})
-    .toPromise()
-    .then(res => 0)
+  public postTeacher(teacher:Teacher): Observable<any> {
+    return this.http.post(`${this.global.basicUrl}/${this.url}/${teacher.firstname}/${teacher.lastname}/${teacher.mailAddress}/${teacher.password}/${teacher.belongsToSchool}`, JSON.stringify(teacher), {headers: this.headers})
+    .map( (response : Response) =>  response.json())
     .catch(func.handleError);
 }
 }

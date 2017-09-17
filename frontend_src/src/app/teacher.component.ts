@@ -74,15 +74,17 @@ export class TeacherComponent {
   }
   newTeacher(firstname:string,lastname:string,mailAddress:string,password:string, belongsToSchool:number){
     if (firstname > "" && lastname > "" && mailAddress > "" && password > "" && belongsToSchool > 0){
-      var h:number;
-      this.PostTeacherService.postTeacher(new Teacher(null,firstname,lastname,mailAddress,password,belongsToSchool)).then(s => h = s,()=>  location.href="/noc");
-      if(h==0){
-      this.showNewTeacher= false;
-      this.globalStatus.setStatus("Data submitted");
-      //fetch new data
-          this.init();}
-          else{this.globalStatus.setStatus("[ERROR] submitting data");}
-          }
+      this.PostTeacherService.postTeacher(new Teacher(null,firstname,lastname,mailAddress,password,belongsToSchool)).subscribe(res => {
+        if(res.id){
+          this.showNewTeacher= false;
+          this.globalStatus.setStatus("Data submitted");
+          this.init();
+        }
+        else{
+          this.globalStatus.setStatus(res.error);
+        }
+      });
+    }
     else{
       this.globalStatus.setStatus("Enter required Values");
     }
@@ -93,24 +95,36 @@ if (teacher != null && key != null && value != null){
   val = value;
   teacher[key]=val;
   var h : number;
-  this.UpdateTeacherService.updateTeacher(teacher).then( r => h = r,()=>  location.href="/noc");
-  if (h==0){
-      this.globalStatus.setStatus("Data submitted " + teacher[key]);
+  this.UpdateTeacherService.updateTeacher(teacher).subscribe(res => {
+    if(res.id){
+      this.globalStatus.setStatus("Data submitted");
       this.init();
-  }else{
-      this.globalStatus.setStatus("ERROR during submitting data");
-  }
+    }
+    else{
+      this.globalStatus.setStatus(res.error);
+    }
+  });
+}
+else{
+  this.globalStatus.setStatus("No changes");
 }
 }
 deleteTeacher(teacher : Teacher){
   var h : number;
-  this.UpdateTeacherService.updateTeacher(teacher).then( r => h = r,()=>  location.href="/noc");
-  if (h==0){
+  if(teacher.id > 0) {
+  this.DeleteTeacherService.deleteTeacher(teacher).subscribe(res => {
+    if(res.id){
       this.globalStatus.setStatus("Data submitted");
       this.init();
-  }else{
-      this.globalStatus.setStatus("ERROR during submitting data");
-  }
+    }
+    else{
+      this.globalStatus.setStatus(res.error);
+    }
+  });
+}
+else{
+  this.globalStatus.setStatus("Nothing to delete!");
+}
 }
 init(){
   if(this.globalSchool.getSchool()){
@@ -152,6 +166,9 @@ getSchoolName(id : number){
     return "";
   }
 
+}
+getCurrentSchool(){
+  return this.globalSchool.getSchool();
 }
 
 selectTeacher(teacher: Teacher): void {

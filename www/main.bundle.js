@@ -303,48 +303,60 @@ var ClassesComponent = (function () {
         this.showNewClass = false;
     };
     ClassesComponent.prototype.newClass = function (name, level, belongsToSchool) {
+        var _this = this;
         if (name > "" && level > "" && belongsToSchool > 0) {
             var h;
-            this.PostClassService.postClass(new __WEBPACK_IMPORTED_MODULE_2__types_types__["a" /* Class */](null, name, level, belongsToSchool)).then(function (r) { return h = r; }, function () { return location.href = "/noc"; });
-            if (0 == h) {
-                this.globalStatus.setStatus("Data submitted");
-                this.showNewClass = false;
-                //refesh Data
-                this.init();
-            }
-            else {
-                this.globalStatus.setStatus("[ERROR] submitting data");
-            }
+            this.PostClassService.postClass(new __WEBPACK_IMPORTED_MODULE_2__types_types__["a" /* Class */](null, name, level, belongsToSchool)).subscribe(function (res) {
+                if (res.id) {
+                    _this.showNewClass = false;
+                    _this.globalStatus.setStatus("Data submitted");
+                    _this.init();
+                }
+                else {
+                    _this.globalStatus.setStatus(res.error);
+                }
+            });
         }
         else {
-            this.globalStatus.setStatus("enter some Values");
+            this.globalStatus.setStatus("Enter required Values");
         }
     };
     ClassesComponent.prototype.updateClass = function (klasse, key, value) {
+        var _this = this;
         var val;
         if (klasse != null && key != null && value != null) {
             val = value;
             klasse[key] = val;
-            var h;
-            this.UpdateClassService.updateClass(klasse).then(function (r) { return h = r; }, function () { return location.href = "/noc"; });
-            if (h == 0) {
-                this.globalStatus.setStatus("Data submitted " + klasse[key]);
-                this.init();
-            }
-            else {
-                this.globalStatus.setStatus("[ERROR] submitting data");
-            }
+            this.UpdateClassService.updateClass(klasse).subscribe(function (res) {
+                if (res.id) {
+                    _this.globalStatus.setStatus("Data submitted");
+                    _this.init();
+                }
+                else {
+                    _this.globalStatus.setStatus(res.error);
+                }
+            });
+        }
+        else {
+            this.globalStatus.setStatus("No changes");
         }
     };
     ClassesComponent.prototype.deleteClass = function (klasse) {
+        var _this = this;
         var h;
-        this.DeleteClassService.deleteClass(klasse).then(function (r) { return h = r; }, function () { return location.href = "/noc"; });
-        if (h == 0) {
-            this.globalStatus.setStatus("Data submitted");
-            this.init();
+        if (klasse.id > 0) {
+            this.DeleteClassService.deleteClass(klasse).subscribe(function (res) {
+                if (res.id) {
+                    _this.globalStatus.setStatus("Data submitted");
+                    _this.init();
+                }
+                else {
+                    _this.globalStatus.setStatus(res.error);
+                }
+            });
         }
         else {
-            this.globalStatus.setStatus("[ERROR] submitting data");
+            this.globalStatus.setStatus("Nothing to delete!");
         }
     };
     ClassesComponent.prototype.getSchoolName = function (id) {
@@ -357,6 +369,9 @@ var ClassesComponent = (function () {
         else {
             return false;
         }
+    };
+    ClassesComponent.prototype.getCurrentSchool = function () {
+        return this.globalSchool.getSchool();
     };
     ClassesComponent.prototype.selectKlasse = function (klasse) {
         if (this.isGlobalClass(klasse.id)) {
@@ -514,7 +529,7 @@ module.exports = __webpack_require__.p + "fontawesome-webfont.fee66e712a8a08eef5
 /***/ "../../../../../src/app/html/classes.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<navbar></navbar>\n\n<div style=\"width: 64%;margin: 0 auto;align:center;\">\n<div class=\"pane leftbar\">\n<h2>{{title}}</h2>\n<button class=\"button medium red\" type=\"button\" (click) = \"toggleNewClass()\"><i class=\"fa fa-plus\" aria-hidden=\"true\"></i>\n</button>\n<ul class=\"L \" >\n<li class=\"LNO\" *ngFor=\"let klasse of classes\"\n  [class.selected]=\"klasse === selectedClass\"\n  (click)=\"selectClass(klasse)\">\n  <div class=\"floatleft pane LPane\">\n    <div *ngIf=\"isGlobalClass(klasse.id); then B else NB\"></div>\n    <ng-template #B>\n    <div class=\"LBadge LB-Green floatleft\" style=\"text-align:center\" (click)=\"selectKlasse(klasse)\">{{klasse.level}}</div>\n    <div class=\"LText floatleft\">{{klasse.name}}</div>\n    </ng-template>\n    <ng-template #NB>\n    <div class=\"LBadge LB-Blue floatleft\" style=\"text-align:center\" (click)=\"selectKlasse(klasse)\">{{klasse.level}}</div>\n    <div class=\"LText floatleft\">{{klasse.name}}</div>\n    </ng-template>\n  </div>\n</li>\n</ul></div>\n<div class=\"floatleft widthnexttobar\">\n\n<div *ngIf=\"showNewClass\" class=\"pane floatleft\" style=\"width:100%;\">\n<h3>Neue Klasse erstellen</h3>\n<div class=\"group floatleft\" style=\"margin-top:3em;margin-bottom:1em;\">\n    <input #name type=\"text\" class=\"md-input\" required >\n    <span class=\"highlight\"></span>\n    <span class=\"bar\"></span>\n    <label class=\"md-input-label\">Name</label>\n  </div>\n  <div class=\"group floatleft\" style=\"margin-top:3em;margin-bottom:1em;\">\n      <input #level type=\"text\" class=\"md-input\" required >\n      <span class=\"highlight\"></span>\n      <span class=\"bar\"></span>\n      <label class=\"md-input-label\">Stufe</label>\n    </div>\n      <div class=\"group floatleft\" style=\"margin-top:3em;margin-bottom:1em;\">\n          <input #belongsToSchool type=\"number\" class=\"md-input\" required>\n          <span class=\"highlight\"></span>\n          <span class=\"bar\"></span>\n          <label class=\"md-input-label\">Schule: {{this.getSchoolName(belongsToSchool.value)}}</label>\n        </div>\n        <div class=\"floatright\">\n        <button class=\"button small grey\" type=\"button\" (click)=\"cancelNewClass()\">Abbrechen</button>\n        <button class=\"button small blue\" style=\"margin: 0 .3em;\" type=\"button\" (click)=\"newClass(name.value, level.value, belongsToSchool.value)\">Anlegen</button>\n        </div>\n</div>\n\n\n<div *ngIf=\"selectedClass\" class=\"pane floatleft\" style=\"width:100%;\">\n<h3 style=\"width:90%;\">Details: {{selectedClass.name}}</h3>\n<div class=\"del\"><i class=\"fa fa-trash\" aria-hidden=\"true\" style=\"font-weight:600;font-size:150%;\" (click)=\"deleteClass(selectedClass)\"></i></div>\n<div class=\"clearfix\"></div>\n<div class=\"group\" style=\"margin-top:3em;margin-bottom:1em;\">\n    <input #a class=\"md-input\" type=\"text\" required [(ngModel)]=\"selectedClass.name\" (change)=\"updateClass(selectedClass,'name',a.value)\">\n    <span class=\"highlight\"></span>\n    <span class=\"bar\"></span>\n    <label class=\"md-input-label\">Name</label>\n  </div>\n  <div  class=\"group\" style=\"margin-top:3em;margin-bottom:1em;\">\n      <input #b class=\"md-input\" type=\"text\" required [(ngModel)]=\"selectedClass.level\" (change)=\"updateClass(selectedClass,'level',b.value)\">\n      <span class=\"highlight\"></span>\n      <span class=\"bar\"></span>\n      <label class=\"md-input-label\">Stufe</label>\n    </div>\n    <div class=\"group\" style=\"margin-top:3em;margin-bottom:1em;\">\n        <input class=\"md-input\" type=\"number\">\n        <span class=\"highlight\"></span>\n        <span class=\"bar\"></span>\n        <label class=\"md-input-label\">Zugeordnet zu Schule: {{this.getSchoolName(selectedClass.belongsToSchool)}}</label>\n      </div>\n  <div style=\"margin-left:5px\"><label>id: </label>{{selectedClass.id}}</div>\n</div>\n\n<!--\n<div *ngIf=\"selectedClass\" class=\"pane floatleft widthnexttobar\">\n<h3> Lehrer</h3>\n<ul class=\"listing\">\n  <li class=\"nobadge\" *ngFor=\"let teacher of teachers\"\n    [class.selected]=\"teacher === selectedTeacher\" [routerLink]=\"['/teacher',teacher.id]\" routerLinkActive=\"active\">{{teacher.firstname}} {{teacher.lastname}}\n</li></ul></div>\n-->\n\n<div *ngIf=\"selectedClass\" class=\"floatleft\" style=\"width:100%;\">\n\n<div *ngIf=\"isStudents(); then schueler else keineschueler\"></div>\n\n<ng-template #keineschueler>\n<div class=\"pane floatleft\" style=\"width:100%;margin-bottom:.3em;\">\n<span style=\"width:40%;font-weight:600;font-size:130%;\">Keine Schüler in dieser Klasse</span>\n</div>\n</ng-template>\n\n<ng-template #schueler>\n<div class=\"pane floatleft\" style=\"padding-top: 1em;padding-bottom:3em;margin-bottom:.3em;width:100%\">\n<h3>Schüler dieser Klasse</h3>\n<ul class=\"L\">\n<li class=\"LNO\" *ngFor=\"let student of students\"\n  [class.selected]=\"student === selectedStudent\" [routerLink]=\"['/student',student.id]\" routerLinkActive=\"active\">\n  <div class=\"floatleft pane LPane\">\n  <div class=\"LText floatleft\">{{student.firstname}} {{student.lastname}}</div>\n  </div>\n</li></ul></div>\n</ng-template>\n\n</div>\n"
+module.exports = "<navbar></navbar>\n\n<div style=\"width: 64%;margin: 0 auto;align:center;\">\n<div class=\"pane leftbar\">\n<h2>{{title}}</h2>\n<button class=\"button medium red\" type=\"button\" (click) = \"toggleNewClass()\"><i class=\"fa fa-plus\" aria-hidden=\"true\"></i>\n</button>\n<ul class=\"L \" >\n<li class=\"LNO\" *ngFor=\"let klasse of classes\"\n  [class.selected]=\"klasse === selectedClass\"\n  (click)=\"selectClass(klasse)\">\n  <div class=\"floatleft pane LPane\">\n    <div *ngIf=\"isGlobalClass(klasse.id); then B else NB\"></div>\n    <ng-template #B>\n    <div class=\"LBadge LB-Green floatleft\" style=\"text-align:center\" (click)=\"selectKlasse(klasse)\">{{klasse.level}}</div>\n    <div class=\"LText floatleft\">{{klasse.name}}</div>\n    </ng-template>\n    <ng-template #NB>\n    <div class=\"LBadge LB-Blue floatleft\" style=\"text-align:center\" (click)=\"selectKlasse(klasse)\">{{klasse.level}}</div>\n    <div class=\"LText floatleft\">{{klasse.name}}</div>\n    </ng-template>\n  </div>\n</li>\n</ul></div>\n<div class=\"floatleft widthnexttobar\">\n\n<div *ngIf=\"showNewClass\" class=\"pane floatleft\" style=\"width:100%;\">\n<h3>Neue Klasse erstellen</h3>\n<div class=\"group floatleft\" style=\"margin-top:3em;margin-bottom:1em;\">\n    <input #name type=\"text\" class=\"md-input\" required >\n    <span class=\"highlight\"></span>\n    <span class=\"bar\"></span>\n    <label class=\"md-input-label\">Name</label>\n  </div>\n  <div class=\"group floatleft\" style=\"margin-top:3em;margin-bottom:1em;\">\n      <input #level type=\"text\" class=\"md-input\" required >\n      <span class=\"highlight\"></span>\n      <span class=\"bar\"></span>\n      <label class=\"md-input-label\">Stufe</label>\n    </div>\n      <div class=\"group floatleft\" style=\"margin-top:3em;margin-bottom:1em;\">\n          <input #belongsToSchool type=\"number\" class=\"md-input\" required  [value]=\"getCurrentSchool().id\">\n          <span class=\"highlight\"></span>\n          <span class=\"bar\"></span>\n          <label class=\"md-input-label\">Schule: {{this.getSchoolName(belongsToSchool.value)}}</label>\n        </div>\n        <div class=\"floatright\">\n        <button class=\"button small grey\" type=\"button\" (click)=\"cancelNewClass()\">Abbrechen</button>\n        <button class=\"button small blue\" style=\"margin: 0 .3em;\" type=\"button\" (click)=\"newClass(name.value, level.value, belongsToSchool.value)\">Anlegen</button>\n        </div>\n</div>\n\n\n<div *ngIf=\"selectedClass\" class=\"pane floatleft\" style=\"width:100%;\">\n<h3 style=\"width:90%;\">Details: {{selectedClass.name}}</h3>\n<div class=\"del\"><i class=\"fa fa-trash\" aria-hidden=\"true\" style=\"font-weight:600;font-size:150%;\" (click)=\"deleteClass(selectedClass)\"></i></div>\n<div class=\"clearfix\"></div>\n<div class=\"group\" style=\"margin-top:3em;margin-bottom:1em;\">\n    <input #a class=\"md-input\" type=\"text\" required [(ngModel)]=\"selectedClass.name\" (change)=\"updateClass(selectedClass,'name',a.value)\">\n    <span class=\"highlight\"></span>\n    <span class=\"bar\"></span>\n    <label class=\"md-input-label\">Name</label>\n  </div>\n  <div  class=\"group\" style=\"margin-top:3em;margin-bottom:1em;\">\n      <input #b class=\"md-input\" type=\"text\" required [(ngModel)]=\"selectedClass.level\" (change)=\"updateClass(selectedClass,'level',b.value)\">\n      <span class=\"highlight\"></span>\n      <span class=\"bar\"></span>\n      <label class=\"md-input-label\">Stufe</label>\n    </div>\n    <div class=\"group\" style=\"margin-top:3em;margin-bottom:1em;\">\n        <input class=\"md-input\" type=\"number\">\n        <span class=\"highlight\"></span>\n        <span class=\"bar\"></span>\n        <label class=\"md-input-label\">Zugeordnet zu Schule: {{this.getSchoolName(selectedClass.belongsToSchool)}}</label>\n      </div>\n  <div style=\"margin-left:5px\"><label>id: </label>{{selectedClass.id}}</div>\n</div>\n\n<!--\n<div *ngIf=\"selectedClass\" class=\"pane floatleft widthnexttobar\">\n<h3> Lehrer</h3>\n<ul class=\"listing\">\n  <li class=\"nobadge\" *ngFor=\"let teacher of teachers\"\n    [class.selected]=\"teacher === selectedTeacher\" [routerLink]=\"['/teacher',teacher.id]\" routerLinkActive=\"active\">{{teacher.firstname}} {{teacher.lastname}}\n</li></ul></div>\n-->\n\n<div *ngIf=\"selectedClass\" class=\"floatleft\" style=\"width:100%;\">\n\n<div *ngIf=\"isStudents(); then schueler else keineschueler\"></div>\n\n<ng-template #keineschueler>\n<div class=\"pane floatleft\" style=\"width:100%;margin-bottom:.3em;\">\n<span style=\"width:40%;font-weight:600;font-size:130%;\">Keine Schüler in dieser Klasse</span>\n</div>\n</ng-template>\n\n<ng-template #schueler>\n<div class=\"pane floatleft\" style=\"padding-top: 1em;padding-bottom:3em;margin-bottom:.3em;width:100%\">\n<h3>Schüler dieser Klasse</h3>\n<ul class=\"L\">\n<li class=\"LNO\" *ngFor=\"let student of students\"\n  [class.selected]=\"student === selectedStudent\" [routerLink]=\"['/student',student.id]\" routerLinkActive=\"active\">\n  <div class=\"floatleft pane LPane\">\n  <div class=\"LText floatleft\">{{student.firstname}} {{student.lastname}}</div>\n  </div>\n</li></ul></div>\n</ng-template>\n\n</div>\n"
 
 /***/ }),
 
@@ -542,7 +557,7 @@ module.exports = "<navbar></navbar>\n\n<div style=\"width: 64%;margin: 0 auto;al
 /***/ "../../../../../src/app/html/teacher.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<navbar></navbar>\n\n<div style=\"width: 64%;margin: 0 auto;align:center;\">\n<div class=\"pane leftbar\">\n<h2>{{title}}</h2>\n<button class=\"button medium red\" type=\"button\" (click) = \"toggleNewTeacher()\"><i class=\"fa fa-plus\" aria-hidden=\"true\"></i>\n</button>\n<ul class=\"L\">\n<li class=\"LNO\" *ngFor=\"let teacher of teachers\"\n  [class.selected]=\"teacher === selectedTeacher\"\n  (click)=\"selectTeacher(teacher)\">\n  <div class=\"floatleft pane LPane\">\n  <div *ngIf=\"isLoginTeacher(teacher.id); then B else NB\"></div>\n  <ng-template #B>\n  <div class=\"LBadge LB-Green floatleft\" style=\"text-align:center\" (click)=\"selectLoginTeacher(teacher)\">&nbsp;</div>\n  <div class=\"LText floatleft\">{{teacher.lastname}}, {{teacher.firstname}}</div>\n  </ng-template>\n  <ng-template #NB>\n  <div class=\"LBadge LB-Blue floatleft\" style=\"text-align:center\" (click)=\"selectLoginTeacher(teacher)\">&nbsp;</div>\n  <div class=\"LText floatleft\">{{teacher.lastname}}, {{teacher.firstname}}</div>\n  </ng-template>\n  </div>\n</li>\n</ul>\n</div>\n\n    <div class=\" floatleft widthnexttobar\">\n\n    <div *ngIf=\"showNewTeacher\" class=\"pane floatleft\" style=\"width:100%;\">\n      <h3>Neuen Lehrer erfassen</h3>\n        <div  class=\"group floatleft\" style=\"margin-top:3em;margin-bottom:1em;\">\n          <input #a type=\"text\" class=\"md-input\" required [value]=\"NewTeacher.firstname\">\n          <span class=\"highlight\"></span>\n          <span class=\"bar\"></span>\n          <label class=\"md-input-label\">Vorname</label>\n        </div>\n        <div class=\"group floatleft\" style=\"margin-top:3em;margin-bottom:1em;\">\n            <input #b type=\"text\" class=\"md-input\" required [value]=\"NewTeacher.lastname\">\n            <span class=\"highlight\"></span>\n            <span class=\"bar\"></span>\n            <label class=\"md-input-label\">Nachname</label>\n        </div>\n        <div class=\"group floatleft\" style=\"margin-top:3em;margin-bottom:1em;\">\n              <input #c type=\"text\" class=\"md-input\" required [value]=\"NewTeacher.mailAddress\">\n              <span class=\"highlight\"></span>\n              <span class=\"bar\"></span>\n              <label class=\"md-input-label\">EMail Adresse</label>\n        </div>\n       <div class=\"group floatleft\" style=\"margin-top:3em;margin-bottom:1em;\">\n                <input #d type=\"password\" class=\"md-input\" required [value]=\"NewTeacher.password\">\n                <span class=\"highlight\"></span>\n                <span class=\"bar\"></span>\n                <label class=\"md-input-label\">Passwort</label>\n              </div>\n            <div class=\"group floatleft\" style=\"margin-top:3em;margin-bottom:1em;\">\n                <input #e type=\"number\" class=\"md-input\" required [value]=\"NewTeacher.belongsToSchool\">\n                <span class=\"highlight\"></span>\n                <span class=\"bar\"></span>\n                <label class=\"md-input-label\">Schule</label>\n              </div>\n      <div class=\"floatright\">\n      <button class=\"button small grey\" type=\"button\" (click)=\"cancelNewTeacher()\">Abbrechen</button>\n      <button class=\"button small blue\" style=\"margin: 0 .3em;\" type=\"button\" (click)=\"newTeacher(a.value,b.value,c.value,d.value,e.value)\">Anlegen</button>\n      </div>\n    </div>\n\n    <div *ngIf=\"selectedTeacher\" class=\"pane\" style=\"width:100%;\">\n    <h3 style=\"width:90%;\">Details: {{selectedTeacher.firstname}} {{selectedTeacher.lastname}}</h3>\n    <div class=\"del\"><i class=\"fa fa-trash\" aria-hidden=\"true\" style=\"font-weight:600;font-size:150%;\" (click)=\"deleteTeacher(selectedTeacher)\"></i></div>\n      <div class=\"group\" style=\"margin-top:3em;margin-bottom:1em;\">\n          <input #a class=\"md-input\" type=\"text\" required [(ngModel)]=\"selectedTeacher.firstname\" (change)=\"updateTeacher(selectedTeacher,'firstname',a.value)\">\n          <span class=\"highlight\"></span>\n          <span class=\"bar\"></span>\n          <label class=\"md-input-label\">Vorname</label>\n        </div>\n        <div  class=\"group\" style=\"margin-top:3em;margin-bottom:1em;\">\n            <input #b class=\"md-input\" type=\"text\" required [(ngModel)]=\"selectedTeacher.lastname\" (change)=\"updateTeacher(selectedTeacher,'lastname',b.value)\">\n            <span class=\"highlight\"></span>\n            <span class=\"bar\"></span>\n            <label class=\"md-input-label\">Nachname</label>\n          </div>\n          <div  class=\"group\" style=\"margin-top:3em;margin-bottom:1em;\">\n              <input #c class=\"md-input\" type=\"text\" required [(ngModel)]=\"selectedTeacher.mailAddress\" (change)=\"updateTeacher(selectedTeacher,'mailAddress',c.value)\">\n              <span class=\"highlight\"></span>\n              <span class=\"bar\"></span>\n              <label class=\"md-input-label\">E-Mail Adresse</label>\n            </div>\n            <div  class=\"group\" style=\"margin-top:3em;margin-bottom:1em;\">\n                <input class=\"md-input\" type=\"number\">\n                <span class=\"highlight\"></span>\n                <span class=\"bar\"></span>\n                <label class=\"md-input-label\">zugeordnete Schule: {{this.getSchoolName(selectedTeacher.belongsToSchool)}}</label>\n              </div>\n        <div style=\"margin-left:5px\"><label>id: </label>{{selectedTeacher.id}}</div>\n      </div>\n\n      </div>\n\n</div>\n"
+module.exports = "<navbar></navbar>\n\n<div style=\"width: 64%;margin: 0 auto;align:center;\">\n<div class=\"pane leftbar\">\n<h2>{{title}}</h2>\n<button class=\"button medium red\" type=\"button\" (click) = \"toggleNewTeacher()\"><i class=\"fa fa-plus\" aria-hidden=\"true\"></i>\n</button>\n<ul class=\"L\">\n<li class=\"LNO\" *ngFor=\"let teacher of teachers\"\n  [class.selected]=\"teacher === selectedTeacher\"\n  (click)=\"selectTeacher(teacher)\">\n  <div class=\"floatleft pane LPane\">\n  <div *ngIf=\"isLoginTeacher(teacher.id); then B else NB\"></div>\n  <ng-template #B>\n  <div class=\"LBadge LB-Green floatleft\" style=\"text-align:center\" (click)=\"selectLoginTeacher(teacher)\">&nbsp;</div>\n  <div class=\"LText floatleft\">{{teacher.lastname}}, {{teacher.firstname}}</div>\n  </ng-template>\n  <ng-template #NB>\n  <div class=\"LBadge LB-Blue floatleft\" style=\"text-align:center\" (click)=\"selectLoginTeacher(teacher)\">&nbsp;</div>\n  <div class=\"LText floatleft\">{{teacher.lastname}}, {{teacher.firstname}}</div>\n  </ng-template>\n  </div>\n</li>\n</ul>\n</div>\n\n    <div class=\" floatleft widthnexttobar\">\n\n    <div *ngIf=\"showNewTeacher\" class=\"pane floatleft\" style=\"width:100%;\">\n      <h3>Neuen Lehrer erfassen</h3>\n        <div  class=\"group floatleft\" style=\"margin-top:3em;margin-bottom:1em;\">\n          <input #a type=\"text\" class=\"md-input\" required [value]=\"NewTeacher.firstname\">\n          <span class=\"highlight\"></span>\n          <span class=\"bar\"></span>\n          <label class=\"md-input-label\">Vorname</label>\n        </div>\n        <div class=\"group floatleft\" style=\"margin-top:3em;margin-bottom:1em;\">\n            <input #b type=\"text\" class=\"md-input\" required [value]=\"NewTeacher.lastname\">\n            <span class=\"highlight\"></span>\n            <span class=\"bar\"></span>\n            <label class=\"md-input-label\">Nachname</label>\n        </div>\n        <div class=\"group floatleft\" style=\"margin-top:3em;margin-bottom:1em;\">\n              <input #c type=\"text\" class=\"md-input\" required [value]=\"NewTeacher.mailAddress\">\n              <span class=\"highlight\"></span>\n              <span class=\"bar\"></span>\n              <label class=\"md-input-label\">EMail Adresse</label>\n        </div>\n       <div class=\"group floatleft\" style=\"margin-top:3em;margin-bottom:1em;\">\n                <input #d type=\"password\" class=\"md-input\" required [value]=\"NewTeacher.password\">\n                <span class=\"highlight\"></span>\n                <span class=\"bar\"></span>\n                <label class=\"md-input-label\">Passwort</label>\n              </div>\n            <div class=\"group floatleft\" style=\"margin-top:3em;margin-bottom:1em;\">\n                <input #e type=\"number\" class=\"md-input\" required [value]=\"getCurrentSchool().id\">\n                <span class=\"highlight\"></span>\n                <span class=\"bar\"></span>\n                <label class=\"md-input-label\">Schule</label>\n              </div>\n      <div class=\"floatright\">\n      <button class=\"button small grey\" type=\"button\" (click)=\"cancelNewTeacher()\">Abbrechen</button>\n      <button class=\"button small blue\" style=\"margin: 0 .3em;\" type=\"button\" (click)=\"newTeacher(a.value,b.value,c.value,d.value,e.value)\">Anlegen</button>\n      </div>\n    </div>\n\n    <div *ngIf=\"selectedTeacher\" class=\"pane\" style=\"width:100%;\">\n    <h3 style=\"width:90%;\">Details: {{selectedTeacher.firstname}} {{selectedTeacher.lastname}}</h3>\n    <div class=\"del\"><i class=\"fa fa-trash\" aria-hidden=\"true\" style=\"font-weight:600;font-size:150%;\" (click)=\"deleteTeacher(selectedTeacher)\"></i></div>\n      <div class=\"group\" style=\"margin-top:3em;margin-bottom:1em;\">\n          <input #a class=\"md-input\" type=\"text\" required [(ngModel)]=\"selectedTeacher.firstname\" (change)=\"updateTeacher(selectedTeacher,'firstname',a.value)\">\n          <span class=\"highlight\"></span>\n          <span class=\"bar\"></span>\n          <label class=\"md-input-label\">Vorname</label>\n        </div>\n        <div  class=\"group\" style=\"margin-top:3em;margin-bottom:1em;\">\n            <input #b class=\"md-input\" type=\"text\" required [(ngModel)]=\"selectedTeacher.lastname\" (change)=\"updateTeacher(selectedTeacher,'lastname',b.value)\">\n            <span class=\"highlight\"></span>\n            <span class=\"bar\"></span>\n            <label class=\"md-input-label\">Nachname</label>\n          </div>\n          <div  class=\"group\" style=\"margin-top:3em;margin-bottom:1em;\">\n              <input #c class=\"md-input\" type=\"text\" required [(ngModel)]=\"selectedTeacher.mailAddress\" (change)=\"updateTeacher(selectedTeacher,'mailAddress',c.value)\">\n              <span class=\"highlight\"></span>\n              <span class=\"bar\"></span>\n              <label class=\"md-input-label\">E-Mail Adresse</label>\n            </div>\n            <div  class=\"group\" style=\"margin-top:3em;margin-bottom:1em;\">\n                <input class=\"md-input\" type=\"number\">\n                <span class=\"highlight\"></span>\n                <span class=\"bar\"></span>\n                <label class=\"md-input-label\">zugeordnete Schule: {{this.getSchoolName(selectedTeacher.belongsToSchool)}}</label>\n              </div>\n        <div style=\"margin-left:5px\"><label>id: </label>{{selectedTeacher.id}}</div>\n      </div>\n\n      </div>\n\n</div>\n"
 
 /***/ }),
 
@@ -960,43 +975,60 @@ var SchoolComponent = (function () {
         this.showNewSchool = false;
     };
     SchoolComponent.prototype.newSchool = function (name) {
+        var _this = this;
         if (name > "") {
-            var h;
-            this.PostSchoolService.postSchool(new __WEBPACK_IMPORTED_MODULE_1__types_types__["c" /* School */](null, name)).then(function (s) { return h = s; }, function () { return location.href = "/noc"; });
-            this.showNewSchool = false;
-            this.globalStatus.setStatus("Data submitted");
-            //fetch new data
-            this.init();
+            this.PostSchoolService.postSchool(new __WEBPACK_IMPORTED_MODULE_1__types_types__["c" /* School */](null, name)).subscribe(function (res) {
+                if (res.id) {
+                    _this.showNewSchool = false;
+                    _this.globalStatus.setStatus("Data submitted");
+                    _this.init();
+                }
+                else {
+                    _this.globalStatus.setStatus(res.error);
+                }
+            });
         }
         else {
             this.globalStatus.setStatus("Enter required Values");
         }
     };
     SchoolComponent.prototype.updateSchool = function (school, key, value) {
+        var _this = this;
         var val;
         if (school != null && key != null && value != null) {
             val = value;
             school[key] = val;
             var h;
-            this.UpdateSchoolService.updateSchool(school).then(function (r) { return h = r; }, function () { return location.href = "/noc"; });
-            if (h == 0) {
-                this.globalStatus.setStatus("Data submitted " + school[key]);
-                this.init();
-            }
-            else {
-                this.globalStatus.setStatus("ERROR during submitting data");
-            }
+            this.UpdateSchoolService.updateSchool(school).subscribe(function (res) {
+                if (res.id) {
+                    _this.globalStatus.setStatus("Data submitted");
+                    _this.init();
+                }
+                else {
+                    _this.globalStatus.setStatus(res.error);
+                }
+            });
+        }
+        else {
+            this.globalStatus.setStatus("No changes");
         }
     };
     SchoolComponent.prototype.deleteSchool = function (school) {
+        var _this = this;
         var h;
-        this.DeleteSchoolService.deleteSchool(school).then(function (r) { return h = r; }, function () { return location.href = "/noc"; });
-        if (h == 0) {
-            this.globalStatus.setStatus("Data submitted");
-            this.init();
+        if (school.id > 0) {
+            this.DeleteSchoolService.deleteSchool(school).subscribe(function (res) {
+                if (res.id) {
+                    _this.globalStatus.setStatus("Data submitted");
+                    _this.init();
+                }
+                else {
+                    _this.globalStatus.setStatus(res.error);
+                }
+            });
         }
         else {
-            this.globalStatus.setStatus("ERROR during submitting data");
+            this.globalStatus.setStatus("Nothing to delete!");
         }
     };
     SchoolComponent.prototype.onSelect = function (school) {
@@ -1062,8 +1094,7 @@ var deleteSchoolService = (function () {
     }
     deleteSchoolService.prototype.deleteSchool = function (school) {
         return this.http.delete(this.global.basicUrl + "/" + this.url + "/" + school.id, { headers: this.headers })
-            .toPromise()
-            .then(function () { return 0; })
+            .map(function (response) { return response.json(); })
             .catch(__WEBPACK_IMPORTED_MODULE_5__lib_functions__["b" /* handleError */]);
     };
     return deleteSchoolService;
@@ -1084,8 +1115,7 @@ var deleteClassService = (function () {
     }
     deleteClassService.prototype.deleteClass = function (klasse) {
         return this.http.delete(this.global.basicUrl + "/" + this.url + "/" + klasse.id, { headers: this.headers })
-            .toPromise()
-            .then(function () { return 0; })
+            .map(function (response) { return response.json(); })
             .catch(__WEBPACK_IMPORTED_MODULE_5__lib_functions__["b" /* handleError */]);
     };
     return deleteClassService;
@@ -1106,8 +1136,7 @@ var deleteStudentService = (function () {
     }
     deleteStudentService.prototype.deleteStudent = function (student) {
         return this.http.delete(this.global.basicUrl + "/" + this.url + "/" + student.id, { headers: this.headers })
-            .toPromise()
-            .then(function () { return 0; })
+            .map(function (response) { return response.json(); })
             .catch(__WEBPACK_IMPORTED_MODULE_5__lib_functions__["b" /* handleError */]);
     };
     return deleteStudentService;
@@ -1128,8 +1157,7 @@ var deleteNoteService = (function () {
     }
     deleteNoteService.prototype.deleteNote = function (note) {
         return this.http.delete(this.global.basicUrl + "/" + this.url + "/" + note.id, { headers: this.headers })
-            .toPromise()
-            .then(function () { return 0; })
+            .map(function (response) { return response.json(); })
             .catch(__WEBPACK_IMPORTED_MODULE_5__lib_functions__["b" /* handleError */]);
     };
     return deleteNoteService;
@@ -1150,8 +1178,7 @@ var deleteTeacherService = (function () {
     }
     deleteTeacherService.prototype.deleteTeacher = function (teacher) {
         return this.http.delete(this.global.basicUrl + "/" + this.url + "/" + teacher.id, { headers: this.headers })
-            .toPromise()
-            .then(function () { return 0; })
+            .map(function (response) { return response.json(); })
             .catch(__WEBPACK_IMPORTED_MODULE_5__lib_functions__["b" /* handleError */]);
     };
     return deleteTeacherService;
@@ -1572,10 +1599,8 @@ var postSchoolService = (function () {
         this.http = httpImpl;
     }
     postSchoolService.prototype.postSchool = function (school) {
-        return this.http
-            .post(this.global.basicUrl + "/" + this.url + "/" + school.name, JSON.stringify(school), { headers: this.headers })
-            .toPromise()
-            .then(function (res) { return 0; })
+        return this.http.post(this.global.basicUrl + "/" + this.url + "/" + school.name, JSON.stringify(school), { headers: this.headers })
+            .map(function (response) { return response.json(); })
             .catch(__WEBPACK_IMPORTED_MODULE_5__lib_functions__["b" /* handleError */]);
     };
     return postSchoolService;
@@ -1595,10 +1620,8 @@ var postClassService = (function () {
         this.http = httpImpl;
     }
     postClassService.prototype.postClass = function (klasse) {
-        return this.http
-            .post(this.global.basicUrl + "/" + this.url + "/" + klasse.name + "/" + klasse.level + "/" + klasse.belongsToSchool, JSON.stringify(klasse), { headers: this.headers })
-            .toPromise()
-            .then(function (res) { return 0; })
+        return this.http.post(this.global.basicUrl + "/" + this.url + "/" + klasse.name + "/" + klasse.level + "/" + klasse.belongsToSchool, JSON.stringify(klasse), { headers: this.headers })
+            .map(function (response) { return response.json(); })
             .catch(__WEBPACK_IMPORTED_MODULE_5__lib_functions__["b" /* handleError */]);
     };
     return postClassService;
@@ -1618,10 +1641,8 @@ var postStudentService = (function () {
         this.http = httpImpl;
     }
     postStudentService.prototype.postStudent = function (student) {
-        return this.http
-            .post(this.global.basicUrl + "/" + this.url + "/" + student.firstname + "/" + student.lastname + "/" + student.belongsToClass, JSON.stringify(student), { headers: this.headers })
-            .toPromise()
-            .then(function (res) { return 0; })
+        return this.http.post(this.global.basicUrl + "/" + this.url + "/" + student.firstname + "/" + student.lastname + "/" + student.belongsToClass, JSON.stringify(student), { headers: this.headers })
+            .map(function (response) { return response.json(); })
             .catch(__WEBPACK_IMPORTED_MODULE_5__lib_functions__["b" /* handleError */]);
     };
     return postStudentService;
@@ -1641,10 +1662,8 @@ var postNoteService = (function () {
         this.http = httpImpl;
     }
     postNoteService.prototype.postNote = function (note) {
-        return this.http
-            .post(this.global.basicUrl + "/" + this.url + "/" + note.text + "/" + note.authorTeacherId + "/" + note.belongsToStudent, JSON.stringify(note), { headers: this.headers })
-            .toPromise()
-            .then(function (res) { return 0; })
+        return this.http.post(this.global.basicUrl + "/" + this.url + "/" + note.text + "/" + note.authorTeacherId + "/" + note.belongsToStudent, JSON.stringify(note), { headers: this.headers })
+            .map(function (response) { return response.json(); })
             .catch(__WEBPACK_IMPORTED_MODULE_5__lib_functions__["b" /* handleError */]);
     };
     return postNoteService;
@@ -1664,10 +1683,8 @@ var postTeacherService = (function () {
         this.http = httpImpl;
     }
     postTeacherService.prototype.postTeacher = function (teacher) {
-        return this.http
-            .post(this.global.basicUrl + "/" + this.url + "/" + teacher.firstname + "/" + teacher.lastname + "/" + teacher.mailAddress + "/" + teacher.password + "/" + teacher.belongsToSchool, JSON.stringify(teacher), { headers: this.headers })
-            .toPromise()
-            .then(function (res) { return 0; })
+        return this.http.post(this.global.basicUrl + "/" + this.url + "/" + teacher.firstname + "/" + teacher.lastname + "/" + teacher.mailAddress + "/" + teacher.password + "/" + teacher.belongsToSchool, JSON.stringify(teacher), { headers: this.headers })
+            .map(function (response) { return response.json(); })
             .catch(__WEBPACK_IMPORTED_MODULE_5__lib_functions__["b" /* handleError */]);
     };
     return postTeacherService;
@@ -1726,8 +1743,7 @@ var updateSchoolService = (function () {
     updateSchoolService.prototype.updateSchool = function (school) {
         return this.http
             .put(this.global.basicUrl + "/" + this.url + "/" + school.id + "/" + school.name, JSON.stringify(school), { headers: this.headers })
-            .toPromise()
-            .then(function () { return 0; })
+            .map(function (response) { return response.json(); })
             .catch(__WEBPACK_IMPORTED_MODULE_5__lib_functions__["b" /* handleError */]);
     };
     return updateSchoolService;
@@ -1749,8 +1765,7 @@ var updateClassService = (function () {
     updateClassService.prototype.updateClass = function (klasse) {
         return this.http
             .put(this.global.basicUrl + "/" + this.url + "/" + klasse.id + "/" + klasse.level + "/" + klasse.name, JSON.stringify(klasse), { headers: this.headers })
-            .toPromise()
-            .then(function () { return 0; })
+            .map(function (response) { return response.json(); })
             .catch(__WEBPACK_IMPORTED_MODULE_5__lib_functions__["b" /* handleError */]);
     };
     return updateClassService;
@@ -1772,8 +1787,7 @@ var updateStudentService = (function () {
     updateStudentService.prototype.updateStudent = function (student) {
         return this.http
             .put(this.global.basicUrl + "/" + this.url + "/" + student.id + "/" + student.belongsToClass + "/" + student.firstname + "/" + student.lastname, JSON.stringify(student), { headers: this.headers })
-            .toPromise()
-            .then(function () { return 0; })
+            .map(function (response) { return response.json(); })
             .catch(__WEBPACK_IMPORTED_MODULE_5__lib_functions__["b" /* handleError */]);
     };
     return updateStudentService;
@@ -1795,8 +1809,7 @@ var updateNoteService = (function () {
     updateNoteService.prototype.updateNote = function (note) {
         return this.http
             .put(this.global.basicUrl + "/" + this.url + "/" + note.id, JSON.stringify(note), { headers: this.headers })
-            .toPromise()
-            .then(function () { return 0; })
+            .map(function (response) { return response.json(); })
             .catch(__WEBPACK_IMPORTED_MODULE_5__lib_functions__["b" /* handleError */]);
     };
     return updateNoteService;
@@ -1818,8 +1831,7 @@ var updateTeacherService = (function () {
     updateTeacherService.prototype.updateTeacher = function (teacher) {
         return this.http
             .put(this.global.basicUrl + "/" + this.url + "/" + teacher.id + "/" + teacher.firstname + "/" + teacher.lastname + "/" + teacher.mailAddress + "/" + teacher.password, JSON.stringify(teacher), { headers: this.headers })
-            .toPromise()
-            .then(function () { return 0; })
+            .map(function (response) { return response.json(); })
             .catch(__WEBPACK_IMPORTED_MODULE_5__lib_functions__["b" /* handleError */]);
     };
     return updateTeacherService;
@@ -1925,18 +1937,18 @@ var StudentComponent = (function () {
         this.showNewStudent = false;
     };
     StudentComponent.prototype.newStudent = function (firstname, lastname, belongsToClass) {
+        var _this = this;
         if (firstname > "" && lastname > "" && belongsToClass > 0) {
-            var h;
-            this.PostStudentService.postStudent(new __WEBPACK_IMPORTED_MODULE_3__types_types__["d" /* Student */](null, firstname, lastname, belongsToClass)).then(function (r) { return h = r; }, function () { return location.href = "/noc"; });
-            if (0 == h) {
-                this.showNewStudent = false;
-                this.globalStatus.setStatus("Data submitted");
-                //fetch new data
-                this.init();
-            }
-            else {
-                this.globalStatus.setStatus("[ERROR] submitting data");
-            }
+            this.PostStudentService.postStudent(new __WEBPACK_IMPORTED_MODULE_3__types_types__["d" /* Student */](null, firstname, lastname, belongsToClass)).subscribe(function (res) {
+                if (res.id) {
+                    _this.showNewStudent = false;
+                    _this.globalStatus.setStatus("Data submitted");
+                    _this.init();
+                }
+                else {
+                    _this.globalStatus.setStatus(res.error);
+                }
+            });
         }
         else {
             this.globalStatus.setStatus("Enter required Values");
@@ -1955,18 +1967,18 @@ var StudentComponent = (function () {
         this.showNewNote = false;
     };
     StudentComponent.prototype.newNote = function (text, timestamp, authorTeacherId, belongsToStudent) {
+        var _this = this;
         if (text > "" && timestamp > 0 && authorTeacherId != null && belongsToStudent > 0) {
-            var h;
-            this.PostNoteService.postNote(new __WEBPACK_IMPORTED_MODULE_3__types_types__["b" /* Note */](null, text, timestamp, authorTeacherId, belongsToStudent)).then(function (s) { return h = s; }, function () { return location.href = "/noc"; });
-            if (0 == h) {
-                this.showNewNote = false;
-                this.globalStatus.setStatus("Data submitted");
-                //fetch new data
-                this.init();
-            }
-            else {
-                this.globalStatus.setStatus("[ERROR] submitting data");
-            }
+            this.PostNoteService.postNote(new __WEBPACK_IMPORTED_MODULE_3__types_types__["b" /* Note */](null, text, timestamp, authorTeacherId, belongsToStudent)).subscribe(function (res) {
+                if (res.id) {
+                    _this.showNewNote = false;
+                    _this.globalStatus.setStatus("Data submitted");
+                    _this.init();
+                }
+                else {
+                    _this.globalStatus.setStatus(res.error);
+                }
+            });
         }
         else {
             this.globalStatus.setStatus("Enter required Values");
@@ -2016,19 +2028,24 @@ var StudentComponent = (function () {
         this.sub.unsubscribe();
     };
     StudentComponent.prototype.updateStudent = function (student, key, value) {
+        var _this = this;
         var val;
         if (student != null && key != null && value != null) {
             val = value;
             student[key] = val;
             var h;
-            this.UpdateStudentService.updateStudent(student).then(function (r) { return h = r; }, function () { return location.href = "/noc"; });
-            if (h == 0) {
-                this.globalStatus.setStatus("Data submitted " + student[key]);
-                this.init();
-            }
-            else {
-                this.globalStatus.setStatus("ERROR during submitting data");
-            }
+            this.UpdateStudentService.updateStudent(student).subscribe(function (res) {
+                if (res.id) {
+                    _this.globalStatus.setStatus("Data submitted");
+                    _this.init();
+                }
+                else {
+                    _this.globalStatus.setStatus(res.error);
+                }
+            });
+        }
+        else {
+            this.globalStatus.setStatus("No changes");
         }
     };
     StudentComponent.prototype.getNow = function () {
@@ -2036,41 +2053,61 @@ var StudentComponent = (function () {
         return now;
     };
     StudentComponent.prototype.deleteStudent = function (student) {
+        var _this = this;
         var h;
-        this.DeleteStudentService.deleteStudent(student).then(function (r) { return h = r; }, function () { return location.href = "/noc"; });
-        if (h == 0) {
-            this.globalStatus.setStatus("Data submitted");
-            this.init();
+        if (student.id > 0) {
+            this.DeleteStudentService.deleteStudent(student).subscribe(function (res) {
+                if (res.id) {
+                    _this.globalStatus.setStatus("Data submitted");
+                    _this.init();
+                }
+                else {
+                    _this.globalStatus.setStatus(res.error);
+                }
+            });
         }
         else {
-            this.globalStatus.setStatus("ERROR during submitting data");
+            this.globalStatus.setStatus("Nothing to delete!");
         }
     };
     StudentComponent.prototype.updateNote = function (note, key, value) {
+        var _this = this;
         var val;
         if (note != null && key != null && value != null) {
             val = value;
             note[key] = val;
-            var h;
-            this.UpdateNoteService.updateNote(note).then(function (r) { return h = r; }, function () { return location.href = "/noc"; });
-            if (h == 0) {
-                this.globalStatus.setStatus("Data submitted " + note[key]);
-                this.init();
-            }
-            else {
-                this.globalStatus.setStatus("ERROR during submitting data");
-            }
+            this.UpdateNoteService.updateNote(note).subscribe(function (res) {
+                if (res.id) {
+                    _this.showNewNote = false;
+                    _this.globalStatus.setStatus("Data submitted");
+                    _this.init();
+                }
+                else {
+                    _this.globalStatus.setStatus(res.error);
+                }
+            });
+        }
+        else {
+            this.globalStatus.setStatus("No changes");
         }
     };
     StudentComponent.prototype.deleteNote = function (note) {
+        var _this = this;
         var h;
-        this.DeleteNoteService.deleteNote(note).then(function (r) { return h = r; }, function () { return location.href = "/noc"; });
-        if (h == 0) {
-            this.globalStatus.setStatus("Data submitted");
-            this.init();
+        if (note.id > 0) {
+            this.DeleteNoteService.deleteNote(note).subscribe(function (res) {
+                if (res.id) {
+                    _this.showNewNote = false;
+                    _this.globalStatus.setStatus("Data submitted");
+                    _this.init();
+                }
+                else {
+                    _this.globalStatus.setStatus(res.error);
+                }
+            });
         }
         else {
-            this.globalStatus.setStatus("ERROR during submitting data");
+            this.globalStatus.setStatus("Nothing to delete!");
         }
     };
     StudentComponent.prototype.getClassName = function (id) {
@@ -2167,48 +2204,60 @@ var TeacherComponent = (function () {
         this.showNewTeacher = false;
     };
     TeacherComponent.prototype.newTeacher = function (firstname, lastname, mailAddress, password, belongsToSchool) {
+        var _this = this;
         if (firstname > "" && lastname > "" && mailAddress > "" && password > "" && belongsToSchool > 0) {
-            var h;
-            this.PostTeacherService.postTeacher(new __WEBPACK_IMPORTED_MODULE_3__types_types__["e" /* Teacher */](null, firstname, lastname, mailAddress, password, belongsToSchool)).then(function (s) { return h = s; }, function () { return location.href = "/noc"; });
-            if (h == 0) {
-                this.showNewTeacher = false;
-                this.globalStatus.setStatus("Data submitted");
-                //fetch new data
-                this.init();
-            }
-            else {
-                this.globalStatus.setStatus("[ERROR] submitting data");
-            }
+            this.PostTeacherService.postTeacher(new __WEBPACK_IMPORTED_MODULE_3__types_types__["e" /* Teacher */](null, firstname, lastname, mailAddress, password, belongsToSchool)).subscribe(function (res) {
+                if (res.id) {
+                    _this.showNewTeacher = false;
+                    _this.globalStatus.setStatus("Data submitted");
+                    _this.init();
+                }
+                else {
+                    _this.globalStatus.setStatus(res.error);
+                }
+            });
         }
         else {
             this.globalStatus.setStatus("Enter required Values");
         }
     };
     TeacherComponent.prototype.updateTeacher = function (teacher, key, value) {
+        var _this = this;
         var val;
         if (teacher != null && key != null && value != null) {
             val = value;
             teacher[key] = val;
             var h;
-            this.UpdateTeacherService.updateTeacher(teacher).then(function (r) { return h = r; }, function () { return location.href = "/noc"; });
-            if (h == 0) {
-                this.globalStatus.setStatus("Data submitted " + teacher[key]);
-                this.init();
-            }
-            else {
-                this.globalStatus.setStatus("ERROR during submitting data");
-            }
+            this.UpdateTeacherService.updateTeacher(teacher).subscribe(function (res) {
+                if (res.id) {
+                    _this.globalStatus.setStatus("Data submitted");
+                    _this.init();
+                }
+                else {
+                    _this.globalStatus.setStatus(res.error);
+                }
+            });
+        }
+        else {
+            this.globalStatus.setStatus("No changes");
         }
     };
     TeacherComponent.prototype.deleteTeacher = function (teacher) {
+        var _this = this;
         var h;
-        this.UpdateTeacherService.updateTeacher(teacher).then(function (r) { return h = r; }, function () { return location.href = "/noc"; });
-        if (h == 0) {
-            this.globalStatus.setStatus("Data submitted");
-            this.init();
+        if (teacher.id > 0) {
+            this.DeleteTeacherService.deleteTeacher(teacher).subscribe(function (res) {
+                if (res.id) {
+                    _this.globalStatus.setStatus("Data submitted");
+                    _this.init();
+                }
+                else {
+                    _this.globalStatus.setStatus(res.error);
+                }
+            });
         }
         else {
-            this.globalStatus.setStatus("ERROR during submitting data");
+            this.globalStatus.setStatus("Nothing to delete!");
         }
     };
     TeacherComponent.prototype.init = function () {
@@ -2251,6 +2300,9 @@ var TeacherComponent = (function () {
         else {
             return "";
         }
+    };
+    TeacherComponent.prototype.getCurrentSchool = function () {
+        return this.globalSchool.getSchool();
     };
     TeacherComponent.prototype.selectTeacher = function (teacher) {
         this.cancelNewTeacher();
