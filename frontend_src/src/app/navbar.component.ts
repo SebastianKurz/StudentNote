@@ -26,7 +26,7 @@ import {GlobalLogin}from './service/local.service';
     <li *ngIf="isGlobalClass()" class="active floatleft" [routerLink]="['/students']" routerLinkActive="active">Schüler</li>
     <li style="">&nbsp;</li>
 
-    <li class="active floatright" (click)="logoff()">{{getCurrentTeacherName()}}<i class="fa fa-sign-out" aria-hidden="true"></i>
+    <li class="active floatright" (click)="logoff()">{{getCurrentTeacherName()}}<i style="margin-left:1em;" class="fa fa-sign-out" aria-hidden="true"></i>
 </li>
 </ul>
 </nav>

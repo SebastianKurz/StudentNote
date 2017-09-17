@@ -7,7 +7,7 @@ import { GlobalStatus } from './service/local.service';
   template: `
 <router-outlet></router-outlet>
 
-<div style="text-align:center;color:#b0b0b0">
+<div style="text-align:center;color:#b0b0b0;display:block;position:fixed;bottom:0;width:100%;height:2em;font-size:1,5em;">
 &copy; {{copy}}
 </div>
 
