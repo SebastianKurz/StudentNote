@@ -53,7 +53,7 @@ export class NavbarComponent {
   }
 
   ngOnInit() {
-    if (!localStorage.getItem('CurrentTeacher')){
+    if (JSON.parse(localStorage.getItem('CurrentTeacher')).id){
     this.logoff();
   }
     }

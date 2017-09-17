@@ -53,11 +53,11 @@ this.wait=false;
     }
   }
 
-getLoginUser(email:string): void {
+getLoginUser(email:string, password:string): void {
   if (email >""){
     //Google login will be accessible here.
     this.wait=true;
-   this.GetTeacherService.getTeacherByMail(email).subscribe(t=> {this.teacher = t;});
+   this.GetTeacherService.getTeacherByMail(email,password).subscribe(t=> {this.teacher = t;});
    if(this.wait){
      setTimeout(() => this.Login(), 2000);
    }}

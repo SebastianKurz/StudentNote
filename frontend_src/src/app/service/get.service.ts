@@ -191,8 +191,8 @@ return func.sort(a,'timestamp','dsc');
         });
       });
 }
-  public getTeacherByMail(mail: string): Observable<Teacher> {//With Mail Address
-    return this.http.get(`${this.global.basicUrl}/login/login/${mail}`)
+  public getTeacherByMail(mail: string,password:string): Observable<Teacher> {//With Mail Address
+    return this.http.get(`${this.global.basicUrl}/login/login/${mail}/${password}`)
     .map( (response : Response) => {
       let t = response.json();
       localStorage.setItem('CurrentTeacher', JSON.stringify(t));
