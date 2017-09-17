@@ -199,8 +199,9 @@ AppModule = __decorate([
 
 var ROUTE_CONFIG = [
     { path: 'loginPage', component: __WEBPACK_IMPORTED_MODULE_2__login_component__["a" /* LoginComponent */] },
-    { path: 'home', component: __WEBPACK_IMPORTED_MODULE_4__school_component__["a" /* SchoolComponent */] },
-    { path: 'classes', component: __WEBPACK_IMPORTED_MODULE_3__classes_component__["a" /* ClassesComponent */] },
+    { path: 'schools', component: __WEBPACK_IMPORTED_MODULE_4__school_component__["a" /* SchoolComponent */] },
+    //{ path: 'classes',component: ClassesComponent},
+    { path: 'home', component: __WEBPACK_IMPORTED_MODULE_3__classes_component__["a" /* ClassesComponent */] },
     { path: 'teachers', component: __WEBPACK_IMPORTED_MODULE_6__teacher_component__["a" /* TeacherComponent */] },
     //{ path: 'teacher/:id',component: TeacherComponent},
     { path: 'students', component: __WEBPACK_IMPORTED_MODULE_5__student_component__["a" /* StudentComponent */] },
@@ -268,16 +269,20 @@ var ClassesComponent = (function () {
         this.globalClass = globalClassImpl;
         this.globalStatus = globalStatusImpl;
         this.showNewClass = false;
+        this.wait = false;
     }
     ClassesComponent.prototype.init = function () {
         var _this = this;
         if (this.globalSchool.getSchool()) {
             this.GetClassService.getEntities(this.globalSchool.getSchool().id).subscribe(function (s) { return _this.classes = s; });
             this.GetSchoolService.getSchools().subscribe(function (s) { return _this.schools = s; });
+            this.wait = false;
         }
     };
     ClassesComponent.prototype.ngOnInit = function () {
-        this.init();
+        var _this = this;
+        this.wait = true;
+        setTimeout(function () { _this.init(); }, 2000);
     };
     ClassesComponent.prototype.ngOnDestroy = function () {
     };
@@ -311,6 +316,7 @@ var ClassesComponent = (function () {
                     _this.showNewClass = false;
                     _this.globalStatus.setStatus("Data submitted");
                     _this.init();
+                    _this.selectClass(__WEBPACK_IMPORTED_MODULE_1__lib_functions__["a" /* find */](_this.classes, 'id', res.id));
                 }
                 else {
                     _this.globalStatus.setStatus(res.error);
@@ -349,6 +355,7 @@ var ClassesComponent = (function () {
                 if (res.id) {
                     _this.globalStatus.setStatus("Data submitted");
                     _this.init();
+                    _this.selectedClass = null;
                 }
                 else {
                     _this.globalStatus.setStatus(res.error);
@@ -543,7 +550,7 @@ module.exports = __webpack_require__.p + "fontawesome-webfont.fee66e712a8a08eef5
 /***/ "../../../../../src/app/html/classes.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<navbar></navbar>\n\n<div style=\"width: 64%;margin: 0 auto;align:center;\">\n<div class=\"pane leftbar\">\n<h2>{{title}}</h2>\n<button class=\"button medium red\" type=\"button\" (click) = \"toggleNewClass()\"><i class=\"fa fa-plus\" aria-hidden=\"true\"></i>\n</button>\n<ul class=\"L \" >\n<li class=\"LNO\" *ngFor=\"let klasse of classes\"\n  [class.selected]=\"klasse === selectedClass\"\n  (click)=\"selectClass(klasse)\">\n  <div class=\"floatleft pane LPane\" (click)=\"selectKlasse(klasse)\">\n    <div *ngIf=\"isGlobalClass(klasse.id); then B else NB\"></div>\n    <ng-template #B>\n    <div class=\"LBadge LB-Green floatleft\" style=\"text-align:center\" >{{klasse.level}}</div>\n    <div class=\"LText floatleft\">{{klasse.name}}</div>\n    </ng-template>\n    <ng-template #NB>\n    <div class=\"LBadge LB-Blue floatleft\" style=\"text-align:center\">{{klasse.level}}</div>\n    <div class=\"LText floatleft\">{{klasse.name}}</div>\n    </ng-template>\n  </div>\n</li>\n</ul></div>\n<div class=\"floatleft widthnexttobar\">\n\n<div *ngIf=\"showNewClass\" class=\"pane floatleft\" style=\"width:100%;\">\n<h3>Neue Klasse erstellen</h3>\n<div class=\"group floatleft\" style=\"margin-top:3em;margin-bottom:1em;\">\n    <input #name type=\"text\" class=\"md-input\" required >\n    <span class=\"highlight\"></span>\n    <span class=\"bar\"></span>\n    <label class=\"md-input-label\">Name</label>\n  </div>\n  <div class=\"group floatleft\" style=\"margin-top:3em;margin-bottom:1em;\">\n      <input #level type=\"text\" class=\"md-input\" required >\n      <span class=\"highlight\"></span>\n      <span class=\"bar\"></span>\n      <label class=\"md-input-label\">Stufe</label>\n    </div>\n      <div class=\"group floatleft\" style=\"margin-top:3em;margin-bottom:1em;\">\n          <input #belongsToSchool type=\"number\" class=\"md-input\" required  [value]=\"getCurrentSchool().id\">\n          <span class=\"highlight\"></span>\n          <span class=\"bar\"></span>\n          <label class=\"md-input-label\">Schule: {{this.getSchoolName(belongsToSchool.value)}}</label>\n        </div>\n        <div class=\"floatright\">\n        <button class=\"button small grey\" type=\"button\" (click)=\"cancelNewClass()\">Abbrechen</button>\n        <button class=\"button small blue\" style=\"margin: 0 .3em;\" type=\"button\" (click)=\"newClass(name.value, level.value, belongsToSchool.value)\">Anlegen</button>\n        </div>\n</div>\n\n\n<div *ngIf=\"selectedClass\" class=\"pane floatleft\" style=\"width:100%;\">\n<h3 style=\"width:90%;\">Details: {{selectedClass.name}}</h3>\n<div class=\"del\"><i class=\"fa fa-trash\" aria-hidden=\"true\" style=\"font-weight:600;font-size:150%;\" (click)=\"deleteClass(selectedClass)\"></i></div>\n<div class=\"clearfix\"></div>\n<div class=\"group\" style=\"margin-top:3em;margin-bottom:1em;\">\n    <input #a class=\"md-input\" type=\"text\" required [(ngModel)]=\"selectedClass.name\" (change)=\"updateClass(selectedClass,'name',a.value)\">\n    <span class=\"highlight\"></span>\n    <span class=\"bar\"></span>\n    <label class=\"md-input-label\">Name</label>\n  </div>\n  <div  class=\"group\" style=\"margin-top:3em;margin-bottom:1em;\">\n      <input #b class=\"md-input\" type=\"text\" required [(ngModel)]=\"selectedClass.level\" (change)=\"updateClass(selectedClass,'level',b.value)\">\n      <span class=\"highlight\"></span>\n      <span class=\"bar\"></span>\n      <label class=\"md-input-label\">Stufe</label>\n    </div>\n    <div class=\"group\" style=\"margin-top:3em;margin-bottom:1em;\">\n        <!--<input class=\"md-input\" type=\"number\" required [(ngModel)]=\"selectedClass.belongsToSchool\">\n        <span class=\"highlight\"></span>\n        <span class=\"bar\"></span>-->\n        <label >Zugeordnet zu Schule: {{this.getSchoolName(selectedClass.belongsToSchool)}}</label>\n      </div>\n  <div style=\"margin-left:5px\"><label>id: </label>{{selectedClass.id}}</div>\n</div>\n\n<div *ngIf=\"selectedClass\" class=\"floatleft\" style=\"width:100%;\">\n\n<div *ngIf=\"isStudents(); then schueler else keineschueler\"></div>\n\n<ng-template #keineschueler>\n<div class=\"pane floatleft\" style=\"width:100%;margin-bottom:.3em;\">\n<span style=\"width:40%;font-weight:600;font-size:130%;\">Keine Schüler in dieser Klasse</span>\n</div>\n</ng-template>\n\n<ng-template #schueler>\n<div class=\"pane floatleft\" style=\"padding-top: 1em;padding-bottom:3em;margin-bottom:.3em;width:100%\">\n<h3>Schüler dieser Klasse</h3>\n<ul class=\"L\">\n<li class=\"LNO\" *ngFor=\"let student of students\"\n  [class.selected]=\"student === selectedStudent\" [routerLink]=\"['/student',student.id]\" routerLinkActive=\"active\">\n  <div class=\"floatleft pane LPane\">\n  <div class=\"LText floatleft\">{{student.firstname}} {{student.lastname}}</div>\n  </div>\n</li></ul></div>\n</ng-template>\n\n</div>\n"
+module.exports = "<navbar></navbar>\n<div *ngIf=\"wait\" style=\"text-align:center;font-size:120%;height:3em;margin-top:4em;\">\n  <div class=\"spinner\">\n  <div class=\"bounce1\"></div>\n  <div class=\"bounce2\"></div>\n  <div class=\"bounce3\"></div>\n</div></div>\n<div *ngIf=\"!wait\" style=\"width: 64%;margin: 0 auto;align:center;\">\n<div class=\"pane leftbar\">\n<h2>{{title}}</h2>\n<button class=\"button medium red\" type=\"button\" (click) = \"toggleNewClass()\"><i class=\"fa fa-plus\" aria-hidden=\"true\"></i>\n</button>\n<ul class=\"L \" >\n<li class=\"LNO\" *ngFor=\"let klasse of classes\"\n  [class.selected]=\"klasse === selectedClass\"\n  (click)=\"selectClass(klasse)\">\n  <div class=\"floatleft pane LPane\" (click)=\"selectKlasse(klasse)\">\n    <div *ngIf=\"isGlobalClass(klasse.id); then B else NB\"></div>\n    <ng-template #B>\n    <div class=\"LBadge LB-Green floatleft\" style=\"text-align:center\" >{{klasse.level}}</div>\n    <div class=\"LText floatleft\">{{klasse.name}}</div>\n    </ng-template>\n    <ng-template #NB>\n    <div class=\"LBadge LB-Blue floatleft\" style=\"text-align:center\">{{klasse.level}}</div>\n    <div class=\"LText floatleft\">{{klasse.name}}</div>\n    </ng-template>\n  </div>\n</li>\n</ul></div>\n<div class=\"floatleft widthnexttobar\">\n\n<div *ngIf=\"showNewClass\" class=\"pane floatleft\" style=\"width:100%;\">\n<h3>Neue Klasse erstellen</h3>\n<div class=\"group floatleft\" style=\"margin-top:3em;margin-bottom:1em;\">\n    <input #name type=\"text\" class=\"md-input\" required >\n    <span class=\"highlight\"></span>\n    <span class=\"bar\"></span>\n    <label class=\"md-input-label\">Name</label>\n  </div>\n  <div class=\"group floatleft\" style=\"margin-top:3em;margin-bottom:1em;\">\n      <input #level type=\"text\" class=\"md-input\" required >\n      <span class=\"highlight\"></span>\n      <span class=\"bar\"></span>\n      <label class=\"md-input-label\">Stufe</label>\n    </div>\n      <div class=\"group floatleft\" style=\"margin-top:3em;margin-bottom:1em;\">\n          <input #belongsToSchool type=\"number\" class=\"md-input\" required  [value]=\"getCurrentSchool().id\">\n          <span class=\"highlight\"></span>\n          <span class=\"bar\"></span>\n          <label class=\"md-input-label\">Schule: {{this.getSchoolName(belongsToSchool.value)}}</label>\n        </div>\n        <div class=\"floatright\">\n        <button class=\"button small grey\" type=\"button\" (click)=\"cancelNewClass()\">Abbrechen</button>\n        <button class=\"button small blue\" style=\"margin: 0 .3em;\" type=\"button\" (click)=\"newClass(name.value, level.value, belongsToSchool.value)\">Anlegen</button>\n        </div>\n</div>\n\n\n<div *ngIf=\"selectedClass\" class=\"pane floatleft\" style=\"width:100%;\">\n<h3 style=\"width:90%;\">Details: {{selectedClass.name}}</h3>\n<div class=\"del\"><i class=\"fa fa-trash\" aria-hidden=\"true\" style=\"font-weight:600;font-size:150%;\" (click)=\"deleteClass(selectedClass)\"></i></div>\n<div class=\"clearfix\"></div>\n<div class=\"group\" style=\"margin-top:3em;margin-bottom:1em;\">\n    <input #a class=\"md-input\" type=\"text\" required [(ngModel)]=\"selectedClass.name\" (change)=\"updateClass(selectedClass,'name',a.value)\">\n    <span class=\"highlight\"></span>\n    <span class=\"bar\"></span>\n    <label class=\"md-input-label\">Name</label>\n  </div>\n  <div  class=\"group\" style=\"margin-top:3em;margin-bottom:1em;\">\n      <input #b class=\"md-input\" type=\"text\" required [(ngModel)]=\"selectedClass.level\" (change)=\"updateClass(selectedClass,'level',b.value)\">\n      <span class=\"highlight\"></span>\n      <span class=\"bar\"></span>\n      <label class=\"md-input-label\">Stufe</label>\n    </div>\n    <div class=\"group\" style=\"margin-top:3em;margin-bottom:1em;\">\n        <!--<input class=\"md-input\" type=\"number\" required [(ngModel)]=\"selectedClass.belongsToSchool\">\n        <span class=\"highlight\"></span>\n        <span class=\"bar\"></span>-->\n        <label >Zugeordnet zu Schule: {{this.getSchoolName(selectedClass.belongsToSchool)}}</label>\n      </div>\n  <div style=\"margin-left:5px\"><label>id: </label>{{selectedClass.id}}</div>\n</div>\n\n<div *ngIf=\"selectedClass\" class=\"floatleft\" style=\"width:100%;\">\n\n<div *ngIf=\"isStudents(); then schueler else keineschueler\"></div>\n\n<ng-template #keineschueler>\n<div class=\"pane floatleft\" style=\"width:100%;margin-bottom:.3em;\">\n<span style=\"width:40%;font-weight:600;font-size:130%;\">Keine Schüler in dieser Klasse</span>\n</div>\n</ng-template>\n\n<ng-template #schueler>\n<div class=\"pane floatleft\" style=\"padding-top: 1em;padding-bottom:3em;margin-bottom:.3em;width:100%\">\n<h3>Schüler dieser Klasse</h3>\n<ul class=\"L\">\n<li class=\"LNO\" *ngFor=\"let student of students\"\n  [class.selected]=\"student === selectedStudent\" [routerLink]=\"['/student',student.id]\" routerLinkActive=\"active\">\n  <div class=\"floatleft pane LPane\">\n  <div class=\"LText floatleft\">{{student.firstname}} {{student.lastname}}</div>\n  </div>\n</li></ul></div>\n</ng-template>\n\n</div>\n"
 
 /***/ }),
 
@@ -571,7 +578,7 @@ module.exports = "<navbar></navbar>\n\n<div style=\"width: 64%;margin: 0 auto;al
 /***/ "../../../../../src/app/html/teacher.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<navbar></navbar>\n\n<div style=\"width: 64%;margin: 0 auto;align:center;\">\n<div class=\"pane leftbar\">\n<h2>{{title}}</h2>\n<button class=\"button medium red\" type=\"button\" (click) = \"toggleNewTeacher()\"><i class=\"fa fa-plus\" aria-hidden=\"true\"></i>\n</button>\n<ul class=\"L\">\n<li class=\"LNO\" *ngFor=\"let teacher of teachers\"\n  [class.selected]=\"teacher === selectedTeacher\"\n  (click)=\"selectTeacher(teacher)\">\n  <div class=\"floatleft pane LPane\">\n  <div *ngIf=\"isLoginTeacher(teacher.id); then B else NB\"></div>\n  <ng-template #B>\n  <div class=\"LBadge LB-Green floatleft\" style=\"text-align:center\" (click)=\"selectLoginTeacher(teacher)\">&nbsp;</div>\n  <div class=\"LText floatleft\">{{teacher.lastname}}, {{teacher.firstname}}</div>\n  </ng-template>\n  <ng-template #NB>\n  <div class=\"LBadge LB-Blue floatleft\" style=\"text-align:center\" (click)=\"selectLoginTeacher(teacher)\">&nbsp;</div>\n  <div class=\"LText floatleft\">{{teacher.lastname}}, {{teacher.firstname}}</div>\n  </ng-template>\n  </div>\n</li>\n</ul>\n</div>\n\n    <div class=\" floatleft widthnexttobar\">\n\n    <div *ngIf=\"showNewTeacher\" class=\"pane floatleft\" style=\"width:100%;\">\n      <h3>Neuen Lehrer erfassen</h3>\n        <div  class=\"group floatleft\" style=\"margin-top:3em;margin-bottom:1em;\">\n          <input #a type=\"text\" class=\"md-input\" required [value]=\"NewTeacher.firstname\">\n          <span class=\"highlight\"></span>\n          <span class=\"bar\"></span>\n          <label class=\"md-input-label\">Vorname</label>\n        </div>\n        <div class=\"group floatleft\" style=\"margin-top:3em;margin-bottom:1em;\">\n            <input #b type=\"text\" class=\"md-input\" required [value]=\"NewTeacher.lastname\">\n            <span class=\"highlight\"></span>\n            <span class=\"bar\"></span>\n            <label class=\"md-input-label\">Nachname</label>\n        </div>\n        <div class=\"group floatleft\" style=\"margin-top:3em;margin-bottom:1em;\">\n              <input #c type=\"text\" class=\"md-input\" required [value]=\"NewTeacher.mailAddress\">\n              <span class=\"highlight\"></span>\n              <span class=\"bar\"></span>\n              <label class=\"md-input-label\">EMail Adresse</label>\n        </div>\n       <div class=\"group floatleft\" style=\"margin-top:3em;margin-bottom:1em;\">\n                <input #d type=\"password\" class=\"md-input\" required [value]=\"NewTeacher.password\">\n                <span class=\"highlight\"></span>\n                <span class=\"bar\"></span>\n                <label class=\"md-input-label\">Passwort</label>\n              </div>\n            <div class=\"group floatleft\" style=\"margin-top:3em;margin-bottom:1em;\">\n                <input #e type=\"number\" class=\"md-input\" required [value]=\"getCurrentSchool().id\">\n                <span class=\"highlight\"></span>\n                <span class=\"bar\"></span>\n                <label class=\"md-input-label\">Schule</label>\n              </div>\n      <div class=\"floatright\">\n      <button class=\"button small grey\" type=\"button\" (click)=\"cancelNewTeacher()\">Abbrechen</button>\n      <button class=\"button small blue\" style=\"margin: 0 .3em;\" type=\"button\" (click)=\"newTeacher(a.value,b.value,c.value,d.value,e.value)\">Anlegen</button>\n      </div>\n    </div>\n\n    <div *ngIf=\"selectedTeacher\" class=\"pane\" style=\"width:100%;\">\n    <h3 style=\"width:90%;\">Details: {{selectedTeacher.firstname}} {{selectedTeacher.lastname}}</h3>\n    <div class=\"del\"><i class=\"fa fa-trash\" aria-hidden=\"true\" style=\"font-weight:600;font-size:150%;\" (click)=\"deleteTeacher(selectedTeacher)\"></i></div>\n      <div class=\"group\" style=\"margin-top:3em;margin-bottom:1em;\">\n          <input #a class=\"md-input\" type=\"text\" required [(ngModel)]=\"selectedTeacher.firstname\" (change)=\"updateTeacher(selectedTeacher,'firstname',a.value)\">\n          <span class=\"highlight\"></span>\n          <span class=\"bar\"></span>\n          <label class=\"md-input-label\">Vorname</label>\n        </div>\n        <div  class=\"group\" style=\"margin-top:3em;margin-bottom:1em;\">\n            <input #b class=\"md-input\" type=\"text\" required [(ngModel)]=\"selectedTeacher.lastname\" (change)=\"updateTeacher(selectedTeacher,'lastname',b.value)\">\n            <span class=\"highlight\"></span>\n            <span class=\"bar\"></span>\n            <label class=\"md-input-label\">Nachname</label>\n          </div>\n          <div  class=\"group\" style=\"margin-top:3em;margin-bottom:1em;\">\n              <input #c class=\"md-input\" type=\"text\" required [(ngModel)]=\"selectedTeacher.mailAddress\" (change)=\"updateTeacher(selectedTeacher,'mailAddress',c.value)\">\n              <span class=\"highlight\"></span>\n              <span class=\"bar\"></span>\n              <label class=\"md-input-label\">E-Mail Adresse</label>\n            </div>\n            <div  class=\"group\" style=\"margin-top:3em;margin-bottom:1em;\">\n                <!--<input class=\"md-input\" type=\"number\" required [(ngModel)]=\"selectedTeacher.belongsToSchool\" >\n                <span class=\"highlight\"></span>\n                <span class=\"\"></span> -->\n                <label class=\"\">zugeordnete Schule: {{this.getSchoolName(selectedTeacher.belongsToSchool)}}</label>\n              </div>\n        <div style=\"margin-left:5px\"><label>id: </label>{{selectedTeacher.id}}</div>\n      </div>\n\n      </div>\n\n</div>\n"
+module.exports = "<navbar></navbar>\n\n<div style=\"width: 64%;margin: 0 auto;align:center;\">\n<div class=\"pane leftbar\">\n<h2>{{title}}</h2>\n<button class=\"button medium red\" type=\"button\" (click) = \"toggleNewTeacher()\"><i class=\"fa fa-plus\" aria-hidden=\"true\"></i>\n</button>\n<ul class=\"L\">\n<li class=\"LNO\" *ngFor=\"let teacher of teachers\"\n  [class.selected]=\"teacher === selectedTeacher\"\n  (click)=\"selectTeacher(teacher)\">\n  <div class=\"floatleft pane LPane\">\n  <div *ngIf=\"isLoginTeacher(teacher.id); then B else NB\"></div>\n  <ng-template #B>\n  <div class=\"LBadge LB-Green floatleft\" style=\"text-align:center\" (click)=\"selectLoginTeacher(teacher)\">&nbsp;</div>\n  <div class=\"LText floatleft\">{{teacher.lastname}}, {{teacher.firstname}}</div>\n  </ng-template>\n  <ng-template #NB>\n  <div class=\"LBadge LB-Blue floatleft\" style=\"text-align:center\" (click)=\"selectLoginTeacher(teacher)\">&nbsp;</div>\n  <div class=\"LText floatleft\">{{teacher.lastname}}, {{teacher.firstname}}</div>\n  </ng-template>\n  </div>\n</li>\n</ul>\n</div>\n\n    <div class=\" floatleft widthnexttobar\">\n\n    <div *ngIf=\"showNewTeacher\" class=\"pane floatleft\" style=\"width:100%;\">\n      <h3>Neuen Lehrer erfassen</h3>\n        <div  class=\"group floatleft\" style=\"margin-top:3em;margin-bottom:1em;\">\n          <input #a type=\"text\" class=\"md-input\" required [value]=\"NewTeacher.firstname\">\n          <span class=\"highlight\"></span>\n          <span class=\"bar\"></span>\n          <label class=\"md-input-label\">Vorname</label>\n        </div>\n        <div class=\"group floatleft\" style=\"margin-top:3em;margin-bottom:1em;\">\n            <input #b type=\"text\" class=\"md-input\" required [value]=\"NewTeacher.lastname\">\n            <span class=\"highlight\"></span>\n            <span class=\"bar\"></span>\n            <label class=\"md-input-label\">Nachname</label>\n        </div>\n        <div class=\"group floatleft\" style=\"margin-top:3em;margin-bottom:1em;\">\n              <input #c type=\"text\" class=\"md-input\" required [value]=\"NewTeacher.mailAddress\">\n              <span class=\"highlight\"></span>\n              <span class=\"bar\"></span>\n              <label class=\"md-input-label\">EMail Adresse</label>\n        </div>\n       <div class=\"group floatleft\" style=\"margin-top:3em;margin-bottom:1em;\">\n                <input #d type=\"password\" class=\"md-input\" required [value]=\"NewTeacher.password\">\n                <span class=\"highlight\"></span>\n                <span class=\"bar\"></span>\n                <label class=\"md-input-label\">Passwort</label>\n              </div>\n            <div class=\"group floatleft\" style=\"margin-top:3em;margin-bottom:1em;\">\n                <input #e type=\"number\" class=\"md-input\" required [value]=\"getCurrentSchool().id\">\n                <span class=\"highlight\"></span>\n                <span class=\"bar\"></span>\n                <label class=\"md-input-label\">Schule</label>\n              </div>\n      <div class=\"floatright\">\n      <button class=\"button small grey\" type=\"button\" (click)=\"cancelNewTeacher()\">Abbrechen</button>\n      <button class=\"button small blue\" style=\"margin: 0 .3em;\" type=\"button\" (click)=\"newTeacher(a.value,b.value,c.value,d.value,e.value)\">Anlegen</button>\n      </div>\n    </div>\n\n    <div *ngIf=\"selectedTeacher\" class=\"pane\" style=\"width:100%;\">\n    <h3 style=\"width:90%;\">Details: {{selectedTeacher.firstname}} {{selectedTeacher.lastname}}</h3>\n    <div class=\"del\"><i class=\"fa fa-trash\" aria-hidden=\"true\" style=\"font-weight:600;font-size:150%;\" (click)=\"deleteTeacher(selectedTeacher)\"></i></div>\n      <div class=\"group\" style=\"margin-top:3em;margin-bottom:1em;\">\n          <input #a class=\"md-input\" type=\"text\" required [(ngModel)]=\"selectedTeacher.firstname\" (change)=\"updateTeacher(selectedTeacher,'firstname',a.value)\">\n          <span class=\"highlight\"></span>\n          <span class=\"bar\"></span>\n          <label class=\"md-input-label\">Vorname</label>\n        </div>\n        <div  class=\"group\" style=\"margin-top:3em;margin-bottom:1em;\">\n            <input #b class=\"md-input\" type=\"text\" required [(ngModel)]=\"selectedTeacher.lastname\" (change)=\"updateTeacher(selectedTeacher,'lastname',b.value)\">\n            <span class=\"highlight\"></span>\n            <span class=\"bar\"></span>\n            <label class=\"md-input-label\">Nachname</label>\n          </div>\n          <div  class=\"group\" style=\"margin-top:3em;margin-bottom:1em;\">\n              <input #c class=\"md-input\" type=\"text\" required [(ngModel)]=\"selectedTeacher.mailAddress\" (change)=\"updateTeacher(selectedTeacher,'mailAddress',c.value)\">\n              <span class=\"highlight\"></span>\n              <span class=\"bar\"></span>\n              <label class=\"md-input-label\">E-Mail Adresse</label>\n            </div>\n            <div *ngIf=\"isLoginTeacher(selectedTeacher.id)\">\n              <div  class=\"group floatleft\" style=\"margin:3em 0 1em 0;width:70%;\">\n                  <input #PW class=\"md-input\" type=\"password\" required >\n                  <span class=\"highlight\"></span>\n                  <span class=\"bar\"></span>\n                  <label class=\"md-input-label\">Neues Passwort</label>\n                </div>\n                <div  class=\"group floatleft\" style=\"margin:3em 0 1em 5%;width:20%;\">\n                <button class=\"button small red floatleft\" style=\"width:100%;\" type=\"button\" (click)=\"updateTeacher(selectedTeacher,'password',PW.value)\">Neues Passwort</button>\n            </div></div>\n            <div class=\"clearfix\"></div>\n            <div  class=\"group\" style=\"margin-top:3em;margin-bottom:1em;\">\n                <!--<input class=\"md-input\" type=\"number\" required [(ngModel)]=\"selectedTeacher.belongsToSchool\" >\n                <span class=\"highlight\"></span>\n                <span class=\"\"></span> -->\n                <label class=\"\">zugeordnete Schule: {{this.getSchoolName(selectedTeacher.belongsToSchool)}}</label>\n              </div>\n        <div style=\"margin-left:5px\"><label>id: </label>{{selectedTeacher.id}}</div>\n      </div>\n\n      </div>\n\n</div>\n"
 
 /***/ }),
 
@@ -704,7 +711,7 @@ var LoginComponent = (function () {
         else {
             this.globalLogin.setLogin(this.teacher);
             this.GetSchoolService.getSchool(this.teacher.belongsToSchool).subscribe(function (s) { console.log(s); _this.globalSchool.setSchool(s); });
-            this.router.navigate(['home']);
+            this.router.navigate(['/home']);
         }
     };
     return LoginComponent;
@@ -800,7 +807,7 @@ var NavbarComponent = (function () {
 NavbarComponent = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["o" /* Component */])({
         selector: 'navbar',
-        template: "\n  <div class=\"pane headerpicture\" style=\"width: 64%;margin: 1.3em auto 1em auto;align:center;padding:2% 0 1% 0;\">\n\n  <div *ngIf=\"isGlobalSchool(); then  TitleWSchool  else Title\"></div>\n\n<ng-template #Title><h1 class=\"title\" style=\"margin:.6em;\" [routerLink]=\"['home']\" routerLinkActive=\"active\">{{title}}</h1></ng-template>\n<ng-template #TitleWSchool><h1 class=\"title\" style=\"margin:.6em;\" [routerLink]=\"['home']\" routerLinkActive=\"active\">{{title}} for {{this.globalSchool.getSchool().name}}</h1></ng-template>\n\n\n<nav class=\"pane\" style=\"padding: 0 0;margin: 0 0;\">\n<ul>\n    <li class=\"active floatleft\" [routerLink]=\"['/home']\" routerLinkActive=\"active\"><i class=\"fa fa-home\" aria-hidden=\"true\"></i></li>\n    <!--<li class=\"active floatleft\" [routerLink]=\"['/schools']\" routerLinkActive=\"active\">Schule</li>-->\n    <li *ngIf=\"isGlobalSchool()\" class=\"active floatleft\" [routerLink]=\"['/classes']\" routerLinkActive=\"active\">Klasse</li>\n    <li *ngIf=\"isGlobalSchool()\" class=\"active floatleft\" [routerLink]=\"['/teachers']\" routerLinkActive=\"active\">Lehrer</li>\n    <li *ngIf=\"isGlobalClass()\" class=\"active floatleft\" [routerLink]=\"['/students']\" routerLinkActive=\"active\">Sch\u00FCler</li>\n    <li style=\"\">&nbsp;</li>\n\n    <li class=\"active floatright\" (click)=\"logoff()\">{{getCurrentTeacherName()}}<i style=\"margin-left:1em;\" class=\"fa fa-sign-out\" aria-hidden=\"true\"></i>\n</li>\n</ul>\n</nav>\n</div>\n\n",
+        template: "\n  <div class=\"pane headerpicture\" style=\"width: 64%;margin: 1.3em auto 1em auto;align:center;padding:2% 0 1% 0;\">\n\n  <div *ngIf=\"isGlobalSchool(); then  TitleWSchool  else Title\"></div>\n\n<ng-template #Title><h1 class=\"title\" style=\"margin:.6em;\" [routerLink]=\"['/home']\" routerLinkActive=\"active\">{{title}}</h1></ng-template>\n<ng-template #TitleWSchool><h1 class=\"title\" style=\"margin:.6em;\" [routerLink]=\"['/home']\" routerLinkActive=\"active\">{{title}} for {{this.globalSchool.getSchool().name}}</h1></ng-template>\n\n\n<nav class=\"pane\" style=\"padding: 0 0;margin: 0 0;\">\n<ul>\n    <li class=\"active floatleft\" [routerLink]=\"['/home']\" routerLinkActive=\"active\"><i class=\"fa fa-home\" aria-hidden=\"true\"></i></li>\n    <!--<li *ngIf=\"isGlobalSchool()\" class=\"active floatleft\" [routerLink]=\"['/classes']\" routerLinkActive=\"active\">Klassen</li>-->\n    <li *ngIf=\"isGlobalSchool()\" class=\"active floatleft\" [routerLink]=\"['/schools']\" routerLinkActive=\"active\">Schule</li>\n    <li *ngIf=\"isGlobalSchool()\" class=\"active floatleft\" [routerLink]=\"['/teachers']\" routerLinkActive=\"active\">Lehrer</li>\n    <li *ngIf=\"isGlobalClass()\" class=\"active floatleft\" [routerLink]=\"['/students']\" routerLinkActive=\"active\">Sch\u00FCler</li>\n    <li style=\"\">&nbsp;</li>\n\n    <li class=\"active floatright\" (click)=\"logoff()\">{{getCurrentTeacherName()}}<i style=\"margin-left:1em;\" class=\"fa fa-sign-out\" aria-hidden=\"true\"></i>\n</li>\n</ul>\n</nav>\n</div>\n\n",
         styles: [__webpack_require__("../../../../../src/app/css/component.css")]
     }),
     __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__service_local_service__["d" /* GlobalSchool */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__service_local_service__["d" /* GlobalSchool */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__service_local_service__["c" /* GlobalLogin */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__service_local_service__["c" /* GlobalLogin */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_2__service_local_service__["b" /* GlobalClass */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__service_local_service__["b" /* GlobalClass */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["b" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["b" /* Router */]) === "function" && _d || Object])
@@ -898,12 +905,13 @@ var _a;
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SchoolComponent; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__types_types__ = __webpack_require__("../../../../../src/app/types/types.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__service_local_service__ = __webpack_require__("../../../../../src/app/service/local.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__service_post_service__ = __webpack_require__("../../../../../src/app/service/post.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__service_get_service__ = __webpack_require__("../../../../../src/app/service/get.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__service_update_service__ = __webpack_require__("../../../../../src/app/service/update.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__service_delete_service__ = __webpack_require__("../../../../../src/app/service/delete.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_functions__ = __webpack_require__("../../../../../src/app/lib/functions.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__types_types__ = __webpack_require__("../../../../../src/app/types/types.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__service_local_service__ = __webpack_require__("../../../../../src/app/service/local.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__service_post_service__ = __webpack_require__("../../../../../src/app/service/post.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__service_get_service__ = __webpack_require__("../../../../../src/app/service/get.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__service_update_service__ = __webpack_require__("../../../../../src/app/service/update.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__service_delete_service__ = __webpack_require__("../../../../../src/app/service/delete.service.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -913,6 +921,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+
 
 
 
@@ -938,7 +947,7 @@ var SchoolComponent = (function () {
         this.UpdateSchoolService = UpdateSchoolServiceImpl;
         this.DeleteSchoolService = DeleteSchoolServiceImpl;
         this.showNewSchool = false;
-        this.NewSchool = new __WEBPACK_IMPORTED_MODULE_1__types_types__["c" /* School */](null, null);
+        this.NewSchool = new __WEBPACK_IMPORTED_MODULE_2__types_types__["c" /* School */](null, null);
     }
     SchoolComponent.prototype.init = function () {
         var _this = this;
@@ -975,13 +984,13 @@ var SchoolComponent = (function () {
         }
     };
     SchoolComponent.prototype.cancelNewSchool = function () {
-        this.NewSchool = new __WEBPACK_IMPORTED_MODULE_1__types_types__["c" /* School */](null, null);
+        this.NewSchool = new __WEBPACK_IMPORTED_MODULE_2__types_types__["c" /* School */](null, null);
         this.showNewSchool = false;
     };
     SchoolComponent.prototype.newSchool = function (name) {
         var _this = this;
         if (name > "") {
-            this.PostSchoolService.postSchool(new __WEBPACK_IMPORTED_MODULE_1__types_types__["c" /* School */](null, name)).subscribe(function (res) {
+            this.PostSchoolService.postSchool(new __WEBPACK_IMPORTED_MODULE_2__types_types__["c" /* School */](null, name)).subscribe(function (res) {
                 if (res.id) {
                     _this.showNewSchool = false;
                     _this.globalStatus.setStatus("Data submitted");
@@ -1007,6 +1016,7 @@ var SchoolComponent = (function () {
                 if (res.id) {
                     _this.globalStatus.setStatus("Data submitted");
                     _this.init();
+                    _this.selectSchool(__WEBPACK_IMPORTED_MODULE_1__lib_functions__["a" /* find */](_this.schools, 'id', res.id));
                 }
                 else {
                     _this.globalStatus.setStatus(res.error);
@@ -1025,6 +1035,7 @@ var SchoolComponent = (function () {
                 if (res.id) {
                     _this.globalStatus.setStatus("Data submitted");
                     _this.init();
+                    _this.selectedSchool = null;
                 }
                 else {
                     _this.globalStatus.setStatus(res.error);
@@ -1047,7 +1058,7 @@ SchoolComponent = __decorate([
         template: __webpack_require__("../../../../../src/app/html/school.component.html"),
         styles: [__webpack_require__("../../../../../src/app/css/component.css")]
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__service_local_service__["d" /* GlobalSchool */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__service_local_service__["d" /* GlobalSchool */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__service_local_service__["e" /* GlobalStatus */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__service_local_service__["e" /* GlobalStatus */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_3__service_post_service__["c" /* postSchoolService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__service_post_service__["c" /* postSchoolService */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_4__service_get_service__["c" /* getSchoolService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__service_get_service__["c" /* getSchoolService */]) === "function" && _d || Object, typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_5__service_update_service__["c" /* updateSchoolService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_5__service_update_service__["c" /* updateSchoolService */]) === "function" && _e || Object, typeof (_f = typeof __WEBPACK_IMPORTED_MODULE_6__service_delete_service__["c" /* deleteSchoolService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_6__service_delete_service__["c" /* deleteSchoolService */]) === "function" && _f || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_3__service_local_service__["d" /* GlobalSchool */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__service_local_service__["d" /* GlobalSchool */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_3__service_local_service__["e" /* GlobalStatus */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__service_local_service__["e" /* GlobalStatus */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_4__service_post_service__["c" /* postSchoolService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__service_post_service__["c" /* postSchoolService */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_5__service_get_service__["c" /* getSchoolService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_5__service_get_service__["c" /* getSchoolService */]) === "function" && _d || Object, typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_6__service_update_service__["c" /* updateSchoolService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_6__service_update_service__["c" /* updateSchoolService */]) === "function" && _e || Object, typeof (_f = typeof __WEBPACK_IMPORTED_MODULE_7__service_delete_service__["c" /* deleteSchoolService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_7__service_delete_service__["c" /* deleteSchoolService */]) === "function" && _f || Object])
 ], SchoolComponent);
 
 var _a, _b, _c, _d, _e, _f;
@@ -1548,8 +1559,8 @@ var Global = (function () {
         this.gStudents = __WEBPACK_IMPORTED_MODULE_1__dummy_data__["d" /* STUDENTS */];
         this.gNotes = __WEBPACK_IMPORTED_MODULE_1__dummy_data__["b" /* NOTES */];
         this.gTeachers = __WEBPACK_IMPORTED_MODULE_1__dummy_data__["e" /* TEACHERS */];
-        //public basicUrl = 'http://localhost:8888';
-        this.basicUrl = 'https://studentnotegae-webengii.appspot.com';
+        this.basicUrl = 'http://localhost:8888';
+        //public basicUrl = 'https://studentnotegae-webengii.appspot.com';
     }
     return Global;
 }());
@@ -2050,6 +2061,7 @@ var StudentComponent = (function () {
                 if (res.id) {
                     _this.globalStatus.setStatus("Data submitted");
                     _this.init();
+                    _this.onSelect(__WEBPACK_IMPORTED_MODULE_2__lib_functions__["a" /* find */](_this.students, 'id', res.id));
                 }
                 else {
                     _this.globalStatus.setStatus(res.error);
@@ -2072,6 +2084,7 @@ var StudentComponent = (function () {
                 if (res.id) {
                     _this.globalStatus.setStatus("Data submitted");
                     _this.init();
+                    _this.selectedStudent = null;
                 }
                 else {
                     _this.globalStatus.setStatus(res.error);
@@ -2264,6 +2277,7 @@ var TeacherComponent = (function () {
                 if (res.id) {
                     _this.globalStatus.setStatus("Data submitted");
                     _this.init();
+                    _this.selectTeacher(__WEBPACK_IMPORTED_MODULE_2__lib_functions__["a" /* find */](_this.teachers, 'id', res.id));
                 }
                 else {
                     _this.globalStatus.setStatus(res.error);
@@ -2282,6 +2296,7 @@ var TeacherComponent = (function () {
                 if (res.id) {
                     _this.globalStatus.setStatus("Data submitted");
                     _this.init();
+                    _this.selectTeacher = null;
                 }
                 else {
                     _this.globalStatus.setStatus(res.error);
@@ -2298,6 +2313,8 @@ var TeacherComponent = (function () {
             this.GetTeacherService.getEntities(this.globalSchool.getSchool().id).subscribe(function (s) { return _this.teachers = s; });
             this.GetSchoolService.getSchools().subscribe(function (s) { return _this.schools = s; });
         }
+    };
+    TeacherComponent.prototype.updatePW = function () {
     };
     TeacherComponent.prototype.ngOnInit = function () {
         var _this = this;

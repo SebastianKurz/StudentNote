@@ -212,6 +212,7 @@ this.GetTeacherService.getEntities(this.globalSchool.getSchool().id).subscribe(s
       if(res.id){
         this.globalStatus.setStatus("Data submitted");
         this.init();
+        this.onSelect(func.find(this.students,'id',res.id));
       }
       else{
         this.globalStatus.setStatus(res.error);
@@ -233,6 +234,7 @@ this.GetTeacherService.getEntities(this.globalSchool.getSchool().id).subscribe(s
     if(res.id){
       this.globalStatus.setStatus("Data submitted");
       this.init();
+      this.selectedStudent=null;
     }
     else{
       this.globalStatus.setStatus(res.error);

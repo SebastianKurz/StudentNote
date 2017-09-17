@@ -24,6 +24,7 @@ export class ClassesComponent {
   teachers : Teacher[];
   selectedClass: Class;
   bbs : number;
+  wait:boolean;
   showNewClass : Boolean;
   private PostClassService: postClassService;
   private GetClassService: getClassService;
@@ -57,16 +58,20 @@ constructor(
   this.globalClass=globalClassImpl;
   this.globalStatus=globalStatusImpl;
   this.showNewClass = false;
+  this.wait=false;
 
 }
 init(){
+
   if(this.globalSchool.getSchool()){
 this.GetClassService.getEntities(this.globalSchool.getSchool().id).subscribe(s => this.classes = s);
 this.GetSchoolService.getSchools().subscribe(s => this.schools = s);
+this.wait=false;
 }
 }
 ngOnInit() {
-  this.init();
+  this.wait=true;
+  setTimeout(() => {this.init()}, 2000);
   }
 
   ngOnDestroy():void {
@@ -100,6 +105,7 @@ newClass(name:string,level:string,belongsToSchool:number){
         this.showNewClass= false;
         this.globalStatus.setStatus("Data submitted");
         this.init();
+        this.selectClass(func.find(this.classes,'id',res.id));
       }
       else{
         this.globalStatus.setStatus(res.error);
@@ -136,6 +142,7 @@ newClass(name:string,level:string,belongsToSchool:number){
       if(res.id){
         this.globalStatus.setStatus("Data submitted");
         this.init();
+        this.selectedClass=null;
       }
       else{
         this.globalStatus.setStatus(res.error);

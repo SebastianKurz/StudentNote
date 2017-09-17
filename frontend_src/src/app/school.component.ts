@@ -120,6 +120,7 @@ export class SchoolComponent {
       if(res.id){
         this.globalStatus.setStatus("Data submitted");
         this.init();
+        this.selectSchool(func.find(this.schools,'id',res.id));
       }
       else{
         this.globalStatus.setStatus(res.error);
@@ -137,6 +138,7 @@ export class SchoolComponent {
     if(res.id){
       this.globalStatus.setStatus("Data submitted");
       this.init();
+      this.selectedSchool=null;
     }
     else{
       this.globalStatus.setStatus(res.error);

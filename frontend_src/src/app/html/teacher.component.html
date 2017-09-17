@@ -85,6 +85,17 @@
               <span class="bar"></span>
               <label class="md-input-label">E-Mail Adresse</label>
             </div>
+            <div *ngIf="isLoginTeacher(selectedTeacher.id)">
+              <div  class="group floatleft" style="margin:3em 0 1em 0;width:70%;">
+                  <input #PW class="md-input" type="password" required >
+                  <span class="highlight"></span>
+                  <span class="bar"></span>
+                  <label class="md-input-label">Neues Passwort</label>
+                </div>
+                <div  class="group floatleft" style="margin:3em 0 1em 5%;width:20%;">
+                <button class="button small red floatleft" style="width:100%;" type="button" (click)="updateTeacher(selectedTeacher,'password',PW.value)">Neues Passwort</button>
+            </div></div>
+            <div class="clearfix"></div>
             <div  class="group" style="margin-top:3em;margin-bottom:1em;">
                 <!--<input class="md-input" type="number" required [(ngModel)]="selectedTeacher.belongsToSchool" >
                 <span class="highlight"></span>

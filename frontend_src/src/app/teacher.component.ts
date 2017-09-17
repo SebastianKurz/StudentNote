@@ -99,6 +99,7 @@ if (teacher != null && key != null && value != null){
     if(res.id){
       this.globalStatus.setStatus("Data submitted");
       this.init();
+      this.selectTeacher(func.find(this.teachers,'id',res.id));
     }
     else{
       this.globalStatus.setStatus(res.error);
@@ -116,6 +117,7 @@ deleteTeacher(teacher : Teacher){
     if(res.id){
       this.globalStatus.setStatus("Data submitted");
       this.init();
+      this.selectTeacher=null;
     }
     else{
       this.globalStatus.setStatus(res.error);
@@ -131,6 +133,9 @@ init(){
 this.GetTeacherService.getEntities(this.globalSchool.getSchool().id).subscribe( s => this.teachers =  s);
 this.GetSchoolService.getSchools().subscribe(s => this.schools = s );
 }
+}
+updatePW(){
+  
 }
 ngOnInit() {
 this.init();

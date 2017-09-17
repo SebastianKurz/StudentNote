@@ -12,8 +12,9 @@ import { TeacherComponent } from './teacher.component';
 
 export const ROUTE_CONFIG: Routes = [
   { path: 'loginPage', component: LoginComponent },
-  { path: 'home',component: SchoolComponent},
-  { path: 'classes',component: ClassesComponent},
+  { path: 'schools',component: SchoolComponent},
+  //{ path: 'classes',component: ClassesComponent},
+  { path: 'home',component: ClassesComponent},
   { path: 'teachers',component: TeacherComponent},
   //{ path: 'teacher/:id',component: TeacherComponent},
   { path: 'students',component: StudentComponent},

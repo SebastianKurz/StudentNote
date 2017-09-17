@@ -74,7 +74,7 @@ getLoginUser(email:string, password:string): void {
   }else {
     this.globalLogin.setLogin(this.teacher);
     this.GetSchoolService.getSchool(this.teacher.belongsToSchool).subscribe(s => {console.log(s);this.globalSchool.setSchool(s);});
-    this.router.navigate(['home']);
+    this.router.navigate(['/home']);
   }
 }
 }
