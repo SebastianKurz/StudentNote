@@ -73,7 +73,7 @@ ngOnInit() {
 
 }
 isStudents(){
- if (this.students.length > 0){
+ if (this.students){
     return true;
   }else{
     return false;
@@ -176,6 +176,13 @@ selectClass(klasse: Class): void {
   this.cancelNewClass();
   this.selectedClass = klasse;
   this.students = null;
-  this.GetStudentService.getEntities(klasse.id).subscribe(s => this.students = s);
+  this.GetStudentService.getEntities(klasse.id).subscribe(s => {
+    if(s != null){
+      this.students = s;
+    }
+    else{
+      this.students = null;
+    }
+    });
 }
 }
