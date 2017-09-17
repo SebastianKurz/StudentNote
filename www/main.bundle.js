@@ -1548,8 +1548,8 @@ var Global = (function () {
         this.gStudents = __WEBPACK_IMPORTED_MODULE_1__dummy_data__["d" /* STUDENTS */];
         this.gNotes = __WEBPACK_IMPORTED_MODULE_1__dummy_data__["b" /* NOTES */];
         this.gTeachers = __WEBPACK_IMPORTED_MODULE_1__dummy_data__["e" /* TEACHERS */];
-        this.basicUrl = 'http://localhost:8888';
-        //public basicUrl = 'https://studentnotegae-webengii.appspot.com';
+        //public basicUrl = 'http://localhost:8888';
+        this.basicUrl = 'https://studentnotegae-webengii.appspot.com';
     }
     return Global;
 }());
