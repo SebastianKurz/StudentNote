@@ -13,11 +13,11 @@
     <div *ngIf="isGlobalClass(klasse.id); then B else NB"></div>
     <ng-template #B>
     <div class="LBadge LB-Green floatleft" style="text-align:center" (click)="selectKlasse(klasse)">{{klasse.level}}</div>
-    <div class="LText floatleft">{{klasse.name}}</div>
+    <div class="LText floatleft" (click)="selectKlasse(klasse)">{{klasse.name}}</div>
     </ng-template>
     <ng-template #NB>
     <div class="LBadge LB-Blue floatleft" style="text-align:center" (click)="selectKlasse(klasse)">{{klasse.level}}</div>
-    <div class="LText floatleft">{{klasse.name}}</div>
+    <div class="LText floatleft" (click)="selectKlasse(klasse)">{{klasse.name}}</div>
     </ng-template>
   </div>
 </li>
