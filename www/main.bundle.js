@@ -2037,16 +2037,6 @@ var StudentComponent = (function () {
                 if (res.id) {
                     _this.globalStatus.setStatus("Data submitted");
                     _this.init();
-                    if (_this.selectedStudent) {
-                        _this.GetNoteService.getEntities(_this.selectedStudent.id).subscribe(function (s) {
-                            if (s != null) {
-                                _this.notes = s;
-                            }
-                            else {
-                                _this.notes = null;
-                            }
-                        });
-                    }
                 }
                 else {
                     _this.globalStatus.setStatus(res.error);
@@ -2069,16 +2059,6 @@ var StudentComponent = (function () {
                 if (res.id) {
                     _this.globalStatus.setStatus("Data submitted");
                     _this.init();
-                    if (_this.selectedStudent) {
-                        _this.GetNoteService.getEntities(_this.selectedStudent.id).subscribe(function (s) {
-                            if (s != null) {
-                                _this.notes = s;
-                            }
-                            else {
-                                _this.notes = null;
-                            }
-                        });
-                    }
                 }
                 else {
                     _this.globalStatus.setStatus(res.error);
@@ -2100,16 +2080,7 @@ var StudentComponent = (function () {
                     _this.showNewNote = false;
                     _this.globalStatus.setStatus("Data submitted");
                     _this.init();
-                    if (_this.selectedStudent) {
-                        _this.GetNoteService.getEntities(_this.selectedStudent.id).subscribe(function (s) {
-                            if (s != null) {
-                                _this.notes = s;
-                            }
-                            else {
-                                _this.notes = null;
-                            }
-                        });
-                    }
+                    _this.onSelect(_this.selectedStudent);
                 }
                 else {
                     _this.globalStatus.setStatus(res.error);
@@ -2129,16 +2100,7 @@ var StudentComponent = (function () {
                     _this.showNewNote = false;
                     _this.globalStatus.setStatus("Data submitted");
                     _this.init();
-                    if (_this.selectedStudent) {
-                        _this.GetNoteService.getEntities(_this.selectedStudent.id).subscribe(function (s) {
-                            if (s != null) {
-                                _this.notes = s;
-                            }
-                            else {
-                                _this.notes = null;
-                            }
-                        });
-                    }
+                    _this.onSelect(_this.selectedStudent);
                 }
                 else {
                     _this.globalStatus.setStatus(res.error);

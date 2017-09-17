@@ -208,15 +208,6 @@ this.GetTeacherService.getEntities(this.globalSchool.getSchool().id).subscribe(s
       if(res.id){
         this.globalStatus.setStatus("Data submitted");
         this.init();
-        if(this.selectedStudent){
-        this.GetNoteService.getEntities(this.selectedStudent.id).subscribe(s => {
-     if(s != null){
-       this.notes = s;
-     }else{
-       this.notes = null;
-     }
-          });
-        }
       }
       else{
         this.globalStatus.setStatus(res.error);
@@ -238,15 +229,6 @@ this.GetTeacherService.getEntities(this.globalSchool.getSchool().id).subscribe(s
     if(res.id){
       this.globalStatus.setStatus("Data submitted");
       this.init();
-      if(this.selectedStudent){
-      this.GetNoteService.getEntities(this.selectedStudent.id).subscribe(s => {
-   if(s != null){
-     this.notes = s;
-   }else{
-     this.notes = null;
-   }
-        });
-      }
     }
     else{
       this.globalStatus.setStatus(res.error);
@@ -268,16 +250,8 @@ else{
         this.showNewNote= false;
         this.globalStatus.setStatus("Data submitted");
         this.init();
-        if(this.selectedStudent){
-        this.GetNoteService.getEntities(this.selectedStudent.id).subscribe(s => {
-     if(s != null){
-       this.notes = s;
-     }else{
-       this.notes = null;
-     }
-          });
+        this.onSelect(this.selectedStudent);
         }
-      }
       else{
         this.globalStatus.setStatus(res.error);
       }
@@ -294,16 +268,8 @@ else{
       this.showNewNote= false;
       this.globalStatus.setStatus("Data submitted");
       this.init();
-      if(this.selectedStudent){
-      this.GetNoteService.getEntities(this.selectedStudent.id).subscribe(s => {
-   if(s != null){
-     this.notes = s;
-   }else{
-     this.notes = null;
-   }
-        });
+      this.onSelect(this.selectedStudent);
       }
-    }
     else{
       this.globalStatus.setStatus(res.error);
     }
