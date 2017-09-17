@@ -1968,6 +1968,7 @@ var StudentComponent = (function () {
                     _this.showNewNote = false;
                     _this.globalStatus.setStatus("Data submitted");
                     _this.init();
+                    _this.onSelect(_this.selectedStudent);
                 }
                 else {
                     _this.globalStatus.setStatus(res.error);

@@ -143,6 +143,7 @@ export class StudentComponent implements OnInit, OnDestroy{
           this.showNewNote= false;
           this.globalStatus.setStatus("Data submitted");
           this.init();
+          this.onSelect(this.selectedStudent);
         }
         else{
           this.globalStatus.setStatus(res.error);
