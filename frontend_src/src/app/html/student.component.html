@@ -1,0 +1,123 @@
+<navbar></navbar>
+
+<div style="width: 64%;margin: 0 auto;align:center;">
+
+  <div class="pane leftbar">
+    <h2>{{title}}</h2>
+    <button class="button medium red" type="button" (click)="toggleNewStudent()"><i class="fa fa-plus" aria-hidden="true"></i>
+</button>
+    <ul class="L">
+      <li class="LNO" *ngFor="let student of students" [class.selected]="student === selectedStudent" (click)="onSelect(student)">
+        <div class="floatleft pane LPane">
+          <div class="LText floatleft">{{student.lastname}}, {{student.firstname}}</div>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="floatleft widthnexttobar">
+    <div style="height:3em;">
+    <div *ngIf="wait" style="text-align:center;font-size:120%;">
+      <div class="spinner">
+      <div class="bounce1"></div>
+      <div class="bounce2"></div>
+      <div class="bounce3"></div>
+    </div></div></div>
+    <div *ngIf="showNewStudent" class="pane floatleft" style="width:100%;">
+      <h3>Neuen Schüler erfassen</h3>
+      <div class="group floatleft" style="margin-top:3em;margin-bottom:1em;">
+        <input #a type="text" class="md-input" required [value]="NewStudent.firstname">
+        <span class="highlight"></span>
+        <span class="bar"></span>
+        <label class="md-input-label">Vorname</label>
+      </div>
+      <div class="group floatleft" style="margin-top:3em;margin-bottom:1em;">
+        <input #b type="text" class="md-input" required [value]="NewStudent.lastname">
+        <span class="highlight"></span>
+        <span class="bar"></span>
+        <label class="md-input-label">Nachname</label>
+      </div>
+      <div class="group floatleft" style="margin-top:3em;margin-bottom:1em;">
+        <input #c type="number" class="md-input" required [value]="getCurrentClass().id">
+        <span class="highlight"></span>
+        <span class="bar"></span>
+        <label class="md-input-label">Klasse</label>
+      </div>
+      <div class="floatright">
+        <button class="button small grey" type="button" (click)="cancelNewStudent()">Abbrechen</button>
+        <button class="button small blue" style="margin: 0 .3em;" type="button" (click)="newStudent(a.value, b.value, c.value)">Anlegen</button>
+      </div>
+    </div>
+
+    <div class="floatleft" *ngIf="selectedStudent" style="width:100%;">
+      <div class="pane floatleft" style="width:100%">
+        <h3 style="width:90%;">Details: {{selectedStudent.firstname}} {{selectedStudent.lastname}}</h3>
+        <div class="del"><i class="fa fa-trash" aria-hidden="true" style="font-weight:600;font-size:150%;" (click)="deleteStudent(selectedStudent)"></i></div>
+        <div class="group" style="margin-top:3em;margin-bottom:1em;">
+          <input #a class="md-input" type="text" required [(ngModel)]="selectedStudent.firstname" (change)="updateStudent(selectedStudent,'firstname',a.value)">
+          <span class="highlight"></span>
+          <span class="bar"></span>
+          <label class="md-input-label">Vorname</label>
+        </div>
+        <div class="group" style="margin-top:3em;margin-bottom:1em;">
+          <input #b class="md-input" type="text" required [(ngModel)]="selectedStudent.lastname" (change)="updateStudent(selectedStudent,'lastname',b.value)">
+          <span class="highlight"></span>
+          <span class="bar"></span>
+          <label class="md-input-label">Nachname</label>
+        </div>
+        <div class="group" style="margin-top:3em;margin-bottom:1em;">
+          <input #c class="md-input" type="number" required [(ngModel)]="selectedStudent.belongsToClass" (change)="updateStudent(selectedStudent,'belongsToClass',c.value)">
+          <span class="highlight"></span>
+          <span class="bar"></span>
+          <label class="md-input-label">Zugeordnet zu Klasse: {{getClassName(selectedStudent.belongsToClass)}}</label>
+        </div>
+        <div style="margin-left:5px"><label>id: </label>{{selectedStudent.id}}</div>
+        <div class="clearfix"></div>
+        <div class="floatright">
+          <button class="button small blue" style="margin: 0 .3em;" type="button" (click)="toggleNewNote()">Neue Bemerkung</button>
+        </div>
+      </div>
+
+      <div *ngIf="showNewNote" class="pane floatleft" style="width:100%;">
+        <h3>Neue Bemerkung verfassen</h3>
+        <div class="group floatleft" style="margin-top:3em;margin-bottom:1em;">
+          <label class="md-input-label">Zugeordnet zu Schüler: {{selectedStudent.firstname}} {{selectedStudent.lastname}}</label>
+        </div>
+        <div class="group floatleft" style="margin-top:3em;margin-bottom:1em;">
+          <label class="md-input-label">Eingestellt von: {{getLoginName()}}</label>
+        </div>
+        <div class="clearfix"></div>
+        <textarea #a style="width:90%;height:7em;border:none;padding-top:1em;align:center;margin-top:2em">
+      </textarea>
+        <div class="floatright">
+          <button class="button small grey" type="button" (click)="cancelNewNote()">Abbrechen</button>
+          <button class="button small blue" style="margin: 0 .3em;" type="button" (click)="newNote(a.value, getNow() ,getLoginId(), selectedStudent.id)">Anlegen</button>
+        </div>
+      </div>
+
+      <div *ngIf="isNotes(); then Bemerkungen else keineBemerkungen"></div>
+
+      <ng-template #keineBemerkungen>
+        <div class="pane floatleft" style="width:100%;margin-bottom:.3em;">
+          <span style="width:40%;font-weight:600;font-size:130%;">Noch keine Bemerkungen</span>
+        </div>
+      </ng-template>
+
+      <ng-template #Bemerkungen>
+        <div class="pane floatleft" style="padding-top: 1em;padding-bottom:1em;margin-bottom:.3em;width:100%">
+          <h3>Bemerkungen</h3>
+        </div>
+
+        <div *ngFor="let note of notes" class="pane floatleft" style="width:100%;margin-bottom:.3em;">
+          <div class="floatleft" style="width:40%;font-weight:600;">{{note.timestamp | date: 'dd.MM.yyyy HH:mm'}}</div>
+          <div class="floatleft" style="width:40%;font-weight:600;">erstellt von: {{this.getTeacherName(note.authorTeacherId)}}</div>
+          <div class="del"><i class="fa fa-trash" aria-hidden="true" style="font-weight:600;font-size:150%;" (click)="deleteNote(note)"></i></div>
+          <div class="clearfix"></div>
+          <textarea #a style="width:90%;height:7em;border:none;padding-top:1em;align:center;" [class.selected]="note === selectedNote" readonly [(ngModel)]="note.text">
+      </textarea>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+
+</div>
