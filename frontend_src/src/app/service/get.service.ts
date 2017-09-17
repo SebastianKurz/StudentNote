@@ -74,7 +74,7 @@ export class getClassService {
     .map((response : Response) => {
         return response.json().schoolClass.map(item => {
           return new Class(
-              item.classId,
+              item.id,
               item.name,
               item.level,
               item.belongsToSchool
@@ -109,7 +109,7 @@ export class getStudentService {
     .map((response : Response) => {
         return response.json().student.map(item => {
           return new Student(
-              item.studentId,
+              item.id,
               item.firstname,
               item.lastname,
               item.belongsToClass
@@ -144,7 +144,7 @@ export class getNoteService {
     .map((response : Response) => {
         return response.json().note.map(item => {
           return new Note(
-              item.noteId,
+              item.id,
               item.text,
               item.timestamp,
               item.authorTeacherId,
@@ -181,7 +181,7 @@ return func.sort(a,'timestamp','dsc');
     .map((response : Response) => {
         return response.json().teacher.map(item => {
           return new Teacher(
-              item.teacherId,
+              item.id,
               item.firstname,
               item.lastname,
               item.mailAddress,
@@ -192,7 +192,7 @@ return func.sort(a,'timestamp','dsc');
       });
 }
   public getTeacherByMail(mail: string,password:string): Observable<Teacher> {//With Mail Address
-    return this.http.get(`${this.global.basicUrl}/login/login/${mail}/${password}`)
+    return this.http.get(`${this.global.basicUrl}/login/login/${mail}`)
     .map( (response : Response) => {
       let t = response.json();
       localStorage.setItem('CurrentTeacher', JSON.stringify(t));

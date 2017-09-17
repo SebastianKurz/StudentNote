@@ -27,29 +27,9 @@ export function handleError(error: any): Promise<any> {
   return Promise.reject(1);
 }*/
 
-export function extractData(res) {
-   let body = res.json();  // If response is a JSON use json()
-   console.log(body);
-   if (body) {
-       return  body;
-    } else {
-       return {};
-    }
-}
-export function extractArray(res) {
-   var array : any[];
-   for(let o of res){
-         array.push(o);
-      }
-      return array;
-}
-
 export function handleError(error: any) {
    let errMsg = (error.message) ? error.message :
    error.status ? `${error.status} - ${error.statusText}` : 'Server error';
         console.error(errMsg); // log to console instead
         return Observable.throw(errMsg);
-}
-export function toObj(observable){
-  return observable.subscribe(res => res);
 }

@@ -360,7 +360,13 @@ var ClassesComponent = (function () {
         }
     };
     ClassesComponent.prototype.getSchoolName = function (id) {
-        return __WEBPACK_IMPORTED_MODULE_1__lib_functions__["a" /* find */](this.schools, 'id', id);
+        var school = __WEBPACK_IMPORTED_MODULE_1__lib_functions__["a" /* find */](this.schools, 'id', id);
+        if (school != null) {
+            return school.name;
+        }
+        else {
+            return "";
+        }
     };
     ClassesComponent.prototype.isGlobalClass = function (id) {
         if (this.globalClass.getClass() && this.globalClass.getClass().id == id) {
@@ -529,7 +535,7 @@ module.exports = __webpack_require__.p + "fontawesome-webfont.fee66e712a8a08eef5
 /***/ "../../../../../src/app/html/classes.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<navbar></navbar>\n\n<div style=\"width: 64%;margin: 0 auto;align:center;\">\n<div class=\"pane leftbar\">\n<h2>{{title}}</h2>\n<button class=\"button medium red\" type=\"button\" (click) = \"toggleNewClass()\"><i class=\"fa fa-plus\" aria-hidden=\"true\"></i>\n</button>\n<ul class=\"L \" >\n<li class=\"LNO\" *ngFor=\"let klasse of classes\"\n  [class.selected]=\"klasse === selectedClass\"\n  (click)=\"selectClass(klasse)\">\n  <div class=\"floatleft pane LPane\">\n    <div *ngIf=\"isGlobalClass(klasse.id); then B else NB\"></div>\n    <ng-template #B>\n    <div class=\"LBadge LB-Green floatleft\" style=\"text-align:center\" (click)=\"selectKlasse(klasse)\">{{klasse.level}}</div>\n    <div class=\"LText floatleft\">{{klasse.name}}</div>\n    </ng-template>\n    <ng-template #NB>\n    <div class=\"LBadge LB-Blue floatleft\" style=\"text-align:center\" (click)=\"selectKlasse(klasse)\">{{klasse.level}}</div>\n    <div class=\"LText floatleft\">{{klasse.name}}</div>\n    </ng-template>\n  </div>\n</li>\n</ul></div>\n<div class=\"floatleft widthnexttobar\">\n\n<div *ngIf=\"showNewClass\" class=\"pane floatleft\" style=\"width:100%;\">\n<h3>Neue Klasse erstellen</h3>\n<div class=\"group floatleft\" style=\"margin-top:3em;margin-bottom:1em;\">\n    <input #name type=\"text\" class=\"md-input\" required >\n    <span class=\"highlight\"></span>\n    <span class=\"bar\"></span>\n    <label class=\"md-input-label\">Name</label>\n  </div>\n  <div class=\"group floatleft\" style=\"margin-top:3em;margin-bottom:1em;\">\n      <input #level type=\"text\" class=\"md-input\" required >\n      <span class=\"highlight\"></span>\n      <span class=\"bar\"></span>\n      <label class=\"md-input-label\">Stufe</label>\n    </div>\n      <div class=\"group floatleft\" style=\"margin-top:3em;margin-bottom:1em;\">\n          <input #belongsToSchool type=\"number\" class=\"md-input\" required  [value]=\"getCurrentSchool().id\">\n          <span class=\"highlight\"></span>\n          <span class=\"bar\"></span>\n          <label class=\"md-input-label\">Schule: {{this.getSchoolName(belongsToSchool.value)}}</label>\n        </div>\n        <div class=\"floatright\">\n        <button class=\"button small grey\" type=\"button\" (click)=\"cancelNewClass()\">Abbrechen</button>\n        <button class=\"button small blue\" style=\"margin: 0 .3em;\" type=\"button\" (click)=\"newClass(name.value, level.value, belongsToSchool.value)\">Anlegen</button>\n        </div>\n</div>\n\n\n<div *ngIf=\"selectedClass\" class=\"pane floatleft\" style=\"width:100%;\">\n<h3 style=\"width:90%;\">Details: {{selectedClass.name}}</h3>\n<div class=\"del\"><i class=\"fa fa-trash\" aria-hidden=\"true\" style=\"font-weight:600;font-size:150%;\" (click)=\"deleteClass(selectedClass)\"></i></div>\n<div class=\"clearfix\"></div>\n<div class=\"group\" style=\"margin-top:3em;margin-bottom:1em;\">\n    <input #a class=\"md-input\" type=\"text\" required [(ngModel)]=\"selectedClass.name\" (change)=\"updateClass(selectedClass,'name',a.value)\">\n    <span class=\"highlight\"></span>\n    <span class=\"bar\"></span>\n    <label class=\"md-input-label\">Name</label>\n  </div>\n  <div  class=\"group\" style=\"margin-top:3em;margin-bottom:1em;\">\n      <input #b class=\"md-input\" type=\"text\" required [(ngModel)]=\"selectedClass.level\" (change)=\"updateClass(selectedClass,'level',b.value)\">\n      <span class=\"highlight\"></span>\n      <span class=\"bar\"></span>\n      <label class=\"md-input-label\">Stufe</label>\n    </div>\n    <div class=\"group\" style=\"margin-top:3em;margin-bottom:1em;\">\n        <input class=\"md-input\" type=\"number\">\n        <span class=\"highlight\"></span>\n        <span class=\"bar\"></span>\n        <label class=\"md-input-label\">Zugeordnet zu Schule: {{this.getSchoolName(selectedClass.belongsToSchool)}}</label>\n      </div>\n  <div style=\"margin-left:5px\"><label>id: </label>{{selectedClass.id}}</div>\n</div>\n\n<!--\n<div *ngIf=\"selectedClass\" class=\"pane floatleft widthnexttobar\">\n<h3> Lehrer</h3>\n<ul class=\"listing\">\n  <li class=\"nobadge\" *ngFor=\"let teacher of teachers\"\n    [class.selected]=\"teacher === selectedTeacher\" [routerLink]=\"['/teacher',teacher.id]\" routerLinkActive=\"active\">{{teacher.firstname}} {{teacher.lastname}}\n</li></ul></div>\n-->\n\n<div *ngIf=\"selectedClass\" class=\"floatleft\" style=\"width:100%;\">\n\n<div *ngIf=\"isStudents(); then schueler else keineschueler\"></div>\n\n<ng-template #keineschueler>\n<div class=\"pane floatleft\" style=\"width:100%;margin-bottom:.3em;\">\n<span style=\"width:40%;font-weight:600;font-size:130%;\">Keine Schüler in dieser Klasse</span>\n</div>\n</ng-template>\n\n<ng-template #schueler>\n<div class=\"pane floatleft\" style=\"padding-top: 1em;padding-bottom:3em;margin-bottom:.3em;width:100%\">\n<h3>Schüler dieser Klasse</h3>\n<ul class=\"L\">\n<li class=\"LNO\" *ngFor=\"let student of students\"\n  [class.selected]=\"student === selectedStudent\" [routerLink]=\"['/student',student.id]\" routerLinkActive=\"active\">\n  <div class=\"floatleft pane LPane\">\n  <div class=\"LText floatleft\">{{student.firstname}} {{student.lastname}}</div>\n  </div>\n</li></ul></div>\n</ng-template>\n\n</div>\n"
+module.exports = "<navbar></navbar>\n\n<div style=\"width: 64%;margin: 0 auto;align:center;\">\n<div class=\"pane leftbar\">\n<h2>{{title}}</h2>\n<button class=\"button medium red\" type=\"button\" (click) = \"toggleNewClass()\"><i class=\"fa fa-plus\" aria-hidden=\"true\"></i>\n</button>\n<ul class=\"L \" >\n<li class=\"LNO\" *ngFor=\"let klasse of classes\"\n  [class.selected]=\"klasse === selectedClass\"\n  (click)=\"selectClass(klasse)\">\n  <div class=\"floatleft pane LPane\">\n    <div *ngIf=\"isGlobalClass(klasse.id); then B else NB\"></div>\n    <ng-template #B>\n    <div class=\"LBadge LB-Green floatleft\" style=\"text-align:center\" (click)=\"selectKlasse(klasse)\">{{klasse.level}}</div>\n    <div class=\"LText floatleft\">{{klasse.name}}</div>\n    </ng-template>\n    <ng-template #NB>\n    <div class=\"LBadge LB-Blue floatleft\" style=\"text-align:center\" (click)=\"selectKlasse(klasse)\">{{klasse.level}}</div>\n    <div class=\"LText floatleft\">{{klasse.name}}</div>\n    </ng-template>\n  </div>\n</li>\n</ul></div>\n<div class=\"floatleft widthnexttobar\">\n\n<div *ngIf=\"showNewClass\" class=\"pane floatleft\" style=\"width:100%;\">\n<h3>Neue Klasse erstellen</h3>\n<div class=\"group floatleft\" style=\"margin-top:3em;margin-bottom:1em;\">\n    <input #name type=\"text\" class=\"md-input\" required >\n    <span class=\"highlight\"></span>\n    <span class=\"bar\"></span>\n    <label class=\"md-input-label\">Name</label>\n  </div>\n  <div class=\"group floatleft\" style=\"margin-top:3em;margin-bottom:1em;\">\n      <input #level type=\"text\" class=\"md-input\" required >\n      <span class=\"highlight\"></span>\n      <span class=\"bar\"></span>\n      <label class=\"md-input-label\">Stufe</label>\n    </div>\n      <div class=\"group floatleft\" style=\"margin-top:3em;margin-bottom:1em;\">\n          <input #belongsToSchool type=\"number\" class=\"md-input\" required  [value]=\"getCurrentSchool().id\">\n          <span class=\"highlight\"></span>\n          <span class=\"bar\"></span>\n          <label class=\"md-input-label\">Schule: {{this.getSchoolName(belongsToSchool.value)}}</label>\n        </div>\n        <div class=\"floatright\">\n        <button class=\"button small grey\" type=\"button\" (click)=\"cancelNewClass()\">Abbrechen</button>\n        <button class=\"button small blue\" style=\"margin: 0 .3em;\" type=\"button\" (click)=\"newClass(name.value, level.value, belongsToSchool.value)\">Anlegen</button>\n        </div>\n</div>\n\n\n<div *ngIf=\"selectedClass\" class=\"pane floatleft\" style=\"width:100%;\">\n<h3 style=\"width:90%;\">Details: {{selectedClass.name}}</h3>\n<div class=\"del\"><i class=\"fa fa-trash\" aria-hidden=\"true\" style=\"font-weight:600;font-size:150%;\" (click)=\"deleteClass(selectedClass)\"></i></div>\n<div class=\"clearfix\"></div>\n<div class=\"group\" style=\"margin-top:3em;margin-bottom:1em;\">\n    <input #a class=\"md-input\" type=\"text\" required [(ngModel)]=\"selectedClass.name\" (change)=\"updateClass(selectedClass,'name',a.value)\">\n    <span class=\"highlight\"></span>\n    <span class=\"bar\"></span>\n    <label class=\"md-input-label\">Name</label>\n  </div>\n  <div  class=\"group\" style=\"margin-top:3em;margin-bottom:1em;\">\n      <input #b class=\"md-input\" type=\"text\" required [(ngModel)]=\"selectedClass.level\" (change)=\"updateClass(selectedClass,'level',b.value)\">\n      <span class=\"highlight\"></span>\n      <span class=\"bar\"></span>\n      <label class=\"md-input-label\">Stufe</label>\n    </div>\n    <div class=\"group\" style=\"margin-top:3em;margin-bottom:1em;\">\n        <input class=\"md-input\" type=\"number\">\n        <span class=\"highlight\"></span>\n        <span class=\"bar\"></span>\n        <label class=\"md-input-label\">Zugeordnet zu Schule: {{this.getSchoolName(selectedClass.belongsToSchool)}}</label>\n      </div>\n  <div style=\"margin-left:5px\"><label>id: </label>{{selectedClass.id}}</div>\n</div>\n\n<div *ngIf=\"selectedClass\" class=\"floatleft\" style=\"width:100%;\">\n\n<div *ngIf=\"isStudents(); then schueler else keineschueler\"></div>\n\n<ng-template #keineschueler>\n<div class=\"pane floatleft\" style=\"width:100%;margin-bottom:.3em;\">\n<span style=\"width:40%;font-weight:600;font-size:130%;\">Keine Schüler in dieser Klasse</span>\n</div>\n</ng-template>\n\n<ng-template #schueler>\n<div class=\"pane floatleft\" style=\"padding-top: 1em;padding-bottom:3em;margin-bottom:.3em;width:100%\">\n<h3>Schüler dieser Klasse</h3>\n<ul class=\"L\">\n<li class=\"LNO\" *ngFor=\"let student of students\"\n  [class.selected]=\"student === selectedStudent\" [routerLink]=\"['student',student.id]\" routerLinkActive=\"active\">\n  <div class=\"floatleft pane LPane\">\n  <div class=\"LText floatleft\">{{student.firstname}} {{student.lastname}}</div>\n  </div>\n</li></ul></div>\n</ng-template>\n\n</div>\n"
 
 /***/ }),
 
@@ -575,10 +581,7 @@ module.exports = __webpack_require__.p + "background.72729b2836257f9422ea.jpg";
 /* unused harmony export sort */
 /* harmony export (immutable) */ __webpack_exports__["a"] = find;
 /* unused harmony export filter */
-/* unused harmony export extractData */
-/* unused harmony export extractArray */
 /* harmony export (immutable) */ __webpack_exports__["b"] = handleError;
-/* unused harmony export toObj */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_rxjs_Observable__ = __webpack_require__("../../../../rxjs/Observable.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_rxjs_Observable___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_rxjs_Observable__);
 
@@ -609,32 +612,11 @@ export function handleError(error: any): Promise<any> {
   console.error('[ERROR] => ', error);
   return Promise.reject(1);
 }*/
-function extractData(res) {
-    var body = res.json(); // If response is a JSON use json()
-    console.log(body);
-    if (body) {
-        return body;
-    }
-    else {
-        return {};
-    }
-}
-function extractArray(res) {
-    var array;
-    for (var _i = 0, res_1 = res; _i < res_1.length; _i++) {
-        var o = res_1[_i];
-        array.push(o);
-    }
-    return array;
-}
 function handleError(error) {
     var errMsg = (error.message) ? error.message :
         error.status ? error.status + " - " + error.statusText : 'Server error';
     console.error(errMsg); // log to console instead
     return __WEBPACK_IMPORTED_MODULE_0_rxjs_Observable__["Observable"].throw(errMsg);
-}
-function toObj(observable) {
-    return observable.subscribe(function (res) { return res; });
 }
 //# sourceMappingURL=functions.js.map
 
@@ -739,7 +721,8 @@ var _a, _b, _c, _d, _e, _f;
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return NavbarComponent; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__service_local_service__ = __webpack_require__("../../../../../src/app/service/local.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__service_local_service__ = __webpack_require__("../../../../../src/app/service/local.service.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -752,15 +735,18 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
+
 var NavbarComponent = (function () {
-    function NavbarComponent(globalSchoolImpl, globalLoginImpl, globalClassImpl) {
+    function NavbarComponent(globalSchoolImpl, globalLoginImpl, globalClassImpl, routerImpl) {
         this.globalSchoolImpl = globalSchoolImpl;
         this.globalLoginImpl = globalLoginImpl;
         this.globalClassImpl = globalClassImpl;
+        this.routerImpl = routerImpl;
         this.title = 'Studentnote';
         this.globalSchool = globalSchoolImpl;
         this.globalLogin = globalLoginImpl;
         this.globalClass = globalClassImpl;
+        this.router = routerImpl;
         this.ngOnInit();
     }
     NavbarComponent.prototype.ngOnInit = function () {
@@ -790,20 +776,20 @@ var NavbarComponent = (function () {
         localStorage.removeItem('CurrentTeacher');
         localStorage.removeItem('CurrentSchool');
         localStorage.removeItem('CurrentClass');
-        location.href = "/loginPage";
+        this.router.navigate(['/loginPage']);
     };
     return NavbarComponent;
 }());
 NavbarComponent = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["o" /* Component */])({
         selector: 'navbar',
-        template: "\n  <div class=\"pane headerpicture\" style=\"width: 64%;margin: 1.3em auto 1em auto;align:center;padding:2% 0 1% 0;\">\n\n  <div *ngIf=\"isGlobalSchool(); then  TitleWSchool  else Title\"></div>\n\n<ng-template #Title><h1 class=\"title\" style=\"margin:.6em;\" [routerLink]=\"['/home']\" routerLinkActive=\"active\">{{title}}</h1></ng-template>\n<ng-template #TitleWSchool><h1 class=\"title\" style=\"margin:.6em;\" [routerLink]=\"['/home']\" routerLinkActive=\"active\">{{title}} for {{this.globalSchool.getSchool().name}}</h1></ng-template>\n\n\n<nav class=\"pane\" style=\"padding: 0 0;margin: 0 0;\">\n<ul>\n    <li class=\"active floatleft\" [routerLink]=\"['/home']\" routerLinkActive=\"active\"><i class=\"fa fa-home\" aria-hidden=\"true\"></i></li>\n    <!--<li class=\"active floatleft\" [routerLink]=\"['/schools']\" routerLinkActive=\"active\">Schule</li>-->\n    <li *ngIf=\"isGlobalSchool()\" class=\"active floatleft\" [routerLink]=\"['/classes']\" routerLinkActive=\"active\">Klasse</li>\n    <li *ngIf=\"isGlobalSchool()\" class=\"active floatleft\" [routerLink]=\"['/teachers']\" routerLinkActive=\"active\">Lehrer</li>\n    <li *ngIf=\"isGlobalClass()\" class=\"active floatleft\" [routerLink]=\"['/students']\" routerLinkActive=\"active\">Sch\u00FCler</li>\n    <li style=\"\">&nbsp;</li>\n\n    <li class=\"active floatright\" (click)=\"logoff()\"><i class=\"fa fa-sign-out\" aria-hidden=\"true\"></i>\n</li>\n</ul>\n</nav>\n</div>\n\n",
+        template: "\n  <div class=\"pane headerpicture\" style=\"width: 64%;margin: 1.3em auto 1em auto;align:center;padding:2% 0 1% 0;\">\n\n  <div *ngIf=\"isGlobalSchool(); then  TitleWSchool  else Title\"></div>\n\n<ng-template #Title><h1 class=\"title\" style=\"margin:.6em;\" [routerLink]=\"['home']\" routerLinkActive=\"active\">{{title}}</h1></ng-template>\n<ng-template #TitleWSchool><h1 class=\"title\" style=\"margin:.6em;\" [routerLink]=\"['home']\" routerLinkActive=\"active\">{{title}} for {{this.globalSchool.getSchool().name}}</h1></ng-template>\n\n\n<nav class=\"pane\" style=\"padding: 0 0;margin: 0 0;\">\n<ul>\n    <li class=\"active floatleft\" [routerLink]=\"['/home']\" routerLinkActive=\"active\"><i class=\"fa fa-home\" aria-hidden=\"true\"></i></li>\n    <!--<li class=\"active floatleft\" [routerLink]=\"['/schools']\" routerLinkActive=\"active\">Schule</li>-->\n    <li *ngIf=\"isGlobalSchool()\" class=\"active floatleft\" [routerLink]=\"['/classes']\" routerLinkActive=\"active\">Klasse</li>\n    <li *ngIf=\"isGlobalSchool()\" class=\"active floatleft\" [routerLink]=\"['/teachers']\" routerLinkActive=\"active\">Lehrer</li>\n    <li *ngIf=\"isGlobalClass()\" class=\"active floatleft\" [routerLink]=\"['/students']\" routerLinkActive=\"active\">Sch\u00FCler</li>\n    <li style=\"\">&nbsp;</li>\n\n    <li class=\"active floatright\" (click)=\"logoff()\"><i class=\"fa fa-sign-out\" aria-hidden=\"true\"></i>\n</li>\n</ul>\n</nav>\n</div>\n\n",
         styles: [__webpack_require__("../../../../../src/app/css/component.css")]
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__service_local_service__["d" /* GlobalSchool */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__service_local_service__["d" /* GlobalSchool */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__service_local_service__["c" /* GlobalLogin */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__service_local_service__["c" /* GlobalLogin */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_1__service_local_service__["b" /* GlobalClass */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__service_local_service__["b" /* GlobalClass */]) === "function" && _c || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__service_local_service__["d" /* GlobalSchool */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__service_local_service__["d" /* GlobalSchool */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__service_local_service__["c" /* GlobalLogin */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__service_local_service__["c" /* GlobalLogin */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_2__service_local_service__["b" /* GlobalClass */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__service_local_service__["b" /* GlobalClass */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["b" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["b" /* Router */]) === "function" && _d || Object])
 ], NavbarComponent);
 
-var _a, _b, _c;
+var _a, _b, _c, _d;
 //# sourceMappingURL=navbar.component.js.map
 
 /***/ }),
@@ -1290,7 +1276,7 @@ var getClassService = (function () {
         return this.http.get(this.global.basicUrl + "/" + this.url + "/" + id)
             .map(function (response) {
             return response.json().schoolClass.map(function (item) {
-                return new __WEBPACK_IMPORTED_MODULE_6__types_types__["a" /* Class */](item.classId, item.name, item.level, item.belongsToSchool);
+                return new __WEBPACK_IMPORTED_MODULE_6__types_types__["a" /* Class */](item.id, item.name, item.level, item.belongsToSchool);
             });
         });
     };
@@ -1327,7 +1313,7 @@ var getStudentService = (function () {
         return this.http.get(this.global.basicUrl + "/" + this.url + "/" + id)
             .map(function (response) {
             return response.json().student.map(function (item) {
-                return new __WEBPACK_IMPORTED_MODULE_6__types_types__["d" /* Student */](item.studentId, item.firstname, item.lastname, item.belongsToClass);
+                return new __WEBPACK_IMPORTED_MODULE_6__types_types__["d" /* Student */](item.id, item.firstname, item.lastname, item.belongsToClass);
             });
         });
     };
@@ -1364,7 +1350,7 @@ var getNoteService = (function () {
         return this.http.get(this.global.basicUrl + "/" + this.url + "/" + id)
             .map(function (response) {
             return response.json().note.map(function (item) {
-                return new __WEBPACK_IMPORTED_MODULE_6__types_types__["b" /* Note */](item.noteId, item.text, item.timestamp, item.authorTeacherId, item.belongsToStudent);
+                return new __WEBPACK_IMPORTED_MODULE_6__types_types__["b" /* Note */](item.id, item.text, item.timestamp, item.authorTeacherId, item.belongsToStudent);
             });
         });
     };
@@ -1400,12 +1386,12 @@ return func.sort(a,'timestamp','dsc');
         return this.http.get(this.global.basicUrl + "/" + this.url + "/" + id)
             .map(function (response) {
             return response.json().teacher.map(function (item) {
-                return new __WEBPACK_IMPORTED_MODULE_6__types_types__["e" /* Teacher */](item.teacherId, item.firstname, item.lastname, item.mailAddress, item.password, item.belongsToSchool);
+                return new __WEBPACK_IMPORTED_MODULE_6__types_types__["e" /* Teacher */](item.id, item.firstname, item.lastname, item.mailAddress, item.password, item.belongsToSchool);
             });
         });
     };
     getTeacherService.prototype.getTeacherByMail = function (mail, password) {
-        return this.http.get(this.global.basicUrl + "/login/login/" + mail + "/" + password)
+        return this.http.get(this.global.basicUrl + "/login/login/" + mail)
             .map(function (response) {
             var t = response.json();
             localStorage.setItem('CurrentTeacher', JSON.stringify(t));
@@ -2002,7 +1988,7 @@ var StudentComponent = (function () {
             return teacher.id;
         }
         else {
-            return "-1";
+            return "";
         }
     };
     StudentComponent.prototype.init = function () {
@@ -2111,7 +2097,13 @@ var StudentComponent = (function () {
         }
     };
     StudentComponent.prototype.getClassName = function (id) {
-        return __WEBPACK_IMPORTED_MODULE_2__lib_functions__["a" /* find */](this.classes, 'id', id);
+        var klasse = __WEBPACK_IMPORTED_MODULE_2__lib_functions__["a" /* find */](this.classes, 'id', id);
+        if (klasse != null) {
+            return klasse.level + " " + klasse.name;
+        }
+        else {
+            return "";
+        }
     };
     StudentComponent.prototype.onSelect = function (student) {
         var _this = this;

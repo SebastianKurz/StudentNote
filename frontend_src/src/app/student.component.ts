@@ -170,7 +170,7 @@ export class StudentComponent implements OnInit, OnDestroy{
     if (teacher != null){
     return teacher.id;
   }else{
-    return "-1";
+    return "";
   }
   }
 init(){
@@ -272,7 +272,12 @@ else{
 }
 }
   getClassName(id : number){
-    return func.find(this.classes,'id',id);
+    var klasse = func.find(this.classes,'id',id);
+    if (klasse != null){
+      return klasse.level + " "+ klasse.name;
+    }else{
+      return "";
+    }
   }
 
 onSelect(student: Student): void {

@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
 import { HttpModule, Http }    from '@angular/http';
 import {Observable} from 'rxjs/Observable';
 
@@ -12,8 +13,8 @@ import {GlobalLogin}from './service/local.service';
 
   <div *ngIf="isGlobalSchool(); then  TitleWSchool  else Title"></div>
 
-<ng-template #Title><h1 class="title" style="margin:.6em;" [routerLink]="['/home']" routerLinkActive="active">{{title}}</h1></ng-template>
-<ng-template #TitleWSchool><h1 class="title" style="margin:.6em;" [routerLink]="['/home']" routerLinkActive="active">{{title}} for {{this.globalSchool.getSchool().name}}</h1></ng-template>
+<ng-template #Title><h1 class="title" style="margin:.6em;" [routerLink]="['home']" routerLinkActive="active">{{title}}</h1></ng-template>
+<ng-template #TitleWSchool><h1 class="title" style="margin:.6em;" [routerLink]="['home']" routerLinkActive="active">{{title}} for {{this.globalSchool.getSchool().name}}</h1></ng-template>
 
 
 <nav class="pane" style="padding: 0 0;margin: 0 0;">
@@ -39,16 +40,19 @@ export class NavbarComponent {
   private globalSchool : GlobalSchool;
   private globalClass : GlobalClass;
   private globalLogin : GlobalLogin;
+  private router : Router;
   title = 'Studentnote';
 
   constructor(
     private globalSchoolImpl : GlobalSchool,
     private globalLoginImpl : GlobalLogin,
     private globalClassImpl:GlobalClass,
+    private routerImpl:Router
   ){
     this.globalSchool=globalSchoolImpl;
     this.globalLogin=globalLoginImpl;
     this.globalClass=globalClassImpl;
+    this.router=routerImpl;
     this.ngOnInit();
   }
 
@@ -81,6 +85,6 @@ export class NavbarComponent {
     localStorage.removeItem('CurrentTeacher');
     localStorage.removeItem('CurrentSchool');
     localStorage.removeItem('CurrentClass');
-    location.href="/loginPage";
+    this.router.navigate(['/loginPage']);
   }
 }

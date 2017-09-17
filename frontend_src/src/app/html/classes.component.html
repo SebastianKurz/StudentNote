@@ -76,15 +76,6 @@
   <div style="margin-left:5px"><label>id: </label>{{selectedClass.id}}</div>
 </div>
 
-<!--
-<div *ngIf="selectedClass" class="pane floatleft widthnexttobar">
-<h3> Lehrer</h3>
-<ul class="listing">
-  <li class="nobadge" *ngFor="let teacher of teachers"
-    [class.selected]="teacher === selectedTeacher" [routerLink]="['/teacher',teacher.id]" routerLinkActive="active">{{teacher.firstname}} {{teacher.lastname}}
-</li></ul></div>
--->
-
 <div *ngIf="selectedClass" class="floatleft" style="width:100%;">
 
 <div *ngIf="isStudents(); then schueler else keineschueler"></div>
@@ -100,7 +91,7 @@
 <h3>Schüler dieser Klasse</h3>
 <ul class="L">
 <li class="LNO" *ngFor="let student of students"
-  [class.selected]="student === selectedStudent" [routerLink]="['/student',student.id]" routerLinkActive="active">
+  [class.selected]="student === selectedStudent" [routerLink]="['student',student.id]" routerLinkActive="active">
   <div class="floatleft pane LPane">
   <div class="LText floatleft">{{student.firstname}} {{student.lastname}}</div>
   </div>

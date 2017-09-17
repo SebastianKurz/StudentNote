@@ -147,7 +147,12 @@ newClass(name:string,level:string,belongsToSchool:number){
   }
   }
     getSchoolName(id : number){
-       return func.find(this.schools,'id',id);
+       var school = func.find(this.schools,'id',id);
+       if (school!=null){
+         return school.name;
+       }else{
+         return "";
+       }
       }
     isGlobalClass(id:number){
       if(this.globalClass.getClass() && this.globalClass.getClass().id == id){
