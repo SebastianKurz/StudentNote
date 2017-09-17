@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component , OnInit} from '@angular/core';
 import { HttpModule, Http }    from '@angular/http';
 import { Router } from '@angular/router';
 import {Observable} from 'rxjs/Observable';
@@ -18,6 +18,8 @@ styleUrls: ['./css/component.css']
 
 export class LoginComponent {
   title = 'Studentnote';
+  teacher : Teacher;
+  wait:boolean;
   private router : Router;
   private globalLogin:GlobalLogin;
   private globalSchool: GlobalSchool;
@@ -36,36 +38,36 @@ this.globalLogin=globalLoginImpl;
 this.globalSchool=globalSchoolImpl;
 this.GetTeacherService=GetTeacherServiceImpl;
 this.GetSchoolService=GetSchoolServiceImpl;
+this.wait=false;
   }
 
-login(email:string): void {
-/*
-  var x= '{"firstname":"Bernhardt","password":"12345","mailAddress":"bsix@gmail.com","id":5576722976079872,"belongsToSchool":13579,"lastname":"Six"}';
-  alert(x);
-  var z : Teacher = JSON.parse(x) as Teacher;
-  alert(z);
-  alert(z.id + z.firstname + z.lastname);
-  alert(JSON.stringify(z));*/
+  ngOnInit() {
+    if (this.teacher = JSON.parse(localStorage.getItem('CurrentTeacher'))){
+        this.Login();
+    }
+  }
+
+getLoginUser(email:string): void {
   if (email >""){
     //Google login will be accessible here.
-  var teacher:any;
-  this.GetTeacherService.getTeacherByMail(email).then(t => teacher = t,() => location.href="noc");
-  console.log(teacher);
-  console.log(JSON.stringify(teacher));
-  if (!teacher){
-    alert(JSON.stringify(teacher));
+    this.wait=true;
+   this.GetTeacherService.getTeacherByMail(email).subscribe(t=> {this.teacher = t;});
+   if(this.wait){
+     setTimeout(() => this.Login(), 2000);
+   }}
+ else{
+   alert("Enter your Email address");
+ }
+ }
+
+ Login(){
+   this.wait=false;
+  if (!this.teacher){
+    alert("No Permission");
   }else {
-    this.globalLogin.setLogin(teacher);
-    var s : School;
-    this.GetSchoolService.getSchool(teacher.belongsToSchool).then(r => s=r,() => location.href="noc");
-    this.globalSchool.setSchool(s);
+    this.globalLogin.setLogin(this.teacher);
+    this.GetSchoolService.getSchool(this.teacher.belongsToSchool).subscribe(s => {this.globalSchool.setSchool(s);});
     this.router.navigate(['/home']);
-
   }
-
-}
-else{
-  alert("Enter your Email address");
-}
 }
 }

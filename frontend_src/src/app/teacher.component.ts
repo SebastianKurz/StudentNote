@@ -20,6 +20,7 @@ import {deleteTeacherService} from './service/delete.service';
 export class TeacherComponent {
   title : string;
   teachers : Teacher[];
+  schools : School[];
   selectedTeacher: Teacher;
   showNewTeacher : Boolean;
   NewTeacher : Teacher;
@@ -113,7 +114,8 @@ deleteTeacher(teacher : Teacher){
 }
 init(){
   if(this.globalSchool.getSchool()){
-this.GetTeacherService.getEntities(this.globalSchool.getSchool().id).then((t) => this.teachers = t,()=>  location.href="/noc");
+this.GetTeacherService.getEntities(this.globalSchool.getSchool().id).subscribe( s => this.teachers =  s);
+this.GetSchoolService.getSchools().subscribe(s => this.schools = s );
 }
 }
 ngOnInit() {
@@ -121,7 +123,10 @@ this.init();
     this.sub = this.route.params.subscribe(params => {
        this.id = +params['id']; // (+) converts string 'id' to a number
        //Ask Webservice
-       this.selectedTeacher = this.teachers.find(o => o.id === this.id);
+       if (this.selectedTeacher){
+       setTimeout(() => {this.selectedTeacher = this.teachers.find(o => o.id === this.id);}, 2000);
+     }
+
     });
 
   }
@@ -140,12 +145,11 @@ selectLoginTeacher(teacher){
   this.globalStatus.setStatus("You cannot change your user. Please relogin with the desired user.");
 }
 getSchoolName(id : number){
-  var school :School;
-  this.GetSchoolService.getSchool(id).then((s) => school = s,()=>  location.href="/noc");
+  var school = func.find(this.schools, 'id' ,id);
   if (school!=null){
     return school.name;
   }else{
-    return "not existing";
+    return "";
   }
 
 }

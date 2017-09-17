@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Headers, Http } from '@angular/http';
+import { Headers, Http,Response, RequestOptions } from '@angular/http';
 import { Router } from '@angular/router';
 import {HttpModule} from '@angular/http';
 
 import 'rxjs/add/operator/toPromise';
+import 'rxjs/add/operator/map';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/Rx'
 
@@ -28,20 +29,23 @@ export class getSchoolService {
     this.http = httpImpl;
     this.router=routerImpl;
   }
-  public getSchools(): Promise<School[]> {
+  public getSchools(): Observable<School[]> {
     return this.http.get(`${this.global.basicUrl}/${this.url}`)
-      .toPromise()
-      .then(response => response.json().parse as School[])
-      .catch(func.handleError);
+    .map((response : Response) => {
+        return response.json().school.map(item => {
+          return new School(
+              item.id,
+              item.name
+            );
+        });
+      });
   }
 
   //return func.sort(this.global.gSchools,'name','asc');}
 
-  public getSchool(id: number): Promise<School> {// With School ID
+  public getSchool(id: number): Observable<School> {// With School ID
     return this.http.get(`${this.global.basicUrl}/${this.url}/${id}`)
-      .toPromise()
-      .then(response => response.json().parse as School)
-      .catch(func.handleError);
+    .map( (response : Response) =>  response.json());
   }
 }
 
@@ -61,17 +65,22 @@ export class getClassService {
              .catch(func.handleError);
     //return func.sort(this.global.gClasses,'level','asc');
   }*/
-  public getClass(schoolid: number, id: number): Promise<Class> {// With Class ID
+  public getClass(schoolid: number, id: number): Observable<Class> {// With Class ID
     return this.http.get(`${this.global.basicUrl}/${this.url}/${schoolid}/${id}`)
-      .toPromise()
-      .then(response => response.json().parse as Class)
-      .catch(func.handleError);
+    .map( (response : Response) =>  response.json());
   }
-  public getEntities(id: number): Promise<Class[]> {// With School ID
+  public getEntities(id: number): Observable<Class[]> {// With School ID
     return this.http.get(`${this.global.basicUrl}/${this.url}/${id}`)
-      .toPromise()
-      .then(response => response.json().parse as Class[])
-      .catch(func.handleError);
+    .map((response : Response) => {
+        return response.json().schoolClass.map(item => {
+          return new Class(
+              item.classId,
+              item.name,
+              item.level,
+              item.belongsToSchool
+            );
+        });
+      });
   }
 }
 
@@ -91,17 +100,22 @@ export class getStudentService {
              .catch(func.handleError);
     //return func.sort(this.global.gStudents,'level','asc');
   }*/
-  public getStudent(classid: number, id: number): Promise<Student> {// With Student ID
+  public getStudent(classid: number, id: number): Observable<Student> {// With Student ID
     return this.http.get(`${this.global.basicUrl}/${this.url}/${classid}/${id}`)
-      .toPromise()
-      .then(response => response.json().parse as Student)
-      .catch(func.handleError);
+    .map( (response : Response) =>  response.json());
   }
-  public getEntities(id: number): Promise<Student[]> {// With Class ID
+  public getEntities(id: number): Observable<Student[]> {// With Class ID
     return this.http.get(`${this.global.basicUrl}/${this.url}/${id}`)
-      .toPromise()
-      .then(response => response.json().parse as Student[])
-      .catch(func.handleError);
+    .map((response : Response) => {
+        return response.json().student.map(item => {
+          return new Student(
+              item.studentId,
+              item.firstname,
+              item.lastname,
+              item.belongsToClass
+            );
+        });
+      });
   }
 }
 
@@ -121,23 +135,31 @@ export class getNoteService {
              .catch(func.handleError);
   return func.sort(a,'timestamp','dsc');
 }*/
-  public getNote(studentid: number, id: number): Promise<Note> {// With Note ID
+  public getNote(studentid: number, id: number): Observable<Note> {// With Note ID
     return this.http.get(`${this.global.basicUrl}/${this.url}/${studentid}/${id}`)
-      .toPromise()
-      .then(response => response.json().parse as Note[])
-      .catch(func.handleError);
+    .map( (response : Response) =>  response.json());
   }
-  public getEntities(id: number): Promise<Note[]> {// With Student ID
-    var a = this.http.get(`${this.global.basicUrl}/${this.url}/${id}`)
-      .toPromise()
-      .then(response => response.json().parse as Note[])
-      .catch(func.handleError);
-    return func.sort(a, 'timestamp', 'dsc');
+  public getEntities(id: number): Observable<Note[]> {// With Student ID
+    return this.http.get(`${this.global.basicUrl}/${this.url}/${id}`)
+    .map((response : Response) => {
+        return response.json().note.map(item => {
+          return new Note(
+              item.noteId,
+              item.text,
+              item.timestamp,
+              item.authorTeacherId,
+              item.belongsToStudent
+            );
+        });
+      });
   }
 }
 @Injectable()
 export class getTeacherService {
-    private global: Global; private http: Http; private url = 'get/getTeacher'; private headers = new Headers({'Content-Type': '*'});private router:Router;
+    private global: Global;
+     private http: Http;
+      private url = 'get/getTeacher';
+       private router:Router;
     constructor(private globalData: Global, private httpImpl: Http,private routerImpl: Router) {
       this.global = globalData;
       this.http = httpImpl;
@@ -150,28 +172,31 @@ export class getTeacherService {
            .catch(func.handleError);
 return func.sort(a,'timestamp','dsc');
 }*/
-  public getTeacher(id: number): Promise<Teacher> {// With Teacher ID
+  public getTeacher(schoolid:number,id: number): Observable<Teacher> {// With Teacher ID
+    return this.http.get(`${this.global.basicUrl}/${this.url}/${schoolid}/${id}`)
+    .map( (response : Response) =>  response.json());
+}
+  public getEntities(id: number): Observable<Teacher[]> {//With School ID
     return this.http.get(`${this.global.basicUrl}/${this.url}/${id}`)
-      .toPromise()
-      .then(response => response.json().parse as Teacher)
-      .catch(func.handleError);
-  }
-  public getEntities(id: number): Promise<Teacher[]> {//With School ID
-    var a = this.http.get(`${this.global.basicUrl}/${this.url}/${id}`)
-      .toPromise()
-      .then(response => response.json().parse as Teacher[])
-      .catch(func.handleError);
-    return func.sort(a, 'timestamp', 'dsc');
-  }
-  public getTeacherByMail(mail: string): Promise<any> {//With Mail Address
-    return this.http.get(`${this.global.basicUrl}/login/login/${mail}`).map(res => {
-			return JSON.parse(res.text()) as Teacher || {success: false, message: "No response from server"};
-		}).catch((error: Response | any) => {
-			return Observable.throw(error.json());
-		}).toPromise();
-/*    return this.http.get(`${this.global.basicUrl}/login/login/${mail}`)
-    .toPromise()
-      .then(response => JSON.parse(response.text()) as Teacher)
-      .catch(func.handleError);*/
-  }
+    .map((response : Response) => {
+        return response.json().teacher.map(item => {
+          return new Teacher(
+              item.teacherId,
+              item.firstname,
+              item.lastname,
+              item.mailAddress,
+              item.password,
+              item.belongsToSchool
+            );
+        });
+      });
+}
+  public getTeacherByMail(mail: string): Observable<Teacher> {//With Mail Address
+    return this.http.get(`${this.global.basicUrl}/login/login/${mail}`)
+    .map( (response : Response) => {
+      let t = response.json();
+      localStorage.setItem('CurrentTeacher', JSON.stringify(t));
+      return t;
+    });
+}
 }

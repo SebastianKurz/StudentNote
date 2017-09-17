@@ -20,6 +20,7 @@ export class ClassesComponent {
   title : String;
   classes : Class[];
   students : Student[];
+  schools : School[];
   teachers : Teacher[];
   selectedClass: Class;
   bbs : number;
@@ -60,7 +61,8 @@ constructor(
 }
 init(){
   if(this.globalSchool.getSchool()){
-this.GetClassService.getEntities(this.globalSchool.getSchool().id).then((c) => this.classes = c,()=>  location.href="/noc");
+this.GetClassService.getEntities(this.globalSchool.getSchool().id).subscribe(s => this.classes = s);
+this.GetSchoolService.getSchools().subscribe(s => this.schools = s);
 }
 }
 ngOnInit() {
@@ -134,15 +136,8 @@ newClass(name:string,level:string,belongsToSchool:number){
       }
     }
     getSchoolName(id : number){
-      var school :School;
-      this.GetSchoolService.getSchool(id).then((s) => school = s,()=>  location.href="/noc");
-      if (school!=null){
-        return school.name;
-      }else{
-        return "not existing";
+       return func.find(this.schools,'id',id);
       }
-
-    }
     isGlobalClass(id:number){
       if(this.globalClass.getClass() && this.globalClass.getClass().id == id){
       return true;
@@ -161,6 +156,6 @@ newClass(name:string,level:string,belongsToSchool:number){
 selectClass(klasse: Class): void {
   this.cancelNewClass();
   this.selectedClass = klasse;
-  this.GetStudentService.getEntities(klasse.id).then(s => this.students = s,()=>  location.href="/noc");
+  this.GetStudentService.getEntities(klasse.id).subscribe(s => this.students = s);
 }
 }

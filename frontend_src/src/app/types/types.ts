@@ -10,6 +10,8 @@ export class Class {
     this.level = level;
     this.belongsToSchool = belongsToSchool;
   }
+  toString(){
+    return (this.id + this.name + this.level + this.belongsToSchool );}
 }
 
 export class Note {
@@ -26,6 +28,8 @@ this.timestamp=timestamp;
 this.authorTeacherId=authorTeacherId;
 this.belongsToStudent=belongsToStudent;
 }
+toString(){
+  return (this.id + this.text + this.timestamp + this.authorTeacherId + this.belongsToStudent);}
 }
 
 export class School {
@@ -36,12 +40,14 @@ export class School {
     this.id=id;
     this.name=name;
   }
+  toString(){
+    return (this.id + this.name );}
 }
 
 export class Student {
   id: number;
-  firstname: String;
-  lastname: String;
+  firstname: string;
+  lastname: string;
   belongsToClass: number;
 constructor(id:number,firstname:string,lastname:string,belongsToClass:number){
   this.id=id;
@@ -49,7 +55,8 @@ constructor(id:number,firstname:string,lastname:string,belongsToClass:number){
   this.lastname=lastname;
   this.belongsToClass=belongsToClass;
 }
-
+toString(){
+  return (this.id + this.firstname + this.lastname + this.belongsToClass); }
 }
 
 export class Teacher {
@@ -69,5 +76,5 @@ export class Teacher {
     this.belongsToSchool=belongsToSchool;
   }
   toString(){
-    return this.id + this.firstname + this.lastname + this.mailAddress + this.password + this.belongsToSchool }
+    return (this.id + this.firstname + this.lastname + this.mailAddress + this.password + this.belongsToSchool );}
 }

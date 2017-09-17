@@ -15,34 +15,35 @@ import {Teacher} from '../types/types';
 
 import * as func from '../lib/functions';
 
-var globalSchool:School;
-var globalClass:Class;
-var globalLogin:Teacher;
 var globalStatus : string = null;
 
 
 @Injectable()
 export class GlobalSchool {
   public setSchool(school:School): number {
-    globalSchool = school;
+    localStorage.setItem('CurrentSchool', JSON.stringify(school));
     return 0;}
   public unsetSchool(): number {
-    globalSchool = null;
+    localStorage.removeItem('CurrentSchool');
     return 0;}
   public getSchool():School{
-    return globalSchool;
+    var school : School = new School(null,null);
+    school = JSON.parse(localStorage.getItem('CurrentSchool')) as School;
+    return school;
   }
 }
 @Injectable()
 export class GlobalClass {
   public setClass(klasse:Class): number {
-    globalClass = klasse;
+      localStorage.setItem('CurrentClass', JSON.stringify(klasse));
     return 0;}
   public unsetClass(): number {
-    globalClass = null;
+    localStorage.removeItem('CurrentClass');
     return 0;}
   public getClass():Class{
-    return globalClass;
+    var klasse : Class = new Class(null,null,null,null);
+    klasse = JSON.parse(localStorage.getItem('CurrentClass')) as Class;
+    return klasse;
   }
 }
 @Injectable()
@@ -61,13 +62,15 @@ export class GlobalStatus {
 @Injectable()
 export class GlobalLogin {
   public setLogin(teacher : Teacher){
-    globalLogin = teacher;
+      localStorage.setItem('CurrentTeacher', JSON.stringify(teacher));
     }
   public unsetLogin(): number {
-    globalLogin = null;
+    localStorage.removeItem('CurrentTeacher');
     return 0;}
   public getLogin(){
-    return globalLogin;
+    var teacher : Teacher = new Teacher(null,null,null,null,null,null);
+    teacher = JSON.parse(localStorage.getItem('CurrentTeacher')) as Teacher;
+    return teacher;
   }
 }
 @Injectable()
@@ -77,5 +80,5 @@ export class Global {
   public gStudents:Student[] = STUDENTS;
   public gNotes:Note[] = NOTES;
   public gTeachers:Teacher[] = TEACHERS;
-  public basicUrl = 'http://localhost:8888';
+  public basicUrl = 'https://studentnotegae-webengii.appspot.com';
 }

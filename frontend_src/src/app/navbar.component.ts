@@ -53,9 +53,9 @@ export class NavbarComponent {
   }
 
   ngOnInit() {
-    if (!this.globalLogin.getLogin()){
+    if (!localStorage.getItem('CurrentTeacher')){
     this.logoff();
-    }
+  }
     }
     ngOnDestroy():void {
   }
@@ -78,6 +78,7 @@ export class NavbarComponent {
   }
 
   logoff():void{
+    localStorage.removeItem('CurrentTeacher');
     location.href="/loginPage";
   }
 }

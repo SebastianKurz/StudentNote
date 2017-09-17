@@ -23,6 +23,7 @@ export class StudentComponent implements OnInit, OnDestroy{
   students : Student[];
   notes : Note[];
   teachers : Teacher[];
+  classes : Class[];
   teacher : Teacher;
   selectedStudent: Student;
   showNewStudent : Boolean;
@@ -174,7 +175,8 @@ export class StudentComponent implements OnInit, OnDestroy{
   }
 init(){
   if(this.globalSchool.getSchool()){
-  this.GetStudentService.getEntities(this.globalClass.getClass().id).then((s) => this.students = s,()=>  location.href="/noc");
+this.GetStudentService.getEntities(this.globalClass.getClass().id).subscribe(s => { this.students = s});
+this.GetClassService.getEntities(this.globalSchool.getSchool().id).subscribe(s => this.classes = s);
 }
 }
   ngOnInit() {
@@ -184,7 +186,7 @@ init(){
          //Ask Webservice
          this.selectedStudent = this.students.find(o => o.id === this.id);
       });
-        if(this.selectedStudent){this.GetNoteService.getEntities(this.selectedStudent.id).then((n) => this.notes = n,()=>  location.href="/noc");
+        if(this.selectedStudent){this.GetNoteService.getEntities(this.selectedStudent.id).subscribe(s => {this.notes = s});
         }
     }
     ngOnDestroy():void {
@@ -243,20 +245,13 @@ init(){
     }
   }
   getClassName(id : number){
-    var klasse : Class;
-
-    this.GetClassService.getClass(this.globalSchool.getSchool().id,id).then((c)=> klasse = c,()=>  location.href="/noc");
-    if (klasse != null){
-      return klasse.name;
-    }else{
-      return "not existing";
-    }
-
+    return func.find(this.classes,'id',id);
   }
 
 onSelect(student: Student): void {
   this.cancelNewStudent();
-  this.GetNoteService.getEntities(student.id).then((n) => this.notes = n,()=>  location.href="/noc");
+  this.GetClassService.getEntities(this.globalSchool.getSchool().id).subscribe(s => this.classes = s);
+   this.GetNoteService.getEntities(student.id).subscribe(s => this.notes = s);
 }
 
 }

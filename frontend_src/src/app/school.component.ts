@@ -26,7 +26,7 @@ import {deleteSchoolService}from './service/delete.service';
 
 export class SchoolComponent {
   title : string;
-  schools : School[];
+  schools : School[] = [];
   selectedSchool: School;
   showNewSchool : Boolean;
   NewSchool : School;
@@ -56,7 +56,7 @@ export class SchoolComponent {
     this.NewSchool = new School(null , null);
   }
   init(){
-    this.GetSchoolService.getSchools().then((s) => this.schools = s,()=>  location.href="/noc");
+     this.GetSchoolService.getSchools().subscribe(s => {this.schools = s});
   }
   ngOnInit() {
     this.init();
