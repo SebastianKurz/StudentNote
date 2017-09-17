@@ -31,6 +31,7 @@ export class StudentComponent implements OnInit, OnDestroy{
   NewStudent : Student;
   NewNote : Note;
   id: number;
+  wait:boolean;
   private sub: any;
   private globalSchool : GlobalSchool;
   private globalClass : GlobalClass;
@@ -81,6 +82,7 @@ export class StudentComponent implements OnInit, OnDestroy{
     this.GetClassService=GetClassServiceImpl;
     this.showNewStudent=false;
     this.showNewNote=false;
+    this.wait=false;
     this.NewStudent=new Student(null,null,null,null);
     this.NewNote=new Note(null,null,null,null,null);
 
@@ -192,7 +194,8 @@ this.GetTeacherService.getEntities(this.globalSchool.getSchool().id).subscribe(s
          this.id = +params['id']; // (+) converts string 'id' to a number
          //Ask Webservice
          if (this.id){
-         setTimeout(() => {this.selectedStudent = this.students.find(o => o.id === this.id);this.GetNoteService.getEntities(this.selectedStudent.id).subscribe(s => {this.notes = s});}, 2000);
+           this.wait=true;
+         setTimeout(() => {this.selectedStudent = this.students.find(o => o.id === this.id);this.GetNoteService.getEntities(this.selectedStudent.id).subscribe(s => {this.notes = s});this.wait=false;}, 2000);
        }
 
       });

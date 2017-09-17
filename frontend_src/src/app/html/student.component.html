@@ -16,6 +16,13 @@
   </div>
 
   <div class="floatleft widthnexttobar">
+    <div style="height:3em;">
+    <div *ngIf="wait" style="text-align:center;font-size:120%;">
+      <div class="spinner">
+      <div class="bounce1"></div>
+      <div class="bounce2"></div>
+      <div class="bounce3"></div>
+    </div></div></div>
     <div *ngIf="showNewStudent" class="pane floatleft" style="width:100%;">
       <h3>Neuen Schüler erfassen</h3>
       <div class="group floatleft" style="margin-top:3em;margin-bottom:1em;">
