@@ -7,7 +7,7 @@ import { GlobalStatus } from './service/local.service';
   template: `
 <router-outlet></router-outlet>
 
-<div  *ngIf="isStatus()" class="status" (click)="unsetStatus()">
+<div  *ngIf="isStatus()" class="status" style="text-align:center;" (click)="unsetStatus()">
 {{this.globalstatus.getStatus()}}
 </div>
 `,

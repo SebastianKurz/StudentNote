@@ -79,6 +79,8 @@ export class NavbarComponent {
 
   logoff():void{
     localStorage.removeItem('CurrentTeacher');
+    localStorage.removeItem('CurrentSchool');
+    localStorage.removeItem('CurrentClass');
     location.href="/loginPage";
   }
 }

@@ -50,7 +50,7 @@ export class GlobalClass {
 export class GlobalStatus {
   public setStatus(status){
     globalStatus = status;
-    setTimeout(() => globalStatus = null, 2000);
+    setTimeout(() => globalStatus = null, 3000);
     }
   public unsetStatus(): number {
     globalStatus = null;
