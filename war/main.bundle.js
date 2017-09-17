@@ -199,15 +199,15 @@ AppModule = __decorate([
 
 var ROUTE_CONFIG = [
     { path: 'loginPage', component: __WEBPACK_IMPORTED_MODULE_2__login_component__["a" /* LoginComponent */] },
-    { path: 'home', component: __WEBPACK_IMPORTED_MODULE_4__school_component__["a" /* SchoolComponent */] },
-    { path: 'classes', component: __WEBPACK_IMPORTED_MODULE_3__classes_component__["a" /* ClassesComponent */] },
     { path: 'schools', component: __WEBPACK_IMPORTED_MODULE_4__school_component__["a" /* SchoolComponent */] },
+    //{ path: 'classes',component: ClassesComponent},
+    { path: 'home', component: __WEBPACK_IMPORTED_MODULE_3__classes_component__["a" /* ClassesComponent */] },
     { path: 'teachers', component: __WEBPACK_IMPORTED_MODULE_6__teacher_component__["a" /* TeacherComponent */] },
     //{ path: 'teacher/:id',component: TeacherComponent},
     { path: 'students', component: __WEBPACK_IMPORTED_MODULE_5__student_component__["a" /* StudentComponent */] },
     { path: 'student/:id', component: __WEBPACK_IMPORTED_MODULE_5__student_component__["a" /* StudentComponent */] },
     { path: '',
-        redirectTo: '/loginPage',
+        redirectTo: 'loginPage',
         pathMatch: 'full'
     },
     { path: 'noc', component: __WEBPACK_IMPORTED_MODULE_1__noconnection_component__["a" /* NoConnectionComponent */] },
@@ -223,12 +223,13 @@ var ROUTE_CONFIG = [
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ClassesComponent; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__types_types__ = __webpack_require__("../../../../../src/app/types/types.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__service_local_service__ = __webpack_require__("../../../../../src/app/service/local.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__service_get_service__ = __webpack_require__("../../../../../src/app/service/get.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__service_post_service__ = __webpack_require__("../../../../../src/app/service/post.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__service_update_service__ = __webpack_require__("../../../../../src/app/service/update.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__service_delete_service__ = __webpack_require__("../../../../../src/app/service/delete.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_functions__ = __webpack_require__("../../../../../src/app/lib/functions.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__types_types__ = __webpack_require__("../../../../../src/app/types/types.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__service_local_service__ = __webpack_require__("../../../../../src/app/service/local.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__service_get_service__ = __webpack_require__("../../../../../src/app/service/get.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__service_post_service__ = __webpack_require__("../../../../../src/app/service/post.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__service_update_service__ = __webpack_require__("../../../../../src/app/service/update.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__service_delete_service__ = __webpack_require__("../../../../../src/app/service/delete.service.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -238,6 +239,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+
 
 
 
@@ -267,20 +269,25 @@ var ClassesComponent = (function () {
         this.globalClass = globalClassImpl;
         this.globalStatus = globalStatusImpl;
         this.showNewClass = false;
+        this.wait = false;
     }
     ClassesComponent.prototype.init = function () {
         var _this = this;
         if (this.globalSchool.getSchool()) {
-            this.GetClassService.getEntities(this.globalSchool.getSchool().id).then(function (c) { return _this.classes = c; }, function () { return location.href = "/noc"; });
+            this.GetClassService.getEntities(this.globalSchool.getSchool().id).subscribe(function (s) { return _this.classes = s; });
+            this.GetSchoolService.getSchools().subscribe(function (s) { return _this.schools = s; });
+            this.wait = false;
         }
     };
     ClassesComponent.prototype.ngOnInit = function () {
-        this.init();
+        var _this = this;
+        this.wait = true;
+        setTimeout(function () { _this.init(); }, 2000);
     };
     ClassesComponent.prototype.ngOnDestroy = function () {
     };
     ClassesComponent.prototype.isStudents = function () {
-        if (this.students.length > 0) {
+        if (this.students) {
             return true;
         }
         else {
@@ -301,58 +308,71 @@ var ClassesComponent = (function () {
         this.showNewClass = false;
     };
     ClassesComponent.prototype.newClass = function (name, level, belongsToSchool) {
+        var _this = this;
         if (name > "" && level > "" && belongsToSchool > 0) {
             var h;
-            this.PostClassService.postClass(new __WEBPACK_IMPORTED_MODULE_1__types_types__["a" /* Class */](null, name, level, belongsToSchool)).then(function (r) { return h = r; }, function () { return location.href = "/noc"; });
-            if (0 == h) {
-                this.globalStatus.setStatus("Data submitted");
-                this.showNewClass = false;
-                //refesh Data
-                this.init();
-            }
-            else {
-                this.globalStatus.setStatus("[ERROR] submitting data");
-            }
+            this.PostClassService.postClass(new __WEBPACK_IMPORTED_MODULE_2__types_types__["a" /* Class */](null, name, level, belongsToSchool)).subscribe(function (res) {
+                if (res.id) {
+                    _this.showNewClass = false;
+                    _this.globalStatus.setStatus("Data submitted");
+                    _this.init();
+                    _this.selectClass(__WEBPACK_IMPORTED_MODULE_1__lib_functions__["a" /* find */](_this.classes, 'id', res.id));
+                }
+                else {
+                    _this.globalStatus.setStatus(res.error);
+                }
+            });
         }
         else {
-            this.globalStatus.setStatus("enter some Values");
+            this.globalStatus.setStatus("Enter required Values");
         }
     };
     ClassesComponent.prototype.updateClass = function (klasse, key, value) {
+        var _this = this;
         var val;
         if (klasse != null && key != null && value != null) {
             val = value;
             klasse[key] = val;
-            var h;
-            this.UpdateClassService.updateClass(klasse).then(function (r) { return h = r; }, function () { return location.href = "/noc"; });
-            if (h == 0) {
-                this.globalStatus.setStatus("Data submitted " + klasse[key]);
-                this.init();
-            }
-            else {
-                this.globalStatus.setStatus("[ERROR] submitting data");
-            }
+            this.UpdateClassService.updateClass(klasse).subscribe(function (res) {
+                if (res.id) {
+                    _this.globalStatus.setStatus("Data submitted");
+                    _this.init();
+                }
+                else {
+                    _this.globalStatus.setStatus(res.error);
+                }
+            });
+        }
+        else {
+            this.globalStatus.setStatus("No changes");
         }
     };
     ClassesComponent.prototype.deleteClass = function (klasse) {
+        var _this = this;
         var h;
-        this.DeleteClassService.deleteClass(klasse).then(function (r) { return h = r; }, function () { return location.href = "/noc"; });
-        if (h == 0) {
-            this.globalStatus.setStatus("Data submitted");
-            this.init();
+        if (klasse.id > 0) {
+            this.DeleteClassService.deleteClass(klasse).subscribe(function (res) {
+                if (res.id) {
+                    _this.globalStatus.setStatus("Data submitted");
+                    _this.init();
+                    _this.selectedClass = null;
+                }
+                else {
+                    _this.globalStatus.setStatus(res.error);
+                }
+            });
         }
         else {
-            this.globalStatus.setStatus("[ERROR] submitting data");
+            this.globalStatus.setStatus("Nothing to delete!");
         }
     };
     ClassesComponent.prototype.getSchoolName = function (id) {
-        var school;
-        this.GetSchoolService.getSchool(id).then(function (s) { return school = s; }, function () { return location.href = "/noc"; });
+        var school = __WEBPACK_IMPORTED_MODULE_1__lib_functions__["a" /* find */](this.schools, 'id', id);
         if (school != null) {
             return school.name;
         }
         else {
-            return "not existing";
+            return "";
         }
     };
     ClassesComponent.prototype.isGlobalClass = function (id) {
@@ -362,6 +382,9 @@ var ClassesComponent = (function () {
         else {
             return false;
         }
+    };
+    ClassesComponent.prototype.getCurrentSchool = function () {
+        return this.globalSchool.getSchool();
     };
     ClassesComponent.prototype.selectKlasse = function (klasse) {
         if (this.isGlobalClass(klasse.id)) {
@@ -375,7 +398,15 @@ var ClassesComponent = (function () {
         var _this = this;
         this.cancelNewClass();
         this.selectedClass = klasse;
-        this.GetStudentService.getEntities(klasse.id).then(function (s) { return _this.students = s; }, function () { return location.href = "/noc"; });
+        this.students = null;
+        this.GetStudentService.getEntities(klasse.id).subscribe(function (s) {
+            if (s != null) {
+                _this.students = s;
+            }
+            else {
+                _this.students = null;
+            }
+        });
     };
     return ClassesComponent;
 }());
@@ -385,7 +416,7 @@ ClassesComponent = __decorate([
         template: __webpack_require__("../../../../../src/app/html/classes.component.html"),
         styles: [__webpack_require__("../../../../../src/app/css/component.css")]
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_4__service_post_service__["a" /* postClassService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__service_post_service__["a" /* postClassService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_3__service_get_service__["a" /* getClassService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__service_get_service__["a" /* getClassService */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_5__service_update_service__["a" /* updateClassService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_5__service_update_service__["a" /* updateClassService */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_6__service_delete_service__["a" /* deleteClassService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_6__service_delete_service__["a" /* deleteClassService */]) === "function" && _d || Object, typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_3__service_get_service__["d" /* getStudentService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__service_get_service__["d" /* getStudentService */]) === "function" && _e || Object, typeof (_f = typeof __WEBPACK_IMPORTED_MODULE_3__service_get_service__["c" /* getSchoolService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__service_get_service__["c" /* getSchoolService */]) === "function" && _f || Object, typeof (_g = typeof __WEBPACK_IMPORTED_MODULE_2__service_local_service__["d" /* GlobalSchool */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__service_local_service__["d" /* GlobalSchool */]) === "function" && _g || Object, typeof (_h = typeof __WEBPACK_IMPORTED_MODULE_2__service_local_service__["b" /* GlobalClass */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__service_local_service__["b" /* GlobalClass */]) === "function" && _h || Object, typeof (_j = typeof __WEBPACK_IMPORTED_MODULE_2__service_local_service__["e" /* GlobalStatus */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__service_local_service__["e" /* GlobalStatus */]) === "function" && _j || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_5__service_post_service__["a" /* postClassService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_5__service_post_service__["a" /* postClassService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_4__service_get_service__["a" /* getClassService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__service_get_service__["a" /* getClassService */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_6__service_update_service__["a" /* updateClassService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_6__service_update_service__["a" /* updateClassService */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_7__service_delete_service__["a" /* deleteClassService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_7__service_delete_service__["a" /* deleteClassService */]) === "function" && _d || Object, typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_4__service_get_service__["d" /* getStudentService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__service_get_service__["d" /* getStudentService */]) === "function" && _e || Object, typeof (_f = typeof __WEBPACK_IMPORTED_MODULE_4__service_get_service__["c" /* getSchoolService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__service_get_service__["c" /* getSchoolService */]) === "function" && _f || Object, typeof (_g = typeof __WEBPACK_IMPORTED_MODULE_3__service_local_service__["d" /* GlobalSchool */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__service_local_service__["d" /* GlobalSchool */]) === "function" && _g || Object, typeof (_h = typeof __WEBPACK_IMPORTED_MODULE_3__service_local_service__["b" /* GlobalClass */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__service_local_service__["b" /* GlobalClass */]) === "function" && _h || Object, typeof (_j = typeof __WEBPACK_IMPORTED_MODULE_3__service_local_service__["e" /* GlobalStatus */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__service_local_service__["e" /* GlobalStatus */]) === "function" && _j || Object])
 ], ClassesComponent);
 
 var _a, _b, _c, _d, _e, _f, _g, _h, _j;
@@ -401,7 +432,7 @@ exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-b
 exports.i(__webpack_require__("../../../../css-loader/index.js?{\"sourceMap\":false,\"importLoaders\":1}!../../../../postcss-loader/index.js?{\"ident\":\"postcss\"}!../../../../../src/app/css/font-awesome.css"), "");
 
 // module
-exports.push([module.i, "\n.status {\n  position: absolute;\n  display:block;\n  width: 20%;\n  padding: .5em 2% .5em 2%;\n  top: .5em;\n  right:38%;\n  background-color: rgba(0,0,0, 0.50);\n  color:white;\n  border-radius: 2px;\n}\n\nbody {\n  background: #e2e1e0;\n  font-famliy:Roboto-Medium;\n}\nbutton,html,input,select,textarea {\n font-family:Roboto,Helvetica Neue,sans-serif\n}\nh1 {\n    font-size: 300%;\n}\n\nh2 {\n    font-size: 250%;\n}\nh3 {\n  margin: .8em 0 .2em 8px;\n  font-size: 200%\n}\n\ntextarea {\n  resize: none;\n\tdisplay: block;\n\twidth: 100%;\n\tborder: 0;\n\tpadding: 10px 5px;\n  background: white no-repeat;\n  /*\n  * IMPORTANT PART HERE\n  */\n\n  /* 2 imgs : 1px gray line (normal state) AND 2px green line (focus state) */\n  background-image: linear-gradient(to bottom, #1abc9c, #1abc9c), linear-gradient(to bottom, silver, silver);\n  /* sizes for the 2 images (default state) */\n  background-size: 0 2px, 100% 1px;\n  /* positions for the 2 images. Change both \"50%\" to \"0%\" or \"100%\" and tri again */\n  background-position: 50% 100%, 50% 100%;\n\n  /* animation solely on background-size */\n  transition: background-size 0.3s cubic-bezier(0.64, 0.09, 0.08, 1);\n\n  }\n\n  textarea:focus{\n    /* sizes for the 2 images (focus state) */\n  \tbackground-size: 100% 2px, 100% 1px;\n  \toutline: none;\n  }\n\n.title{\n  color: #f0f0f0;\n  text-shadow: 0 0 3px rgba(0,0,0,0.25), 0 0 5px rgba(0,0,0,0.12);\n  text-decoration: none;\n}\n.title:hover {\n    cursor:pointer;\n}\n.del {\n  position:absolute;top: 3em;right:3em;\n}\n.del:hover {\n  cursor:pointer;\n}\nnav {\n  display:block;\n  background-color: #fff;\n  margin-bottom: 1.5em;\n\n}\nnav ul {\n    list-style-type: none;\n    margin: 0;\n    padding: 0;\n    display:block;\n    background-color: #fff;\n    text-indent:0;\n}\nnav ul li{\n    display:inline-block;\n    min-width: 3em;\n    font-size: 130%;\n    background-color:#fff;\n    color:black;\n    padding: 1rem 1rem;\n    text-align: center;\n}\nnav a, .noLink {\n  color:black;\n  text-decoration: none;\n}\nnav ul li.active:hover {\n  background-color: #f0f0f0;\n  transition: box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);\n  transition-delay: 0.2s;\n  cursor:pointer;\n}\nnav a:hover{\n    color:black;\n}\nnav a:visited, .noLink:visited  {\n  color:black;\n}\n\n.logoff {\n  background: url(" + __webpack_require__("../../../../../src/app/img/exit-app.svg") + ")no-repeat center center;\n}\n.home {\n    background: url(" + __webpack_require__("../../../../../src/app/img/home.svg") + ")no-repeat center center;\n}\n\n.card {\n  background: #fff;\n  border-radius: 2px;\n  display: inline-block;\n  margin: 1rem;\n  position: relative;\n  padding: 0 3rem 3rem 0;\n}\n\n.card-1 {\n  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);\n  transition: all 0.3s cubic-bezier(.25,.8,.25,1);\n}\n\n.card-1:hover {\n  box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);\n}\n\n.card-2 {\n  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);\n}\n\n.card-3 {\n  box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);\n}\n\n.card-4 {\n  box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);\n}\n\n.card-5 {\n  box-shadow: 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);\n}\n\n.pane {\n  background: #fff;\n  border-radius: 2px;\n  margin: 0 1rem 1rem 0;\n  position: relative;\n  padding: 2em;\n  transition: all 0.3s cubic-bezier(.25,.8,.25,1);\n  box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);\n}\n.pane:hover {\n box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);\n}\n\n\n/* Material style */\nbutton {\n  border: none;\n  cursor: pointer;\n  color: white;\n  padding: 1.2rem 3.5rem;\n  border-radius: 2px;\n  font-size: 130%;\n  box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);\n  background: #2196F3;\n}\nbutton:hover {\n box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);\n}\n\n/* Ripple magic */\nbutton{\n  position: relative;\n  overflow: hidden;\n}\n\nbutton:after {\n  content: '';\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  width: 5px;\n  height: 5px;\n  background: rgba(255, 255, 255, .5);\n  opacity: 0;\n  border-radius: 100%;\n  -webkit-transform: scale(1, 1) translate(-50%);\n          transform: scale(1, 1) translate(-50%);\n  -webkit-transform-origin: 50% 50%;\n          transform-origin: 50% 50%;\n}\n\n@-webkit-keyframes ripple {\n  0% {\n    -webkit-transform: scale(20, 20);\n            transform: scale(20, 20);\n    opacity: 1;\n  }\n  20% {\n    -webkit-transform: scale(60, 60);\n            transform: scale(60, 60);\n    opacity: 1;\n  }\n  100% {\n    opacity: 0;\n    -webkit-transform: scale(90, 90);\n            transform: scale(90, 90);\n  }\n}\n\n@keyframes ripple {\n  0% {\n    -webkit-transform: scale(20, 20);\n            transform: scale(20, 20);\n    opacity: 1;\n  }\n  20% {\n    -webkit-transform: scale(60, 60);\n            transform: scale(60, 60);\n    opacity: 1;\n  }\n  100% {\n    opacity: 0;\n    -webkit-transform: scale(90, 90);\n            transform: scale(90, 90);\n  }\n}\n\nbutton:focus:not(:active)::after {\n  -webkit-animation: ripple 1s ease-out;\n          animation: ripple 1s ease-out;\n}\n\n.switch-input {\n  display: none;\n}\n.switch-label {\n  position: relative;\n  display: inline-block;\n  min-width: 112px;\n  cursor: pointer;\n  font-weight: 500;\n  text-align: left;\n  margin: 16px;\n  padding: 16px 0 16px 44px;\n}\n.switch-label:before, .switch-label:after {\n  content: \"\";\n  position: absolute;\n  margin: 0;\n  outline: 0;\n  top: 50%;\n  -webkit-transform: translate(0, -50%);\n  transform: translate(0, -50%);\n  transition: all 0.3s ease;\n}\n.switch-label:before {\n  left: 1px;\n  width: 34px;\n  height: 14px;\n  background-color: #9E9E9E;\n  border-radius: 8px;\n}\n.switch-label:after {\n  left: 0;\n  width: 20px;\n  height: 20px;\n  background-color: #FAFAFA;\n  border-radius: 50%;\n  box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.14), 0 2px 2px 0 rgba(0, 0, 0, 0.098), 0 1px 5px 0 rgba(0, 0, 0, 0.084);\n}\n.switch-label .toggle--on {\n  display: none;\n}\n.switch-label .toggle--off {\n  display: inline-block;\n}\n.switch-input:checked + .switch-label:before {\n  background-color: #A5D6A7;\n}\n.switch-input:checked + .switch-label:after {\n  background-color: #4CAF50;\n  -webkit-transform: translate(80%, -50%);\n  transform: translate(80%, -50%);\n}\n.switch-input:checked + .switch-label .toggle--on {\n  display: inline-block;\n}\n.switch-input:checked + .switch-label .toggle--off {\n  display: none;\n}\n\n.group \t\t\t  {\n  position:relative;\n  margin-bottom:1em;\n  width:90%;\n}\n.md-input \t\t\t\t{\n  font-size:18px;\n  padding:10px 10px 10px 5px;\n  display:block;\n  border:none;\n  border-bottom:1px solid #757575;\n}\n.md-input, .bar {\n  width:100%;\n}\n.md-input:focus \t\t{ outline:none; }\n\n/* LABEL ======================================= */\n.md-input-label \t\t\t\t {\n  color:#999;\n  font-size:18px;\n  font-weight:normal;\n  position:absolute;\n  pointer-events:none;\n  left:5px;\n  top:10px;\n  transition:0.2s ease all;\n  -moz-transition:0.2s ease all;\n  -webkit-transition:0.2s ease all;\n}\n\n/* active state */\n.md-input:focus ~ .md-input-label, .md-input:valid ~ .md-input-label \t\t{\n  top:-20px;\n  font-size:14px;\n  color:#5264AE;\n}\n\n/* BOTTOM BARS ================================= */\n.bar \t{ position:relative; display:block;}\n.bar:before, .bar:after \t{\n  content:'';\n  height:2px;\n  width:0;\n  bottom:1px;\n  position:absolute;\n  background:#5264AE;\n  transition:0.2s ease all;\n  -moz-transition:0.2s ease all;\n  -webkit-transition:0.2s ease all;\n}\n.bar:before {\n  left:50%;\n}\n.bar:after {\n  right:50%;\n}\n\n/* active state */\n.md-input:focus ~ .bar:before, .md-input:focus ~ .bar:after {\n  width:50%;\n}\n\n/* HIGHLIGHTER ================================== */\n.highlight {\n  position:absolute;\n  height:60%;\n  width:100px;\n  top:25%;\n  left:0;\n  pointer-events:none;\n  opacity:0.5;\n}\n\n/* active state */\n  .md-input:focus ~ .highlight {\n  -webkit-animation:inputHighlighter 0.3s ease;\n  animation:inputHighlighter 0.3s ease;\n}\n\n/* ANIMATIONS ================ */\n@-webkit-keyframes inputHighlighter {\n\tfrom { background:#5264AE; }\n  to \t{ width:0; background:transparent; }\n}\n@keyframes inputHighlighter {\n\tfrom { background:#5264AE; }\n  to \t{ width:0; background:transparent; }\n}\n.L {\n  width:18.3em;\n  list-style-type: none;\n  text-decoration: none;\n  padding: 5px;\n  line-height: 1em;\n  display:block;\n}\n.LNO{padding: 0;\nmargin:0;\nmargin-bottom:.1em;\n\n}\n.LBadge {\n  width:3em;\n  padding: .8em;\n  font-size: small;\n  border-radius: 2px 2px 2px 2px;\n  margin:0 .5em 0 0;\n}\n.LB-Blue{\n  color: white;\n  background-color: #4285f4;\n}\n.LB-Green{\n  background-color: #0f9d58;\n  color: #fff;\n}\n.LB.Red{\n  background-color: #ef5a4a;\n  color: #fff;\n}\n.LPane {\nwidth:17.2em;\nmin-height: 1.8em;\npadding: .5em .5em .5em .5em;\nbackground-color: #EEE;\nmargin-bottom: .2em;\nvertical-align: middle;\nbox-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);\n}\n.LText {\n  margin: .7em .5em 0 .3em;\n  overflow: hidden;\n  width:11.6em;\n}\n.LPane:hover {\n  color: #607D8B;\n  background-color: #DDD;\n  left: .1em;\n  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);\n  cursor:pointer;\n}\nli.selected\n.LPane{\n  color: black;\n  background-color: #CCCCCC;\n  left: .1em;\n  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);\n}\nli.selected\n.LPane:hover{\n  background-color: #b3b3b3 !important;\n  color: black;\n  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);\n}\n\n  .leftbar {\n    display:block;\n    float:left;\n    width:20em;\n  }\n\n  .widthnexttobar {\n    margin-right: 0;\n    width: calc(100% - 29em);\n  }\n\n  .button > paper-ripple {\n       border-radius: 2px;\n       overflow: hidden;\n     }\n\n     .button.narrow {\n       width: 8em;\n     }\n     .button.small {\n       width: 8em;\n       padding: .5em 1em;\n       font-size: 100%;\n       box-shadow: 0 3px 6px rgba(0,0,0,0.23), 0 3px 6px rgba(0,0,0,0.30);\n     }\n     .button.medium {\n       width: 15.2em;\n       padding: .5em 1em;\n       margin-left: 5px;\n       font-size: 120%;\n       box-shadow: 0 3px 6px rgba(0,0,0,0.23), 0 3px 6px rgba(0,0,0,0.30);\n\n     }\n    .button.medium:hover, .button.small:hover {\n      box-shadow: 0 3px 4px rgba(0,0,0,0.13), 0 3px 6px rgba(0,0,0,0.20);\n    }\n\n\n     .button.grey {\n       background-color: #eee;\n       color:black;\n     }\n\n     .button.blue {\n       background-color: #4285f4;\n       color: #fff;\n     }\n     .button.red {\n       background-color: #ef5a4a;\n       color: #fff;\n     }\n\n     .button.green {\n       background-color: #0f9d58;\n       color: #fff;\n     }\n\n     .button.raised {\n       transition: box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);\n       transition-delay: 0.2s;\n       box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);\n     }\n\n     .button.raised:active {\n       box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.2);\n       transition-delay: 0s;\n     }\n     .floatleft {\n      float:left;\n      }\n      .floatright {\n       float:right;\n      }\n      .clearfix {\n        clear:both;\n      }\n       .bemerkungen {\n         list-style-type: none;\n       }\n\n\n      .headerpicture{\n        background: url(" + __webpack_require__("../../../../../src/app/img/background.jpg") + ")no-repeat center left;\n        background-size: contain;\n        background-size: 100% auto;\n        width: 100%;\n        background-position: left;\n      }\n", ""]);
+exports.push([module.i, "\n.status {\n  position: absolute;\n  display:block;\n  width: 20%;\n  padding: 1em 2%;\n  top: .5em;\n  right:38%;\n  background-color: rgba(0,0,0, 0.50);\n  color:white;\n  border-radius: 2px;\n}\n\n.spinner {\n  margin: 0 auto;\n  width: 70px;\n  text-align: center;\n}\n\n.spinner > div {\n  width: 18px;\n  height: 18px;\n  background-color: #333;\n\n  border-radius: 100%;\n  display: inline-block;\n  -webkit-animation: sk-bouncedelay 1.4s infinite ease-in-out both;\n  animation: sk-bouncedelay 1.4s infinite ease-in-out both;\n}\n\n.spinner .bounce1 {\n  -webkit-animation-delay: -0.32s;\n  animation-delay: -0.32s;\n}\n\n.spinner .bounce2 {\n  -webkit-animation-delay: -0.16s;\n  animation-delay: -0.16s;\n}\n\n@-webkit-keyframes sk-bouncedelay {\n  0%, 80%, 100% { -webkit-transform: scale(0) }\n  40% { -webkit-transform: scale(1.0) }\n}\n\n@keyframes sk-bouncedelay {\n  0%, 80%, 100% {\n    -webkit-transform: scale(0);\n    transform: scale(0);\n  } 40% {\n    -webkit-transform: scale(1.0);\n    transform: scale(1.0);\n  }\n}\n\nbody {\n  background: #e2e1e0;\n  font-famliy:Roboto-Medium;\n}\nbutton,html,input,select,textarea {\n font-family:Roboto,Helvetica Neue,sans-serif\n}\nh1 {\n    font-size: 300%;\n}\n\nh2 {\n    font-size: 250%;\n}\nh3 {\n  margin: .8em 0 .2em 8px;\n  font-size: 200%\n}\n\ntextarea {\n  resize: none;\n\tdisplay: block;\n\twidth: 100%;\n\tborder: 0;\n\tpadding: 10px 5px;\n  background: white no-repeat;\n  /*\n  * IMPORTANT PART HERE\n  */\n\n  /* 2 imgs : 1px gray line (normal state) AND 2px green line (focus state) */\n  background-image: linear-gradient(to bottom, #1abc9c, #1abc9c), linear-gradient(to bottom, silver, silver);\n  /* sizes for the 2 images (default state) */\n  background-size: 0 2px, 100% 1px;\n  /* positions for the 2 images. Change both \"50%\" to \"0%\" or \"100%\" and tri again */\n  background-position: 50% 100%, 50% 100%;\n\n  /* animation solely on background-size */\n  transition: background-size 0.3s cubic-bezier(0.64, 0.09, 0.08, 1);\n\n  }\n\n  textarea:focus{\n    /* sizes for the 2 images (focus state) */\n  \tbackground-size: 100% 2px, 100% 1px;\n  \toutline: none;\n  }\n\n.title{\n  color: #f0f0f0;\n  text-shadow: 0 0 3px rgba(0,0,0,0.25), 0 0 5px rgba(0,0,0,0.12);\n  text-decoration: none;\n}\n.title:hover {\n    cursor:pointer;\n}\n.del {\n  position:absolute;top: 3em;right:3em;\n}\n.del:hover {\n  cursor:pointer;\n}\nnav {\n  display:block;\n  background-color: #fff;\n  margin-bottom: 1.5em;\n\n}\nnav ul {\n    list-style-type: none;\n    margin: 0;\n    padding: 0;\n    display:block;\n    background-color: #fff;\n    text-indent:0;\n}\nnav ul li{\n    display:inline-block;\n    min-width: 3em;\n    font-size: 130%;\n    background-color:#fff;\n    color:black;\n    padding: 1rem 1rem;\n    text-align: center;\n}\nnav a, .noLink {\n  color:black;\n  text-decoration: none;\n}\nnav ul li.active:hover {\n  background-color: #f0f0f0;\n  transition: box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);\n  transition-delay: 0.2s;\n  cursor:pointer;\n}\nnav a:hover{\n    color:black;\n}\nnav a:visited, .noLink:visited  {\n  color:black;\n}\n\n.card {\n  background: #fff;\n  border-radius: 2px;\n  display: inline-block;\n  margin: 1rem;\n  position: relative;\n  padding: 0 3rem 3rem 0;\n}\n\n.card-1 {\n  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);\n  transition: all 0.3s cubic-bezier(.25,.8,.25,1);\n}\n\n.card-1:hover {\n  box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);\n}\n\n.card-2 {\n  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);\n}\n\n.card-3 {\n  box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);\n}\n\n.card-4 {\n  box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);\n}\n\n.card-5 {\n  box-shadow: 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);\n}\n\n.pane {\n  background: #fff;\n  border-radius: 2px;\n  margin: 0 1rem 1rem 0;\n  position: relative;\n  padding: 2em;\n  transition: all 0.3s cubic-bezier(.25,.8,.25,1);\n  box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);\n}\n.pane:hover {\n box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);\n}\n\n\n.path {\n  stroke-dasharray: 187;\n  stroke-dashoffset: 0;\n  -webkit-transform-origin: center;\n          transform-origin: center;\n}\n\n@-webkit-keyframes colors {\n\t0% { stroke: #4285F4; }\n\t25% { stroke: #DE3E35; }\n\t50% { stroke: #F7C223; }\n\t75% { stroke: #1B9A59; }\n  100% { stroke: #4285F4; }\n}\n\n@keyframes colors {\n\t0% { stroke: #4285F4; }\n\t25% { stroke: #DE3E35; }\n\t50% { stroke: #F7C223; }\n\t75% { stroke: #1B9A59; }\n  100% { stroke: #4285F4; }\n}\n\n@-webkit-keyframes dash {\n 0% { stroke-dashoffset: 187; }\n 50% {\n   stroke-dashoffset: 187/4;\n   -webkit-transform:rotate(135deg);\n           transform:rotate(135deg);\n }\n 100% {\n   stroke-dashoffset: 187;\n   -webkit-transform:rotate(450deg);\n           transform:rotate(450deg);\n }\n}\n\n@keyframes dash {\n 0% { stroke-dashoffset: 187; }\n 50% {\n   stroke-dashoffset: 187/4;\n   -webkit-transform:rotate(135deg);\n           transform:rotate(135deg);\n }\n 100% {\n   stroke-dashoffset: 187;\n   -webkit-transform:rotate(450deg);\n           transform:rotate(450deg);\n }\n}\n\n/* Material style */\nbutton {\n  border: none;\n  cursor: pointer;\n  color: white;\n  padding: 1.2rem 3.5rem;\n  border-radius: 2px;\n  font-size: 130%;\n  box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);\n  background: #2196F3;\n}\nbutton:hover {\n box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);\n}\n\n/* Ripple magic */\nbutton{\n  position: relative;\n  overflow: hidden;\n}\n\nbutton:after {\n  content: '';\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  width: 5px;\n  height: 5px;\n  background: rgba(255, 255, 255, .5);\n  opacity: 0;\n  border-radius: 100%;\n  -webkit-transform: scale(1, 1) translate(-50%);\n          transform: scale(1, 1) translate(-50%);\n  -webkit-transform-origin: 50% 50%;\n          transform-origin: 50% 50%;\n}\n\n@-webkit-keyframes ripple {\n  0% {\n    -webkit-transform: scale(20, 20);\n            transform: scale(20, 20);\n    opacity: 1;\n  }\n  20% {\n    -webkit-transform: scale(60, 60);\n            transform: scale(60, 60);\n    opacity: 1;\n  }\n  100% {\n    opacity: 0;\n    -webkit-transform: scale(90, 90);\n            transform: scale(90, 90);\n  }\n}\n\n@keyframes ripple {\n  0% {\n    -webkit-transform: scale(20, 20);\n            transform: scale(20, 20);\n    opacity: 1;\n  }\n  20% {\n    -webkit-transform: scale(60, 60);\n            transform: scale(60, 60);\n    opacity: 1;\n  }\n  100% {\n    opacity: 0;\n    -webkit-transform: scale(90, 90);\n            transform: scale(90, 90);\n  }\n}\n\nbutton:focus:not(:active)::after {\n  -webkit-animation: ripple 1s ease-out;\n          animation: ripple 1s ease-out;\n}\n\n.switch-input {\n  display: none;\n}\n.switch-label {\n  position: relative;\n  display: inline-block;\n  min-width: 112px;\n  cursor: pointer;\n  font-weight: 500;\n  text-align: left;\n  margin: 16px;\n  padding: 16px 0 16px 44px;\n}\n.switch-label:before, .switch-label:after {\n  content: \"\";\n  position: absolute;\n  margin: 0;\n  outline: 0;\n  top: 50%;\n  -webkit-transform: translate(0, -50%);\n  transform: translate(0, -50%);\n  transition: all 0.3s ease;\n}\n.switch-label:before {\n  left: 1px;\n  width: 34px;\n  height: 14px;\n  background-color: #9E9E9E;\n  border-radius: 8px;\n}\n.switch-label:after {\n  left: 0;\n  width: 20px;\n  height: 20px;\n  background-color: #FAFAFA;\n  border-radius: 50%;\n  box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.14), 0 2px 2px 0 rgba(0, 0, 0, 0.098), 0 1px 5px 0 rgba(0, 0, 0, 0.084);\n}\n.switch-label .toggle--on {\n  display: none;\n}\n.switch-label .toggle--off {\n  display: inline-block;\n}\n.switch-input:checked + .switch-label:before {\n  background-color: #A5D6A7;\n}\n.switch-input:checked + .switch-label:after {\n  background-color: #4CAF50;\n  -webkit-transform: translate(80%, -50%);\n  transform: translate(80%, -50%);\n}\n.switch-input:checked + .switch-label .toggle--on {\n  display: inline-block;\n}\n.switch-input:checked + .switch-label .toggle--off {\n  display: none;\n}\n\n.group \t\t\t  {\n  position:relative;\n  margin-bottom:1em;\n  width:90%;\n}\n.md-input \t\t\t\t{\n  font-size:18px;\n  padding:10px 10px 10px 5px;\n  display:block;\n  border:none;\n  border-bottom:1px solid #757575;\n}\n.md-input, .bar {\n  width:100%;\n}\n.md-input:focus \t\t{ outline:none; }\n\n/* LABEL ======================================= */\n.md-input-label \t\t\t\t {\n  color:#999;\n  font-size:18px;\n  font-weight:normal;\n  position:absolute;\n  pointer-events:none;\n  left:5px;\n  top:10px;\n  transition:0.2s ease all;\n  -moz-transition:0.2s ease all;\n  -webkit-transition:0.2s ease all;\n}\n\n/* active state */\n.md-input:focus ~ .md-input-label, .md-input:valid ~ .md-input-label \t\t{\n  top:-20px;\n  font-size:14px;\n  color:#5264AE;\n}\n\n/* BOTTOM BARS ================================= */\n.bar \t{ position:relative; display:block;}\n.bar:before, .bar:after \t{\n  content:'';\n  height:2px;\n  width:0;\n  bottom:1px;\n  position:absolute;\n  background:#5264AE;\n  transition:0.2s ease all;\n  -moz-transition:0.2s ease all;\n  -webkit-transition:0.2s ease all;\n}\n.bar:before {\n  left:50%;\n}\n.bar:after {\n  right:50%;\n}\n\n/* active state */\n.md-input:focus ~ .bar:before, .md-input:focus ~ .bar:after {\n  width:50%;\n}\n\n/* HIGHLIGHTER ================================== */\n.highlight {\n  position:absolute;\n  height:60%;\n  width:100px;\n  top:25%;\n  left:0;\n  pointer-events:none;\n  opacity:0.5;\n}\n\n/* active state */\n  .md-input:focus ~ .highlight {\n  -webkit-animation:inputHighlighter 0.3s ease;\n  animation:inputHighlighter 0.3s ease;\n}\n\n/* ANIMATIONS ================ */\n@-webkit-keyframes inputHighlighter {\n\tfrom { background:#5264AE; }\n  to \t{ width:0; background:transparent; }\n}\n@keyframes inputHighlighter {\n\tfrom { background:#5264AE; }\n  to \t{ width:0; background:transparent; }\n}\n.L {\n  width:18.3em;\n  list-style-type: none;\n  text-decoration: none;\n  padding: 5px;\n  line-height: 1em;\n  display:block;\n}\n.LNO{padding: 0;\nmargin:0;\nmargin-bottom:.1em;\n\n}\n.LBadge {\n  width:3em;\n  padding: .8em;\n  font-size: small;\n  border-radius: 2px 2px 2px 2px;\n  margin:0 .5em 0 0;\n}\n.LB-Blue{\n  color: white;\n  background-color: #4285f4;\n}\n.LB-Green{\n  background-color: #0f9d58;\n  color: #fff;\n}\n.LB.Red{\n  background-color: #ef5a4a;\n  color: #fff;\n}\n.LPane {\nwidth:17.2em;\nmin-height: 1.8em;\npadding: .5em .5em .5em .5em;\nbackground-color: #EEE;\nmargin-bottom: .2em;\nvertical-align: middle;\nbox-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);\n}\n.LText {\n  margin: .7em .5em 0 .3em;\n  overflow: hidden;\n  width:11.6em;\n}\n.LPane:hover {\n  color: #607D8B;\n  background-color: #DDD;\n  left: .1em;\n  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);\n  cursor:pointer;\n}\nli.selected\n.LPane{\n  color: black;\n  background-color: #CCCCCC;\n  left: .1em;\n  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);\n}\nli.selected\n.LPane:hover{\n  background-color: #b3b3b3 !important;\n  color: black;\n  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);\n}\n\n  .leftbar {\n    display:block;\n    float:left;\n    width:20em;\n  }\n\n  .widthnexttobar {\n    margin-right: 0;\n    width: calc(100% - 29em);\n  }\n\n  .button > paper-ripple {\n       border-radius: 2px;\n       overflow: hidden;\n     }\n\n     .button.narrow {\n       width: 8em;\n     }\n     .button.small {\n       width: 8em;\n       padding: .5em 1em;\n       font-size: 100%;\n       box-shadow: 0 3px 6px rgba(0,0,0,0.23), 0 3px 6px rgba(0,0,0,0.30);\n     }\n     .button.medium {\n       width: 15.2em;\n       padding: .5em 1em;\n       margin-left: 5px;\n       font-size: 120%;\n       box-shadow: 0 3px 6px rgba(0,0,0,0.23), 0 3px 6px rgba(0,0,0,0.30);\n\n     }\n    .button.medium:hover, .button.small:hover {\n      box-shadow: 0 3px 4px rgba(0,0,0,0.13), 0 3px 6px rgba(0,0,0,0.20);\n    }\n\n\n     .button.grey {\n       background-color: #eee;\n       color:black;\n     }\n\n     .button.blue {\n       background-color: #4285f4;\n       color: #fff;\n     }\n     .button.red {\n       background-color: #ef5a4a;\n       color: #fff;\n     }\n\n     .button.green {\n       background-color: #0f9d58;\n       color: #fff;\n     }\n\n     .button.raised {\n       transition: box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);\n       transition-delay: 0.2s;\n       box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);\n     }\n\n     .button.raised:active {\n       box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.2);\n       transition-delay: 0s;\n     }\n     .floatleft {\n      float:left;\n      }\n      .floatright {\n       float:right;\n      }\n      .clearfix {\n        clear:both;\n      }\n       .bemerkungen {\n         list-style-type: none;\n       }\n\n\n      .headerpicture{\n        background: url(" + __webpack_require__("../../../../../src/app/img/background.jpg") + ")no-repeat center left;\n        background-size: contain;\n        background-size: 100% auto;\n        width: 100%;\n        background-position: left;\n      }\n", ""]);
 
 // exports
 
@@ -519,14 +550,14 @@ module.exports = __webpack_require__.p + "fontawesome-webfont.fee66e712a8a08eef5
 /***/ "../../../../../src/app/html/classes.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<navbar></navbar>\n\n<div style=\"width: 64%;margin: 0 auto;align:center;\">\n<div class=\"pane leftbar\">\n<h2>{{title}}</h2>\n<button class=\"button medium red\" type=\"button\" (click) = \"toggleNewClass()\"><i class=\"fa fa-plus\" aria-hidden=\"true\"></i>\n</button>\n<ul class=\"L \" >\n<li class=\"LNO\" *ngFor=\"let klasse of classes\"\n  [class.selected]=\"klasse === selectedClass\"\n  (click)=\"selectClass(klasse)\">\n  <div class=\"floatleft pane LPane\">\n    <div *ngIf=\"isGlobalClass(klasse.id); then B else NB\"></div>\n    <ng-template #B>\n    <div class=\"LBadge LB-Green floatleft\" style=\"text-align:center\" (click)=\"selectKlasse(klasse)\">{{klasse.level}}</div>\n    <div class=\"LText floatleft\">{{klasse.name}}</div>\n    </ng-template>\n    <ng-template #NB>\n    <div class=\"LBadge LB-Blue floatleft\" style=\"text-align:center\" (click)=\"selectKlasse(klasse)\">{{klasse.level}}</div>\n    <div class=\"LText floatleft\">{{klasse.name}}</div>\n    </ng-template>\n  </div>\n</li>\n</ul></div>\n<div class=\"floatleft widthnexttobar\">\n\n<div *ngIf=\"showNewClass\" class=\"pane floatleft\" style=\"width:100%;\">\n<h3>Neue Klasse erstellen</h3>\n<div class=\"group floatleft\" style=\"margin-top:3em;margin-bottom:1em;\">\n    <input #name type=\"text\" class=\"md-input\" required >\n    <span class=\"highlight\"></span>\n    <span class=\"bar\"></span>\n    <label class=\"md-input-label\">Name</label>\n  </div>\n  <div class=\"group floatleft\" style=\"margin-top:3em;margin-bottom:1em;\">\n      <input #level type=\"text\" class=\"md-input\" required >\n      <span class=\"highlight\"></span>\n      <span class=\"bar\"></span>\n      <label class=\"md-input-label\">Stufe</label>\n    </div>\n      <div class=\"group floatleft\" style=\"margin-top:3em;margin-bottom:1em;\">\n          <input #belongsToSchool type=\"number\" class=\"md-input\" required>\n          <span class=\"highlight\"></span>\n          <span class=\"bar\"></span>\n          <label class=\"md-input-label\">Schule: {{this.getSchoolName(belongsToSchool.value)}}</label>\n        </div>\n        <div class=\"floatright\">\n        <button class=\"button small grey\" type=\"button\" (click)=\"cancelNewClass()\">Abbrechen</button>\n        <button class=\"button small blue\" style=\"margin: 0 .3em;\" type=\"button\" (click)=\"newClass(name.value, level.value, belongsToSchool.value)\">Anlegen</button>\n        </div>\n</div>\n\n\n<div *ngIf=\"selectedClass\" class=\"pane floatleft\" style=\"width:100%;\">\n<h3 style=\"width:90%;\">Details: {{selectedClass.name}}</h3>\n<div class=\"del\"><i class=\"fa fa-trash\" aria-hidden=\"true\" style=\"font-weight:600;font-size:150%;\" (click)=\"deleteClass(selectedClass)\"></i></div>\n<div class=\"clearfix\"></div>\n<div class=\"group\" style=\"margin-top:3em;margin-bottom:1em;\">\n    <input #a class=\"md-input\" type=\"text\" required [(ngModel)]=\"selectedClass.name\" (change)=\"updateClass(selectedClass,'name',a.value)\">\n    <span class=\"highlight\"></span>\n    <span class=\"bar\"></span>\n    <label class=\"md-input-label\">Name</label>\n  </div>\n  <div  class=\"group\" style=\"margin-top:3em;margin-bottom:1em;\">\n      <input #b class=\"md-input\" type=\"text\" required [(ngModel)]=\"selectedClass.level\" (change)=\"updateClass(selectedClass,'level',b.value)\">\n      <span class=\"highlight\"></span>\n      <span class=\"bar\"></span>\n      <label class=\"md-input-label\">Stufe</label>\n    </div>\n    <div class=\"group\" style=\"margin-top:3em;margin-bottom:1em;\">\n        <input class=\"md-input\" type=\"number\">\n        <span class=\"highlight\"></span>\n        <span class=\"bar\"></span>\n        <label class=\"md-input-label\">Zugeordnet zu Schule: {{this.getSchoolName(selectedClass.belongsToSchool)}}</label>\n      </div>\n  <div style=\"margin-left:5px\"><label>id: </label>{{selectedClass.id}}</div>\n</div>\n\n<!--\n<div *ngIf=\"selectedClass\" class=\"pane floatleft widthnexttobar\">\n<h3> Lehrer</h3>\n<ul class=\"listing\">\n  <li class=\"nobadge\" *ngFor=\"let teacher of teachers\"\n    [class.selected]=\"teacher === selectedTeacher\" [routerLink]=\"['/teacher',teacher.id]\" routerLinkActive=\"active\">{{teacher.firstname}} {{teacher.lastname}}\n</li></ul></div>\n-->\n\n<div *ngIf=\"selectedClass\" class=\"floatleft\" style=\"width:100%;\">\n\n<div *ngIf=\"isStudents(); then schueler else keineschueler\"></div>\n\n<ng-template #keineschueler>\n<div class=\"pane floatleft\" style=\"width:100%;margin-bottom:.3em;\">\n<span style=\"width:40%;font-weight:600;font-size:130%;\">Keine Schüler in dieser Klasse</span>\n</div>\n</ng-template>\n\n<ng-template #schueler>\n<div class=\"pane floatleft\" style=\"padding-top: 1em;padding-bottom:3em;margin-bottom:.3em;width:100%\">\n<h3>Schüler dieser Klasse</h3>\n<ul class=\"L\">\n<li class=\"LNO\" *ngFor=\"let student of students\"\n  [class.selected]=\"student === selectedStudent\" [routerLink]=\"['/student',student.id]\" routerLinkActive=\"active\">\n  <div class=\"floatleft pane LPane\">\n  <div class=\"LText floatleft\">{{student.firstname}} {{student.lastname}}</div>\n  </div>\n</li></ul></div>\n</ng-template>\n\n</div>\n"
+module.exports = "<navbar></navbar>\n<div *ngIf=\"wait\" style=\"text-align:center;font-size:120%;height:3em;margin-top:4em;\">\n  <div class=\"spinner\">\n  <div class=\"bounce1\"></div>\n  <div class=\"bounce2\"></div>\n  <div class=\"bounce3\"></div>\n</div></div>\n<div *ngIf=\"!wait\" style=\"width: 64%;margin: 0 auto;align:center;\">\n<div class=\"pane leftbar\">\n<h2>{{title}}</h2>\n<button class=\"button medium red\" type=\"button\" (click) = \"toggleNewClass()\"><i class=\"fa fa-plus\" aria-hidden=\"true\"></i>\n</button>\n<ul class=\"L \" >\n<li class=\"LNO\" *ngFor=\"let klasse of classes\"\n  [class.selected]=\"klasse === selectedClass\"\n  (click)=\"selectClass(klasse)\">\n  <div class=\"floatleft pane LPane\" (click)=\"selectKlasse(klasse)\">\n    <div *ngIf=\"isGlobalClass(klasse.id); then B else NB\"></div>\n    <ng-template #B>\n    <div class=\"LBadge LB-Green floatleft\" style=\"text-align:center\" >{{klasse.level}}</div>\n    <div class=\"LText floatleft\">{{klasse.name}}</div>\n    </ng-template>\n    <ng-template #NB>\n    <div class=\"LBadge LB-Blue floatleft\" style=\"text-align:center\">{{klasse.level}}</div>\n    <div class=\"LText floatleft\">{{klasse.name}}</div>\n    </ng-template>\n  </div>\n</li>\n</ul></div>\n<div class=\"floatleft widthnexttobar\">\n\n<div *ngIf=\"showNewClass\" class=\"pane floatleft\" style=\"width:100%;\">\n<h3>Neue Klasse erstellen</h3>\n<div class=\"group floatleft\" style=\"margin-top:3em;margin-bottom:1em;\">\n    <input #name type=\"text\" class=\"md-input\" required >\n    <span class=\"highlight\"></span>\n    <span class=\"bar\"></span>\n    <label class=\"md-input-label\">Name</label>\n  </div>\n  <div class=\"group floatleft\" style=\"margin-top:3em;margin-bottom:1em;\">\n      <input #level type=\"text\" class=\"md-input\" required >\n      <span class=\"highlight\"></span>\n      <span class=\"bar\"></span>\n      <label class=\"md-input-label\">Stufe</label>\n    </div>\n      <div class=\"group floatleft\" style=\"margin-top:3em;margin-bottom:1em;\">\n          <input #belongsToSchool type=\"number\" class=\"md-input\" required  [value]=\"getCurrentSchool().id\">\n          <span class=\"highlight\"></span>\n          <span class=\"bar\"></span>\n          <label class=\"md-input-label\">Schule: {{this.getSchoolName(belongsToSchool.value)}}</label>\n        </div>\n        <div class=\"floatright\">\n        <button class=\"button small grey\" type=\"button\" (click)=\"cancelNewClass()\">Abbrechen</button>\n        <button class=\"button small blue\" style=\"margin: 0 .3em;\" type=\"button\" (click)=\"newClass(name.value, level.value, belongsToSchool.value)\">Anlegen</button>\n        </div>\n</div>\n\n\n<div *ngIf=\"selectedClass\" class=\"pane floatleft\" style=\"width:100%;\">\n<h3 style=\"width:90%;\">Details: {{selectedClass.name}}</h3>\n<div class=\"del\"><i class=\"fa fa-trash\" aria-hidden=\"true\" style=\"font-weight:600;font-size:150%;\" (click)=\"deleteClass(selectedClass)\"></i></div>\n<div class=\"clearfix\"></div>\n<div class=\"group\" style=\"margin-top:3em;margin-bottom:1em;\">\n    <input #a class=\"md-input\" type=\"text\" required [(ngModel)]=\"selectedClass.name\" (change)=\"updateClass(selectedClass,'name',a.value)\">\n    <span class=\"highlight\"></span>\n    <span class=\"bar\"></span>\n    <label class=\"md-input-label\">Name</label>\n  </div>\n  <div  class=\"group\" style=\"margin-top:3em;margin-bottom:1em;\">\n      <input #b class=\"md-input\" type=\"text\" required [(ngModel)]=\"selectedClass.level\" (change)=\"updateClass(selectedClass,'level',b.value)\">\n      <span class=\"highlight\"></span>\n      <span class=\"bar\"></span>\n      <label class=\"md-input-label\">Stufe</label>\n    </div>\n    <div class=\"group\" style=\"margin-top:3em;margin-bottom:1em;\">\n        <!--<input class=\"md-input\" type=\"number\" required [(ngModel)]=\"selectedClass.belongsToSchool\">\n        <span class=\"highlight\"></span>\n        <span class=\"bar\"></span>-->\n        <label >Zugeordnet zu Schule: {{this.getSchoolName(selectedClass.belongsToSchool)}}</label>\n      </div>\n  <div style=\"margin-left:5px\"><label>id: </label>{{selectedClass.id}}</div>\n</div>\n\n<div *ngIf=\"selectedClass\" class=\"floatleft\" style=\"width:100%;\">\n\n<div *ngIf=\"isStudents(); then schueler else keineschueler\"></div>\n\n<ng-template #keineschueler>\n<div class=\"pane floatleft\" style=\"width:100%;margin-bottom:.3em;\">\n<span style=\"width:40%;font-weight:600;font-size:130%;\">Keine Schüler in dieser Klasse</span>\n</div>\n</ng-template>\n\n<ng-template #schueler>\n<div class=\"pane floatleft\" style=\"padding-top: 1em;padding-bottom:3em;margin-bottom:.3em;width:100%\">\n<h3>Schüler dieser Klasse</h3>\n<ul class=\"L\">\n<li class=\"LNO\" *ngFor=\"let student of students\"\n  [class.selected]=\"student === selectedStudent\" [routerLink]=\"['/student',student.id]\" routerLinkActive=\"active\">\n  <div class=\"floatleft pane LPane\">\n  <div class=\"LText floatleft\">{{student.firstname}} {{student.lastname}}</div>\n  </div>\n</li></ul></div>\n</ng-template>\n\n</div>\n"
 
 /***/ }),
 
 /***/ "../../../../../src/app/html/login.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "\n<div class=\"pane\" style=\"width:40%;margin: 1em auto 1em auto; padding: 3em 0 3em 0;overflow:hidden;\">\n<!--Title Part -->\n<div  style=\"text-align:center\">\n<h1 style=\"padding-top:50px;\">\n  {{title}}\n</h1>\n\n<!-- Replace this later -->\n<img  width=\"70%\" src=\"data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxOS4xLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiDQoJIHZpZXdCb3g9IjAgMCAyNTAgMjUwIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCAyNTAgMjUwOyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+DQo8c3R5bGUgdHlwZT0idGV4dC9jc3MiPg0KCS5zdDB7ZmlsbDojREQwMDMxO30NCgkuc3Qxe2ZpbGw6I0MzMDAyRjt9DQoJLnN0MntmaWxsOiNGRkZGRkY7fQ0KPC9zdHlsZT4NCjxnPg0KCTxwb2x5Z29uIGNsYXNzPSJzdDAiIHBvaW50cz0iMTI1LDMwIDEyNSwzMCAxMjUsMzAgMzEuOSw2My4yIDQ2LjEsMTg2LjMgMTI1LDIzMCAxMjUsMjMwIDEyNSwyMzAgMjAzLjksMTg2LjMgMjE4LjEsNjMuMiAJIi8+DQoJPHBvbHlnb24gY2xhc3M9InN0MSIgcG9pbnRzPSIxMjUsMzAgMTI1LDUyLjIgMTI1LDUyLjEgMTI1LDE1My40IDEyNSwxNTMuNCAxMjUsMjMwIDEyNSwyMzAgMjAzLjksMTg2LjMgMjE4LjEsNjMuMiAxMjUsMzAgCSIvPg0KCTxwYXRoIGNsYXNzPSJzdDIiIGQ9Ik0xMjUsNTIuMUw2Ni44LDE4Mi42aDBoMjEuN2gwbDExLjctMjkuMmg0OS40bDExLjcsMjkuMmgwaDIxLjdoMEwxMjUsNTIuMUwxMjUsNTIuMUwxMjUsNTIuMUwxMjUsNTIuMQ0KCQlMMTI1LDUyLjF6IE0xNDIsMTM1LjRIMTA4bDE3LTQwLjlMMTQyLDEzNS40eiIvPg0KPC9nPg0KPC9zdmc+DQo=\">\n</div>\n\n<!--Login Button -->\n<div style=\"text-align:center\">\n<div class=\"group floatleft\" style=\"margin-top:3em;margin-bottom:1em;\">\n  <input #a type=\"text\" class=\"md-input\" required>\n  <span class=\"highlight\"></span>\n  <span class=\"bar\"></span>\n  <label class=\"md-input-label\">E-Mail Adresse hier eingeben</label>\n</div>\n<button type=\"button\" style=\"margin-top:8em;\" (click)=\"login(a.value)\">Login</button>\n</div>\n\n</div>\n"
+module.exports = "\n<div class=\"pane\" style=\"width:40%;max-width:720px;margin: 1em auto 1em auto; padding: 3em 0 3em 0;overflow:hidden;\">\n<!--Title Part -->\n<div  style=\"text-align:center\">\n<h1 style=\"padding-top:50px;\">\n  {{title}}\n</h1>\n\n<!-- Replace this later -->\n<i style=\"font-size:2000%;\" class=\"fa fa-graduation-cap\" aria-hidden=\"true\"></i>\n\n</div>\n\n<div style=\"height:3em;\">\n<div *ngIf=\"wait\" style=\"text-align:center;font-size:120%;\">\n  <div class=\"spinner\">\n  <div class=\"bounce1\"></div>\n  <div class=\"bounce2\"></div>\n  <div class=\"bounce3\"></div>\n</div></div></div>\n\n<!--Login Button -->\n<div style=\"text-align:center;margin-top:2em;\">\n<div class=\"group\" style=\"margin: 2em auto;max-width:300px;\">\n  <input #a type=\"text\" class=\"md-input\" required>\n  <span class=\"highlight\"></span>\n  <span class=\"bar\"></span>\n  <label class=\"md-input-label\">E-Mail Adresse hier eingeben</label>\n</div>\n  <div class=\"group\" style=\"margin: 2em auto;max-width:300px;\">\n  <input #b type=\"password\" class=\"md-input\" required>\n  <span class=\"highlight\"></span>\n  <span class=\"bar\"></span>\n  <label class=\"md-input-label\">Passwort</label>\n</div>\n<button type=\"button\" style=\"margin-top:2em;\" (click)=\"getLoginUser(a.value, b.value)\"><i class=\"fa fa-sign-in\" aria-hidden=\"true\"></i> Login</button>\n</div>\n\n</div>\n"
 
 /***/ }),
 
@@ -540,14 +571,14 @@ module.exports = "<navbar></navbar>\n\n<div style=\"width: 64%;margin: 0 auto;al
 /***/ "../../../../../src/app/html/student.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<navbar></navbar>\n\n<div style=\"width: 64%;margin: 0 auto;align:center;\">\n\n  <div class=\"pane leftbar\">\n    <h2>{{title}}</h2>\n    <button class=\"button medium red\" type=\"button\" (click)=\"toggleNewStudent()\"><i class=\"fa fa-plus\" aria-hidden=\"true\"></i>\n</button>\n    <ul class=\"L\">\n      <li class=\"LNO\" *ngFor=\"let student of students\" [class.selected]=\"student === selectedStudent\" (click)=\"onSelect(student)\">\n        <div class=\"floatleft pane LPane\">\n          <div class=\"LText floatleft\">{{student.lastname}}, {{student.firstname}}</div>\n        </div>\n      </li>\n    </ul>\n  </div>\n\n  <div class=\"floatleft widthnexttobar\">\n    <div *ngIf=\"showNewStudent\" class=\"pane floatleft\" style=\"width:100%;\">\n      <h3>Neuen Schüler erfassen</h3>\n      <div class=\"group floatleft\" style=\"margin-top:3em;margin-bottom:1em;\">\n        <input #a type=\"text\" class=\"md-input\" required [value]=\"NewStudent.firstname\">\n        <span class=\"highlight\"></span>\n        <span class=\"bar\"></span>\n        <label class=\"md-input-label\">Vorname</label>\n      </div>\n      <div class=\"group floatleft\" style=\"margin-top:3em;margin-bottom:1em;\">\n        <input #b type=\"text\" class=\"md-input\" required [value]=\"NewStudent.lastname\">\n        <span class=\"highlight\"></span>\n        <span class=\"bar\"></span>\n        <label class=\"md-input-label\">Nachname</label>\n      </div>\n      <div class=\"group floatleft\" style=\"margin-top:3em;margin-bottom:1em;\">\n        <input #c type=\"number\" class=\"md-input\" required [value]=\"NewStudent.belongsToClass\">\n        <span class=\"highlight\"></span>\n        <span class=\"bar\"></span>\n        <label class=\"md-input-label\">Klasse</label>\n      </div>\n      <div class=\"floatright\">\n        <button class=\"button small grey\" type=\"button\" (click)=\"cancelNewStudent()\">Abbrechen</button>\n        <button class=\"button small blue\" style=\"margin: 0 .3em;\" type=\"button\" (click)=\"newStudent(a.value, b.value, c.value)\">Anlegen</button>\n      </div>\n    </div>\n\n    <div class=\"floatleft\" *ngIf=\"selectedStudent\" style=\"width:100%;\">\n      <div class=\"pane floatleft\" style=\"width:100%\">\n        <h3 style=\"width:90%;\">Details: {{selectedStudent.firstname}} {{selectedStudent.lastname}}</h3>\n        <div class=\"del\"><i class=\"fa fa-trash\" aria-hidden=\"true\" style=\"font-weight:600;font-size:150%;\" (click)=\"deleteStudent(selectedStudent)\"></i></div>\n        <div class=\"group\" style=\"margin-top:3em;margin-bottom:1em;\">\n          <input #a class=\"md-input\" type=\"text\" required [(ngModel)]=\"selectedStudent.firstname\" (change)=\"updateStudent(selectedStudent,'firstname',a.value)\">\n          <span class=\"highlight\"></span>\n          <span class=\"bar\"></span>\n          <label class=\"md-input-label\">Vorname</label>\n        </div>\n        <div class=\"group\" style=\"margin-top:3em;margin-bottom:1em;\">\n          <input #b class=\"md-input\" type=\"text\" required [(ngModel)]=\"selectedStudent.lastname\" (change)=\"updateStudent(selectedStudent,'lastname',b.value)\">\n          <span class=\"highlight\"></span>\n          <span class=\"bar\"></span>\n          <label class=\"md-input-label\">Nachname</label>\n        </div>\n        <div class=\"group\" style=\"margin-top:3em;margin-bottom:1em;\">\n          <input #c class=\"md-input\" type=\"number\" required [(ngModel)]=\"selectedStudent.belongsToClass\" (change)=\"updateStudent(selectedStudent,'belongsToClass',c.value)\">\n          <span class=\"highlight\"></span>\n          <span class=\"bar\"></span>\n          <label class=\"md-input-label\">Zugeordnet zu Klasse: {{getClassName(selectedStudent.belongsToClass)}}</label>\n        </div>\n        <div style=\"margin-left:5px\"><label>id: </label>{{selectedStudent.id}}</div>\n        <div class=\"clearfix\"></div>\n        <div class=\"floatright\">\n          <button class=\"button small blue\" style=\"margin: 0 .3em;\" type=\"button\" (click)=\"toggleNewNote()\">Neue Bemerkung</button>\n        </div>\n      </div>\n\n      <div *ngIf=\"showNewNote\" class=\"pane floatleft\" style=\"width:100%;\">\n        <h3>Neue Bemerkung verfassen</h3>\n        <div class=\"group floatleft\" style=\"margin-top:3em;margin-bottom:1em;\">\n          <label class=\"md-input-label\">Zugeordnet zu Schüler: {{selectedStudent.firstname}} {{selectedStudent.lastname}}</label>\n        </div>\n        <div class=\"group floatleft\" style=\"margin-top:3em;margin-bottom:1em;\">\n          <label class=\"md-input-label\">Eingestellt von: {{getLoginName()}}</label>\n        </div>\n        <div class=\"clearfix\"></div>\n        <textarea #a style=\"width:90%;height:7em;border:none;padding-top:1em;align:center;margin-top:2em\">\n      </textarea>\n        <div class=\"floatright\">\n          <button class=\"button small grey\" type=\"button\" (click)=\"cancelNewNote()\">Abbrechen</button>\n          <button class=\"button small blue\" style=\"margin: 0 .3em;\" type=\"button\" (click)=\"newNote(a.value, getNow() ,getLoginId(), selectedStudent.id)\">Anlegen</button>\n        </div>\n      </div>\n\n      <div *ngIf=\"isNotes(); then Bemerkungen else keineBemerkungen\"></div>\n\n      <ng-template #keineBemerkungen>\n        <div class=\"pane floatleft\" style=\"width:100%;margin-bottom:.3em;\">\n          <span style=\"width:40%;font-weight:600;font-size:130%;\">Noch keine Bemerkungen</span>\n        </div>\n      </ng-template>\n\n      <ng-template #Bemerkungen>\n        <div class=\"pane floatleft\" style=\"padding-top: 1em;padding-bottom:1em;margin-bottom:.3em;width:100%\">\n          <h3>Bemerkungen</h3>\n        </div>\n\n        <div *ngFor=\"let note of notes\" class=\"pane floatleft\" style=\"width:100%;margin-bottom:.3em;\">\n          <div class=\"floatleft\" style=\"width:40%;font-weight:600;\">{{note.timestamp | date: 'dd.MM.yyyy HH:mm'}}</div>\n          <div class=\"floatleft\" style=\"width:40%;font-weight:600;\">erstellt von: {{this.getTeacherName(this.GetTeacherService.getTeacher(note.authorTeacherId))}}</div>\n          <div class=\"del\"><i class=\"fa fa-trash\" aria-hidden=\"true\" style=\"font-weight:600;font-size:150%;\" (click)=\"deleteNote(note)\"></i></div>\n          <div class=\"clearfix\"></div>\n          <textarea #a style=\"width:90%;height:7em;border:none;padding-top:1em;align:center;\" [class.selected]=\"note === selectedNote\" readonly [(ngModel)]=\"note.text\">\n      </textarea>\n        </div>\n      </ng-template>\n    </div>\n  </div>\n\n</div>\n"
+module.exports = "<navbar></navbar>\n\n<div style=\"width: 64%;margin: 0 auto;align:center;\">\n\n  <div class=\"pane leftbar\">\n    <h2>{{title}}</h2>\n    <button class=\"button medium red\" type=\"button\" (click)=\"toggleNewStudent()\"><i class=\"fa fa-plus\" aria-hidden=\"true\"></i>\n</button>\n    <ul class=\"L\">\n      <li class=\"LNO\" *ngFor=\"let student of students\" [class.selected]=\"student === selectedStudent\" (click)=\"onSelect(student)\">\n        <div class=\"floatleft pane LPane\">\n          <div class=\"LText floatleft\">{{student.lastname}}, {{student.firstname}}</div>\n        </div>\n      </li>\n    </ul>\n  </div>\n\n  <div class=\"floatleft widthnexttobar\">\n    <div style=\"height:3em;\">\n    <div *ngIf=\"wait\" style=\"text-align:center;font-size:120%;\">\n      <div class=\"spinner\">\n      <div class=\"bounce1\"></div>\n      <div class=\"bounce2\"></div>\n      <div class=\"bounce3\"></div>\n    </div></div></div>\n    <div *ngIf=\"showNewStudent\" class=\"pane floatleft\" style=\"width:100%;\">\n      <h3>Neuen Schüler erfassen</h3>\n      <div class=\"group floatleft\" style=\"margin-top:3em;margin-bottom:1em;\">\n        <input #a type=\"text\" class=\"md-input\" required [value]=\"NewStudent.firstname\">\n        <span class=\"highlight\"></span>\n        <span class=\"bar\"></span>\n        <label class=\"md-input-label\">Vorname</label>\n      </div>\n      <div class=\"group floatleft\" style=\"margin-top:3em;margin-bottom:1em;\">\n        <input #b type=\"text\" class=\"md-input\" required [value]=\"NewStudent.lastname\">\n        <span class=\"highlight\"></span>\n        <span class=\"bar\"></span>\n        <label class=\"md-input-label\">Nachname</label>\n      </div>\n      <div class=\"group floatleft\" style=\"margin-top:3em;margin-bottom:1em;\">\n        <input #c type=\"number\" class=\"md-input\" required [value]=\"getCurrentClass().id\">\n        <span class=\"highlight\"></span>\n        <span class=\"bar\"></span>\n        <label class=\"md-input-label\">Klasse</label>\n      </div>\n      <div class=\"floatright\">\n        <button class=\"button small grey\" type=\"button\" (click)=\"cancelNewStudent()\">Abbrechen</button>\n        <button class=\"button small blue\" style=\"margin: 0 .3em;\" type=\"button\" (click)=\"newStudent(a.value, b.value, c.value)\">Anlegen</button>\n      </div>\n    </div>\n\n    <div class=\"floatleft\" *ngIf=\"selectedStudent\" style=\"width:100%;\">\n      <div class=\"pane floatleft\" style=\"width:100%\">\n        <h3 style=\"width:90%;\">Details: {{selectedStudent.firstname}} {{selectedStudent.lastname}}</h3>\n        <div class=\"del\"><i class=\"fa fa-trash\" aria-hidden=\"true\" style=\"font-weight:600;font-size:150%;\" (click)=\"deleteStudent(selectedStudent)\"></i></div>\n        <div class=\"group\" style=\"margin-top:3em;margin-bottom:1em;\">\n          <input #a class=\"md-input\" type=\"text\" required [(ngModel)]=\"selectedStudent.firstname\" (change)=\"updateStudent(selectedStudent,'firstname',a.value)\">\n          <span class=\"highlight\"></span>\n          <span class=\"bar\"></span>\n          <label class=\"md-input-label\">Vorname</label>\n        </div>\n        <div class=\"group\" style=\"margin-top:3em;margin-bottom:1em;\">\n          <input #b class=\"md-input\" type=\"text\" required [(ngModel)]=\"selectedStudent.lastname\" (change)=\"updateStudent(selectedStudent,'lastname',b.value)\">\n          <span class=\"highlight\"></span>\n          <span class=\"bar\"></span>\n          <label class=\"md-input-label\">Nachname</label>\n        </div>\n        <div class=\"group\" style=\"margin-top:3em;margin-bottom:1em;\">\n          <input #c class=\"md-input\" type=\"number\" required [(ngModel)]=\"selectedStudent.belongsToClass\" (change)=\"updateStudent(selectedStudent,'belongsToClass',c.value)\">\n          <span class=\"highlight\"></span>\n          <span class=\"bar\"></span>\n          <label class=\"md-input-label\">Zugeordnet zu Klasse: {{getClassName(selectedStudent.belongsToClass)}}</label>\n        </div>\n        <div style=\"margin-left:5px\"><label>id: </label>{{selectedStudent.id}}</div>\n        <div class=\"clearfix\"></div>\n        <div class=\"floatright\">\n          <button class=\"button small blue\" style=\"margin: 0 .3em;\" type=\"button\" (click)=\"toggleNewNote()\">Neue Bemerkung</button>\n        </div>\n      </div>\n\n      <div *ngIf=\"showNewNote\" class=\"pane floatleft\" style=\"width:100%;\">\n        <h3>Neue Bemerkung verfassen</h3>\n        <div class=\"group floatleft\" style=\"margin-top:3em;margin-bottom:1em;\">\n          <label class=\"md-input-label\">Zugeordnet zu Schüler: {{selectedStudent.firstname}} {{selectedStudent.lastname}}</label>\n        </div>\n        <div class=\"group floatleft\" style=\"margin-top:3em;margin-bottom:1em;\">\n          <label class=\"md-input-label\">Eingestellt von: {{getLoginName()}}</label>\n        </div>\n        <div class=\"clearfix\"></div>\n        <textarea #a style=\"width:90%;height:7em;border:none;padding-top:1em;align:center;margin-top:2em\">\n      </textarea>\n        <div class=\"floatright\">\n          <button class=\"button small grey\" type=\"button\" (click)=\"cancelNewNote()\">Abbrechen</button>\n          <button class=\"button small blue\" style=\"margin: 0 .3em;\" type=\"button\" (click)=\"newNote(a.value, getNow() ,getLoginId(), selectedStudent.id)\">Anlegen</button>\n        </div>\n      </div>\n\n      <div *ngIf=\"isNotes(); then Bemerkungen else keineBemerkungen\"></div>\n\n      <ng-template #keineBemerkungen>\n        <div class=\"pane floatleft\" style=\"width:100%;margin-bottom:.3em;\">\n          <span style=\"width:40%;font-weight:600;font-size:130%;\">Noch keine Bemerkungen</span>\n        </div>\n      </ng-template>\n\n      <ng-template #Bemerkungen>\n        <div class=\"pane floatleft\" style=\"padding-top: 1em;padding-bottom:1em;margin-bottom:.3em;width:100%\">\n          <h3>Bemerkungen</h3>\n        </div>\n\n        <div *ngFor=\"let note of notes\" class=\"pane floatleft\" style=\"width:100%;margin-bottom:.3em;\">\n          <div class=\"floatleft\" style=\"width:40%;font-weight:600;\">{{note.timestamp | date: 'dd.MM.yyyy HH:mm'}}</div>\n          <div class=\"floatleft\" style=\"width:40%;font-weight:600;\">erstellt von: {{this.getTeacherName(note.authorTeacherId)}}</div>\n          <div class=\"del\"><i class=\"fa fa-trash\" aria-hidden=\"true\" style=\"font-weight:600;font-size:150%;\" (click)=\"deleteNote(note)\"></i></div>\n          <div class=\"clearfix\"></div>\n          <textarea #a style=\"width:90%;height:7em;border:none;padding-top:1em;align:center;\" [class.selected]=\"note === selectedNote\" readonly [(ngModel)]=\"note.text\">\n      </textarea>\n        </div>\n      </ng-template>\n    </div>\n  </div>\n\n</div>\n"
 
 /***/ }),
 
 /***/ "../../../../../src/app/html/teacher.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<navbar></navbar>\n\n<div style=\"width: 64%;margin: 0 auto;align:center;\">\n<div class=\"pane leftbar\">\n<h2>{{title}}</h2>\n<button class=\"button medium red\" type=\"button\" (click) = \"toggleNewTeacher()\"><i class=\"fa fa-plus\" aria-hidden=\"true\"></i>\n</button>\n<ul class=\"L\">\n<li class=\"LNO\" *ngFor=\"let teacher of teachers\"\n  [class.selected]=\"teacher === selectedTeacher\"\n  (click)=\"selectTeacher(teacher)\">\n  <div class=\"floatleft pane LPane\">\n  <div *ngIf=\"isLoginTeacher(teacher.id); then B else NB\"></div>\n  <ng-template #B>\n  <div class=\"LBadge LB-Green floatleft\" style=\"text-align:center\" (click)=\"selectLoginTeacher(teacher)\">&nbsp;</div>\n  <div class=\"LText floatleft\">{{teacher.lastname}}, {{teacher.firstname}}</div>\n  </ng-template>\n  <ng-template #NB>\n  <div class=\"LBadge LB-Blue floatleft\" style=\"text-align:center\" (click)=\"selectLoginTeacher(teacher)\">&nbsp;</div>\n  <div class=\"LText floatleft\">{{teacher.lastname}}, {{teacher.firstname}}</div>\n  </ng-template>\n  </div>\n</li>\n</ul>\n</div>\n\n    <div class=\" floatleft widthnexttobar\">\n\n    <div *ngIf=\"showNewTeacher\" class=\"pane floatleft\" style=\"width:100%;\">\n      <h3>Neuen Lehrer erfassen</h3>\n        <div  class=\"group floatleft\" style=\"margin-top:3em;margin-bottom:1em;\">\n          <input #a type=\"text\" class=\"md-input\" required [value]=\"NewTeacher.firstname\">\n          <span class=\"highlight\"></span>\n          <span class=\"bar\"></span>\n          <label class=\"md-input-label\">Vorname</label>\n        </div>\n        <div class=\"group floatleft\" style=\"margin-top:3em;margin-bottom:1em;\">\n            <input #b type=\"text\" class=\"md-input\" required [value]=\"NewTeacher.lastname\">\n            <span class=\"highlight\"></span>\n            <span class=\"bar\"></span>\n            <label class=\"md-input-label\">Nachname</label>\n        </div>\n        <div class=\"group floatleft\" style=\"margin-top:3em;margin-bottom:1em;\">\n              <input #c type=\"text\" class=\"md-input\" required [value]=\"NewTeacher.mailAddress\">\n              <span class=\"highlight\"></span>\n              <span class=\"bar\"></span>\n              <label class=\"md-input-label\">EMail Adresse</label>\n        </div>\n       <div class=\"group floatleft\" style=\"margin-top:3em;margin-bottom:1em;\">\n                <input #d type=\"password\" class=\"md-input\" required [value]=\"NewTeacher.password\">\n                <span class=\"highlight\"></span>\n                <span class=\"bar\"></span>\n                <label class=\"md-input-label\">Passwort</label>\n              </div>\n            <div class=\"group floatleft\" style=\"margin-top:3em;margin-bottom:1em;\">\n                <input #e type=\"number\" class=\"md-input\" required [value]=\"NewTeacher.belongsToSchool\">\n                <span class=\"highlight\"></span>\n                <span class=\"bar\"></span>\n                <label class=\"md-input-label\">Schule</label>\n              </div>\n      <div class=\"floatright\">\n      <button class=\"button small grey\" type=\"button\" (click)=\"cancelNewTeacher()\">Abbrechen</button>\n      <button class=\"button small blue\" style=\"margin: 0 .3em;\" type=\"button\" (click)=\"newTeacher(a.value,b.value,c.value,d.value,e.value)\">Anlegen</button>\n      </div>\n    </div>\n\n    <div *ngIf=\"selectedTeacher\" class=\"pane\" style=\"width:100%;\">\n    <h3 style=\"width:90%;\">Details: {{selectedTeacher.firstname}} {{selectedTeacher.lastname}}</h3>\n    <div class=\"del\"><i class=\"fa fa-trash\" aria-hidden=\"true\" style=\"font-weight:600;font-size:150%;\" (click)=\"deleteTeacher(selectedTeacher)\"></i></div>\n      <div class=\"group\" style=\"margin-top:3em;margin-bottom:1em;\">\n          <input #a class=\"md-input\" type=\"text\" required [(ngModel)]=\"selectedTeacher.firstname\" (change)=\"updateTeacher(selectedTeacher,'firstname',a.value)\">\n          <span class=\"highlight\"></span>\n          <span class=\"bar\"></span>\n          <label class=\"md-input-label\">Vorname</label>\n        </div>\n        <div  class=\"group\" style=\"margin-top:3em;margin-bottom:1em;\">\n            <input #b class=\"md-input\" type=\"text\" required [(ngModel)]=\"selectedTeacher.lastname\" (change)=\"updateTeacher(selectedTeacher,'lastname',b.value)\">\n            <span class=\"highlight\"></span>\n            <span class=\"bar\"></span>\n            <label class=\"md-input-label\">Nachname</label>\n          </div>\n          <div  class=\"group\" style=\"margin-top:3em;margin-bottom:1em;\">\n              <input #c class=\"md-input\" type=\"text\" required [(ngModel)]=\"selectedTeacher.mailAddress\" (change)=\"updateTeacher(selectedTeacher,'mailAddress',c.value)\">\n              <span class=\"highlight\"></span>\n              <span class=\"bar\"></span>\n              <label class=\"md-input-label\">E-Mail Adresse</label>\n            </div>\n            <div  class=\"group\" style=\"margin-top:3em;margin-bottom:1em;\">\n                <input class=\"md-input\" type=\"number\">\n                <span class=\"highlight\"></span>\n                <span class=\"bar\"></span>\n                <label class=\"md-input-label\">zugeordnete Schule: {{this.getSchoolName(selectedTeacher.belongsToSchool)}}</label>\n              </div>\n        <div style=\"margin-left:5px\"><label>id: </label>{{selectedTeacher.id}}</div>\n      </div>\n\n      </div>\n\n</div>\n"
+module.exports = "<navbar></navbar>\n\n<div style=\"width: 64%;margin: 0 auto;align:center;\">\n<div class=\"pane leftbar\">\n<h2>{{title}}</h2>\n<button class=\"button medium red\" type=\"button\" (click) = \"toggleNewTeacher()\"><i class=\"fa fa-plus\" aria-hidden=\"true\"></i>\n</button>\n<ul class=\"L\">\n<li class=\"LNO\" *ngFor=\"let teacher of teachers\"\n  [class.selected]=\"teacher === selectedTeacher\"\n  (click)=\"selectTeacher(teacher)\">\n  <div class=\"floatleft pane LPane\">\n  <div *ngIf=\"isLoginTeacher(teacher.id); then B else NB\"></div>\n  <ng-template #B>\n  <div class=\"LBadge LB-Green floatleft\" style=\"text-align:center\" (click)=\"selectLoginTeacher(teacher)\">&nbsp;</div>\n  <div class=\"LText floatleft\">{{teacher.lastname}}, {{teacher.firstname}}</div>\n  </ng-template>\n  <ng-template #NB>\n  <div class=\"LBadge LB-Blue floatleft\" style=\"text-align:center\" (click)=\"selectLoginTeacher(teacher)\">&nbsp;</div>\n  <div class=\"LText floatleft\">{{teacher.lastname}}, {{teacher.firstname}}</div>\n  </ng-template>\n  </div>\n</li>\n</ul>\n</div>\n\n    <div class=\" floatleft widthnexttobar\">\n\n    <div *ngIf=\"showNewTeacher\" class=\"pane floatleft\" style=\"width:100%;\">\n      <h3>Neuen Lehrer erfassen</h3>\n        <div  class=\"group floatleft\" style=\"margin-top:3em;margin-bottom:1em;\">\n          <input #a type=\"text\" class=\"md-input\" required [value]=\"NewTeacher.firstname\">\n          <span class=\"highlight\"></span>\n          <span class=\"bar\"></span>\n          <label class=\"md-input-label\">Vorname</label>\n        </div>\n        <div class=\"group floatleft\" style=\"margin-top:3em;margin-bottom:1em;\">\n            <input #b type=\"text\" class=\"md-input\" required [value]=\"NewTeacher.lastname\">\n            <span class=\"highlight\"></span>\n            <span class=\"bar\"></span>\n            <label class=\"md-input-label\">Nachname</label>\n        </div>\n        <div class=\"group floatleft\" style=\"margin-top:3em;margin-bottom:1em;\">\n              <input #c type=\"text\" class=\"md-input\" required [value]=\"NewTeacher.mailAddress\">\n              <span class=\"highlight\"></span>\n              <span class=\"bar\"></span>\n              <label class=\"md-input-label\">EMail Adresse</label>\n        </div>\n       <div class=\"group floatleft\" style=\"margin-top:3em;margin-bottom:1em;\">\n                <input #d type=\"password\" class=\"md-input\" required [value]=\"NewTeacher.password\">\n                <span class=\"highlight\"></span>\n                <span class=\"bar\"></span>\n                <label class=\"md-input-label\">Passwort</label>\n              </div>\n            <div class=\"group floatleft\" style=\"margin-top:3em;margin-bottom:1em;\">\n                <input #e type=\"number\" class=\"md-input\" required [value]=\"getCurrentSchool().id\">\n                <span class=\"highlight\"></span>\n                <span class=\"bar\"></span>\n                <label class=\"md-input-label\">Schule</label>\n              </div>\n      <div class=\"floatright\">\n      <button class=\"button small grey\" type=\"button\" (click)=\"cancelNewTeacher()\">Abbrechen</button>\n      <button class=\"button small blue\" style=\"margin: 0 .3em;\" type=\"button\" (click)=\"newTeacher(a.value,b.value,c.value,d.value,e.value)\">Anlegen</button>\n      </div>\n    </div>\n\n    <div *ngIf=\"selectedTeacher\" class=\"pane\" style=\"width:100%;\">\n    <h3 style=\"width:90%;\">Details: {{selectedTeacher.firstname}} {{selectedTeacher.lastname}}</h3>\n    <div class=\"del\"><i class=\"fa fa-trash\" aria-hidden=\"true\" style=\"font-weight:600;font-size:150%;\" (click)=\"deleteTeacher(selectedTeacher)\"></i></div>\n      <div class=\"group\" style=\"margin-top:3em;margin-bottom:1em;\">\n          <input #a class=\"md-input\" type=\"text\" required [(ngModel)]=\"selectedTeacher.firstname\" (change)=\"updateTeacher(selectedTeacher,'firstname',a.value)\">\n          <span class=\"highlight\"></span>\n          <span class=\"bar\"></span>\n          <label class=\"md-input-label\">Vorname</label>\n        </div>\n        <div  class=\"group\" style=\"margin-top:3em;margin-bottom:1em;\">\n            <input #b class=\"md-input\" type=\"text\" required [(ngModel)]=\"selectedTeacher.lastname\" (change)=\"updateTeacher(selectedTeacher,'lastname',b.value)\">\n            <span class=\"highlight\"></span>\n            <span class=\"bar\"></span>\n            <label class=\"md-input-label\">Nachname</label>\n          </div>\n          <div  class=\"group\" style=\"margin-top:3em;margin-bottom:1em;\">\n              <input #c class=\"md-input\" type=\"text\" required [(ngModel)]=\"selectedTeacher.mailAddress\" (change)=\"updateTeacher(selectedTeacher,'mailAddress',c.value)\">\n              <span class=\"highlight\"></span>\n              <span class=\"bar\"></span>\n              <label class=\"md-input-label\">E-Mail Adresse</label>\n            </div>\n            <div *ngIf=\"isLoginTeacher(selectedTeacher.id)\">\n              <div  class=\"group floatleft\" style=\"margin:3em 0 1em 0;width:70%;\">\n                  <input #PW class=\"md-input\" type=\"password\" required >\n                  <span class=\"highlight\"></span>\n                  <span class=\"bar\"></span>\n                  <label class=\"md-input-label\">Neues Passwort</label>\n                </div>\n                <div  class=\"group floatleft\" style=\"margin:3em 0 1em 5%;width:20%;\">\n                <button class=\"button small red floatleft\" style=\"width:100%;\" type=\"button\" (click)=\"updateTeacher(selectedTeacher,'password',PW.value)\">Neues Passwort</button>\n            </div></div>\n            <div class=\"clearfix\"></div>\n            <div  class=\"group\" style=\"margin-top:3em;margin-bottom:1em;\">\n                <!--<input class=\"md-input\" type=\"number\" required [(ngModel)]=\"selectedTeacher.belongsToSchool\" >\n                <span class=\"highlight\"></span>\n                <span class=\"\"></span> -->\n                <label class=\"\">zugeordnete Schule: {{this.getSchoolName(selectedTeacher.belongsToSchool)}}</label>\n              </div>\n        <div style=\"margin-left:5px\"><label>id: </label>{{selectedTeacher.id}}</div>\n      </div>\n\n      </div>\n\n</div>\n"
 
 /***/ }),
 
@@ -558,28 +589,17 @@ module.exports = __webpack_require__.p + "background.72729b2836257f9422ea.jpg";
 
 /***/ }),
 
-/***/ "../../../../../src/app/img/exit-app.svg":
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__.p + "exit-app.16769e5df82f8c43c38e.svg";
-
-/***/ }),
-
-/***/ "../../../../../src/app/img/home.svg":
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__.p + "home.d7397dd7ecdbe18e1856.svg";
-
-/***/ }),
-
 /***/ "../../../../../src/app/lib/functions.ts":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (immutable) */ __webpack_exports__["b"] = sort;
-/* unused harmony export find */
+/* unused harmony export sort */
+/* harmony export (immutable) */ __webpack_exports__["a"] = find;
 /* unused harmony export filter */
-/* harmony export (immutable) */ __webpack_exports__["a"] = handleError;
+/* harmony export (immutable) */ __webpack_exports__["b"] = handleError;
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_rxjs_Observable__ = __webpack_require__("../../../../rxjs/Observable.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_rxjs_Observable___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_rxjs_Observable__);
+
 function sort(array, key, order) {
     if (order == 'dsc') {
         return array.sort(function (b, a) {
@@ -602,9 +622,16 @@ function find(array, key, value) {
 function filter(array, key, value) {
     return array.filter(function (o) { return o[key] === value; });
 }
+/*
+export function handleError(error: any): Promise<any> {
+  console.error('[ERROR] => ', error);
+  return Promise.reject(1);
+}*/
 function handleError(error) {
-    console.error('[ERROR] => ', error);
-    return Promise.reject(1);
+    var errMsg = (error.message) ? error.message :
+        error.status ? error.status + " - " + error.statusText : 'Server error';
+    console.error(errMsg); // log to console instead
+    return __WEBPACK_IMPORTED_MODULE_0_rxjs_Observable__["Observable"].throw(errMsg);
 }
 //# sourceMappingURL=functions.js.map
 
@@ -635,39 +662,56 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 var LoginComponent = (function () {
-    function LoginComponent(routerImpl, globalLoginImpl, globalSchoolImpl, GetTeacherServiceImpl, GetSchoolServiceImpl) {
+    function LoginComponent(routerImpl, globalLoginImpl, globalSchoolImpl, globalStatusImpl, GetTeacherServiceImpl, GetSchoolServiceImpl) {
         this.routerImpl = routerImpl;
         this.globalLoginImpl = globalLoginImpl;
         this.globalSchoolImpl = globalSchoolImpl;
+        this.globalStatusImpl = globalStatusImpl;
         this.GetTeacherServiceImpl = GetTeacherServiceImpl;
         this.GetSchoolServiceImpl = GetSchoolServiceImpl;
         this.title = 'Studentnote';
         this.router = routerImpl;
         this.globalLogin = globalLoginImpl;
         this.globalSchool = globalSchoolImpl;
+        this.globalStatus = globalStatusImpl;
         this.GetTeacherService = GetTeacherServiceImpl;
         this.GetSchoolService = GetSchoolServiceImpl;
+        this.wait = false;
     }
-    LoginComponent.prototype.login = function (email) {
+    LoginComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        if (JSON.parse(localStorage.getItem('CurrentTeacher')) && JSON.parse(localStorage.getItem('CurrentTeacher')).id) {
+            this.teacher = JSON.parse(localStorage.getItem('CurrentTeacher'));
+            this.globalLogin.setLogin(this.teacher);
+            this.GetSchoolService.getSchool(this.teacher.belongsToSchool).subscribe(function (s) { _this.globalSchool.setSchool(s); });
+            this.router.navigate(['/home']);
+        }
+    };
+    LoginComponent.prototype.getLoginUser = function (email, password) {
+        var _this = this;
         if (email > "") {
-            //Google login will be accessible here. No Session implemented yet.
-            var teacher;
-            this.GetTeacherService.getTeacherByMail(email).then(function (t) { return teacher = t; });
-            console.log(teacher);
-            console.log(JSON.stringify(teacher));
-            /*if (!teacher){
-              alert(JSON.stringify(teacher));
-            }else {
-              this.globalLogin.setLogin(teacher);
-              var s : School;
-              this.GetSchoolService.getSchool(teacher.belongsToSchool).then(r => s=r);
-              this.globalSchool.setSchool(s);
-              this.router.navigate(['/home']);
-          
-            }*/
+            //Google login will be accessible here.
+            this.wait = true;
+            this.GetTeacherService.getTeacherByMail(email, password).subscribe(function (t) { _this.teacher = t; _this.globalLogin.setLogin(t); });
+            if (this.wait) {
+                setTimeout(function () { return _this.Login(); }, 3000);
+            }
         }
         else {
-            alert("Enter your Email address");
+            this.globalStatus.setStatus("Enter your Email address");
+        }
+    };
+    LoginComponent.prototype.Login = function () {
+        var _this = this;
+        this.wait = false;
+        console.log(this.teacher);
+        if (!(JSON.parse(localStorage.getItem('CurrentTeacher')) && JSON.parse(localStorage.getItem('CurrentTeacher')).id)) {
+            this.globalStatus.setStatus("No Permission");
+        }
+        else {
+            this.globalLogin.setLogin(this.teacher);
+            this.GetSchoolService.getSchool(this.teacher.belongsToSchool).subscribe(function (s) { console.log(s); _this.globalSchool.setSchool(s); });
+            this.router.navigate(['/home']);
         }
     };
     return LoginComponent;
@@ -678,10 +722,10 @@ LoginComponent = __decorate([
         template: __webpack_require__("../../../../../src/app/html/login.component.html"),
         styles: [__webpack_require__("../../../../../src/app/css/component.css")]
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["b" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["b" /* Router */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__service_local_service__["c" /* GlobalLogin */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__service_local_service__["c" /* GlobalLogin */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_2__service_local_service__["d" /* GlobalSchool */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__service_local_service__["d" /* GlobalSchool */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_3__service_get_service__["e" /* getTeacherService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__service_get_service__["e" /* getTeacherService */]) === "function" && _d || Object, typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_3__service_get_service__["c" /* getSchoolService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__service_get_service__["c" /* getSchoolService */]) === "function" && _e || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["b" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["b" /* Router */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__service_local_service__["c" /* GlobalLogin */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__service_local_service__["c" /* GlobalLogin */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_2__service_local_service__["d" /* GlobalSchool */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__service_local_service__["d" /* GlobalSchool */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_2__service_local_service__["e" /* GlobalStatus */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__service_local_service__["e" /* GlobalStatus */]) === "function" && _d || Object, typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_3__service_get_service__["e" /* getTeacherService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__service_get_service__["e" /* getTeacherService */]) === "function" && _e || Object, typeof (_f = typeof __WEBPACK_IMPORTED_MODULE_3__service_get_service__["c" /* getSchoolService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__service_get_service__["c" /* getSchoolService */]) === "function" && _f || Object])
 ], LoginComponent);
 
-var _a, _b, _c, _d, _e;
+var _a, _b, _c, _d, _e, _f;
 //# sourceMappingURL=login.component.js.map
 
 /***/ }),
@@ -692,7 +736,8 @@ var _a, _b, _c, _d, _e;
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return NavbarComponent; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__service_local_service__ = __webpack_require__("../../../../../src/app/service/local.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__service_local_service__ = __webpack_require__("../../../../../src/app/service/local.service.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -705,23 +750,35 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
+
 var NavbarComponent = (function () {
-    function NavbarComponent(globalSchoolImpl, globalLoginImpl, globalClassImpl) {
+    function NavbarComponent(globalSchoolImpl, globalLoginImpl, globalClassImpl, routerImpl) {
         this.globalSchoolImpl = globalSchoolImpl;
         this.globalLoginImpl = globalLoginImpl;
         this.globalClassImpl = globalClassImpl;
+        this.routerImpl = routerImpl;
         this.title = 'Studentnote';
         this.globalSchool = globalSchoolImpl;
         this.globalLogin = globalLoginImpl;
         this.globalClass = globalClassImpl;
+        this.router = routerImpl;
         this.ngOnInit();
     }
     NavbarComponent.prototype.ngOnInit = function () {
-        if (!this.globalLogin.getLogin()) {
+        if (!(JSON.parse(localStorage.getItem('CurrentTeacher')).id)) {
             this.logoff();
         }
     };
     NavbarComponent.prototype.ngOnDestroy = function () {
+    };
+    NavbarComponent.prototype.getCurrentTeacherName = function () {
+        var x = JSON.parse(localStorage.getItem('CurrentTeacher'));
+        if (x) {
+            return x.lastname;
+        }
+        else {
+            return "";
+        }
     };
     NavbarComponent.prototype.isGlobalSchool = function () {
         if (this.globalSchool.getSchool() != null) {
@@ -740,20 +797,23 @@ var NavbarComponent = (function () {
         }
     };
     NavbarComponent.prototype.logoff = function () {
-        location.href = "/loginPage";
+        localStorage.removeItem('CurrentTeacher');
+        localStorage.removeItem('CurrentSchool');
+        localStorage.removeItem('CurrentClass');
+        this.router.navigate(['/loginPage']);
     };
     return NavbarComponent;
 }());
 NavbarComponent = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["o" /* Component */])({
         selector: 'navbar',
-        template: "\n  <div class=\"pane headerpicture\" style=\"width: 64%;margin: 1.3em auto 1em auto;align:center;padding:2% 0 1% 0;\">\n\n  <div *ngIf=\"isGlobalSchool(); then  TitleWSchool  else Title\"></div>\n\n<ng-template #Title><h1 class=\"title\" style=\"margin:.6em;\" [routerLink]=\"['/home']\" routerLinkActive=\"active\">{{title}}</h1></ng-template>\n<ng-template #TitleWSchool><h1 class=\"title\" style=\"margin:.6em;\" [routerLink]=\"['/home']\" routerLinkActive=\"active\">{{title}} for {{this.globalSchool.getSchool().name}}</h1></ng-template>\n\n\n<nav class=\"pane\" style=\"padding: 0 0;margin: 0 0;\">\n<ul>\n    <li class=\"active floatleft\" [routerLink]=\"['/home']\" routerLinkActive=\"active\"><i class=\"fa fa-home\" aria-hidden=\"true\"></i></li>\n    <!--<li class=\"active floatleft\" [routerLink]=\"['/schools']\" routerLinkActive=\"active\">Schule</li>-->\n    <li *ngIf=\"isGlobalSchool()\" class=\"active floatleft\" [routerLink]=\"['/classes']\" routerLinkActive=\"active\">Klasse</li>\n    <li *ngIf=\"isGlobalSchool()\" class=\"active floatleft\" [routerLink]=\"['/teachers']\" routerLinkActive=\"active\">Lehrer</li>\n    <li *ngIf=\"isGlobalClass()\" class=\"active floatleft\" [routerLink]=\"['/students']\" routerLinkActive=\"active\">Sch\u00FCler</li>\n    <li style=\"\">&nbsp;</li>\n\n    <li class=\"active floatright\" (click)=\"logoff()\"><i class=\"fa fa-sign-out\" aria-hidden=\"true\"></i>\n</li>\n</ul>\n</nav>\n</div>\n\n",
+        template: "\n  <div class=\"pane headerpicture\" style=\"width: 64%;margin: 1.3em auto 1em auto;align:center;padding:2% 0 1% 0;\">\n\n  <div *ngIf=\"isGlobalSchool(); then  TitleWSchool  else Title\"></div>\n\n<ng-template #Title><h1 class=\"title\" style=\"margin:.6em;\" [routerLink]=\"['/home']\" routerLinkActive=\"active\">{{title}}</h1></ng-template>\n<ng-template #TitleWSchool><h1 class=\"title\" style=\"margin:.6em;\" [routerLink]=\"['/home']\" routerLinkActive=\"active\">{{title}} for {{this.globalSchool.getSchool().name}}</h1></ng-template>\n\n\n<nav class=\"pane\" style=\"padding: 0 0;margin: 0 0;\">\n<ul>\n    <li class=\"active floatleft\" [routerLink]=\"['/home']\" routerLinkActive=\"active\"><i class=\"fa fa-home\" aria-hidden=\"true\"></i></li>\n    <!--<li *ngIf=\"isGlobalSchool()\" class=\"active floatleft\" [routerLink]=\"['/classes']\" routerLinkActive=\"active\">Klassen</li>-->\n    <li *ngIf=\"isGlobalSchool()\" class=\"active floatleft\" [routerLink]=\"['/schools']\" routerLinkActive=\"active\">Schule</li>\n    <li *ngIf=\"isGlobalSchool()\" class=\"active floatleft\" [routerLink]=\"['/teachers']\" routerLinkActive=\"active\">Lehrer</li>\n    <li *ngIf=\"isGlobalClass()\" class=\"active floatleft\" [routerLink]=\"['/students']\" routerLinkActive=\"active\">Sch\u00FCler</li>\n    <li style=\"\">&nbsp;</li>\n\n    <li class=\"active floatright\" (click)=\"logoff()\">{{getCurrentTeacherName()}}<i style=\"margin-left:1em;\" class=\"fa fa-sign-out\" aria-hidden=\"true\"></i>\n</li>\n</ul>\n</nav>\n</div>\n\n",
         styles: [__webpack_require__("../../../../../src/app/css/component.css")]
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__service_local_service__["d" /* GlobalSchool */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__service_local_service__["d" /* GlobalSchool */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__service_local_service__["c" /* GlobalLogin */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__service_local_service__["c" /* GlobalLogin */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_1__service_local_service__["b" /* GlobalClass */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__service_local_service__["b" /* GlobalClass */]) === "function" && _c || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__service_local_service__["d" /* GlobalSchool */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__service_local_service__["d" /* GlobalSchool */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__service_local_service__["c" /* GlobalLogin */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__service_local_service__["c" /* GlobalLogin */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_2__service_local_service__["b" /* GlobalClass */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__service_local_service__["b" /* GlobalClass */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["b" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["b" /* Router */]) === "function" && _d || Object])
 ], NavbarComponent);
 
-var _a, _b, _c;
+var _a, _b, _c, _d;
 //# sourceMappingURL=navbar.component.js.map
 
 /***/ }),
@@ -809,6 +869,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var Root = (function () {
     function Root(globalstatusImpl) {
         this.globalstatusImpl = globalstatusImpl;
+        this.copy = "2017 | Lucas Wiemers, Sebastian Kurz";
         this.globalstatus = globalstatusImpl;
     }
     Root.prototype.isStatus = function () {
@@ -827,7 +888,7 @@ var Root = (function () {
 Root = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["o" /* Component */])({
         selector: 'root',
-        template: "\n<router-outlet></router-outlet>\n\n<div  *ngIf=\"isStatus()\" class=\"status\" (click)=\"unsetStatus()\">\n{{this.globalstatus.getStatus()}}\n</div>\n",
+        template: "\n<router-outlet></router-outlet>\n\n<div style=\"text-align:center;color:#b0b0b0;display:block;position:fixed;bottom:0;width:100%;height:2em;font-size:1,5em;\">\n&copy; {{copy}}\n</div>\n\n<div  *ngIf=\"isStatus()\" class=\"status\" style=\"text-align:center;\" (click)=\"unsetStatus()\">\n{{this.globalstatus.getStatus()}}\n</div>\n",
         styles: [__webpack_require__("../../../../../src/app/css/component.css")]
     }),
     __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__service_local_service__["e" /* GlobalStatus */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__service_local_service__["e" /* GlobalStatus */]) === "function" && _a || Object])
@@ -844,12 +905,13 @@ var _a;
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SchoolComponent; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__types_types__ = __webpack_require__("../../../../../src/app/types/types.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__service_local_service__ = __webpack_require__("../../../../../src/app/service/local.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__service_post_service__ = __webpack_require__("../../../../../src/app/service/post.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__service_get_service__ = __webpack_require__("../../../../../src/app/service/get.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__service_update_service__ = __webpack_require__("../../../../../src/app/service/update.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__service_delete_service__ = __webpack_require__("../../../../../src/app/service/delete.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_functions__ = __webpack_require__("../../../../../src/app/lib/functions.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__types_types__ = __webpack_require__("../../../../../src/app/types/types.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__service_local_service__ = __webpack_require__("../../../../../src/app/service/local.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__service_post_service__ = __webpack_require__("../../../../../src/app/service/post.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__service_get_service__ = __webpack_require__("../../../../../src/app/service/get.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__service_update_service__ = __webpack_require__("../../../../../src/app/service/update.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__service_delete_service__ = __webpack_require__("../../../../../src/app/service/delete.service.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -867,6 +929,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
+
 var SchoolComponent = (function () {
     function SchoolComponent(globalSchoolImpl, globalStatusImpl, PostSchoolServiceImpl, GetSchoolServiceImpl, UpdateSchoolServiceImpl, DeleteSchoolServiceImpl) {
         this.globalSchoolImpl = globalSchoolImpl;
@@ -875,6 +938,7 @@ var SchoolComponent = (function () {
         this.GetSchoolServiceImpl = GetSchoolServiceImpl;
         this.UpdateSchoolServiceImpl = UpdateSchoolServiceImpl;
         this.DeleteSchoolServiceImpl = DeleteSchoolServiceImpl;
+        this.schools = [];
         this.title = 'Liste der Schulen';
         this.globalSchool = globalSchoolImpl;
         this.globalStatus = globalStatusImpl;
@@ -883,11 +947,11 @@ var SchoolComponent = (function () {
         this.UpdateSchoolService = UpdateSchoolServiceImpl;
         this.DeleteSchoolService = DeleteSchoolServiceImpl;
         this.showNewSchool = false;
-        this.NewSchool = new __WEBPACK_IMPORTED_MODULE_1__types_types__["c" /* School */](null, null);
+        this.NewSchool = new __WEBPACK_IMPORTED_MODULE_2__types_types__["c" /* School */](null, null);
     }
     SchoolComponent.prototype.init = function () {
         var _this = this;
-        this.GetSchoolService.getSchools().then(function (s) { return _this.schools = s; }, function () { return location.href = "/noc"; });
+        this.GetSchoolService.getSchools().subscribe(function (s) { _this.schools = s; });
     };
     SchoolComponent.prototype.ngOnInit = function () {
         this.init();
@@ -920,47 +984,66 @@ var SchoolComponent = (function () {
         }
     };
     SchoolComponent.prototype.cancelNewSchool = function () {
-        this.NewSchool = new __WEBPACK_IMPORTED_MODULE_1__types_types__["c" /* School */](null, null);
+        this.NewSchool = new __WEBPACK_IMPORTED_MODULE_2__types_types__["c" /* School */](null, null);
         this.showNewSchool = false;
     };
     SchoolComponent.prototype.newSchool = function (name) {
+        var _this = this;
         if (name > "") {
-            var h;
-            this.PostSchoolService.postSchool(new __WEBPACK_IMPORTED_MODULE_1__types_types__["c" /* School */](null, name)).then(function (s) { return h = s; }, function () { return location.href = "/noc"; });
-            this.showNewSchool = false;
-            this.globalStatus.setStatus("Data submitted");
-            //fetch new data
-            this.init();
+            this.PostSchoolService.postSchool(new __WEBPACK_IMPORTED_MODULE_2__types_types__["c" /* School */](null, name)).subscribe(function (res) {
+                if (res.id) {
+                    _this.showNewSchool = false;
+                    _this.globalStatus.setStatus("Data submitted");
+                    _this.init();
+                }
+                else {
+                    _this.globalStatus.setStatus(res.error);
+                }
+            });
         }
         else {
             this.globalStatus.setStatus("Enter required Values");
         }
     };
     SchoolComponent.prototype.updateSchool = function (school, key, value) {
+        var _this = this;
         var val;
         if (school != null && key != null && value != null) {
             val = value;
             school[key] = val;
             var h;
-            this.UpdateSchoolService.updateSchool(school).then(function (r) { return h = r; }, function () { return location.href = "/noc"; });
-            if (h == 0) {
-                this.globalStatus.setStatus("Data submitted " + school[key]);
-                this.init();
-            }
-            else {
-                this.globalStatus.setStatus("ERROR during submitting data");
-            }
+            this.UpdateSchoolService.updateSchool(school).subscribe(function (res) {
+                if (res.id) {
+                    _this.globalStatus.setStatus("Data submitted");
+                    _this.init();
+                    _this.selectSchool(__WEBPACK_IMPORTED_MODULE_1__lib_functions__["a" /* find */](_this.schools, 'id', res.id));
+                }
+                else {
+                    _this.globalStatus.setStatus(res.error);
+                }
+            });
+        }
+        else {
+            this.globalStatus.setStatus("No changes");
         }
     };
     SchoolComponent.prototype.deleteSchool = function (school) {
+        var _this = this;
         var h;
-        this.DeleteSchoolService.deleteSchool(school).then(function (r) { return h = r; }, function () { return location.href = "/noc"; });
-        if (h == 0) {
-            this.globalStatus.setStatus("Data submitted");
-            this.init();
+        if (school.id > 0) {
+            this.DeleteSchoolService.deleteSchool(school).subscribe(function (res) {
+                if (res.id) {
+                    _this.globalStatus.setStatus("Data submitted");
+                    _this.init();
+                    _this.selectedSchool = null;
+                }
+                else {
+                    _this.globalStatus.setStatus(res.error);
+                }
+            });
         }
         else {
-            this.globalStatus.setStatus("ERROR during submitting data");
+            this.globalStatus.setStatus("Nothing to delete!");
         }
     };
     SchoolComponent.prototype.onSelect = function (school) {
@@ -975,7 +1058,7 @@ SchoolComponent = __decorate([
         template: __webpack_require__("../../../../../src/app/html/school.component.html"),
         styles: [__webpack_require__("../../../../../src/app/css/component.css")]
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__service_local_service__["d" /* GlobalSchool */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__service_local_service__["d" /* GlobalSchool */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__service_local_service__["e" /* GlobalStatus */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__service_local_service__["e" /* GlobalStatus */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_3__service_post_service__["c" /* postSchoolService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__service_post_service__["c" /* postSchoolService */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_4__service_get_service__["c" /* getSchoolService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__service_get_service__["c" /* getSchoolService */]) === "function" && _d || Object, typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_5__service_update_service__["c" /* updateSchoolService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_5__service_update_service__["c" /* updateSchoolService */]) === "function" && _e || Object, typeof (_f = typeof __WEBPACK_IMPORTED_MODULE_6__service_delete_service__["c" /* deleteSchoolService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_6__service_delete_service__["c" /* deleteSchoolService */]) === "function" && _f || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_3__service_local_service__["d" /* GlobalSchool */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__service_local_service__["d" /* GlobalSchool */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_3__service_local_service__["e" /* GlobalStatus */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__service_local_service__["e" /* GlobalStatus */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_4__service_post_service__["c" /* postSchoolService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__service_post_service__["c" /* postSchoolService */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_5__service_get_service__["c" /* getSchoolService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_5__service_get_service__["c" /* getSchoolService */]) === "function" && _d || Object, typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_6__service_update_service__["c" /* updateSchoolService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_6__service_update_service__["c" /* updateSchoolService */]) === "function" && _e || Object, typeof (_f = typeof __WEBPACK_IMPORTED_MODULE_7__service_delete_service__["c" /* deleteSchoolService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_7__service_delete_service__["c" /* deleteSchoolService */]) === "function" && _f || Object])
 ], SchoolComponent);
 
 var _a, _b, _c, _d, _e, _f;
@@ -1026,9 +1109,8 @@ var deleteSchoolService = (function () {
     }
     deleteSchoolService.prototype.deleteSchool = function (school) {
         return this.http.delete(this.global.basicUrl + "/" + this.url + "/" + school.id, { headers: this.headers })
-            .toPromise()
-            .then(function () { return 0; })
-            .catch(__WEBPACK_IMPORTED_MODULE_5__lib_functions__["a" /* handleError */]);
+            .map(function (response) { return response.json(); })
+            .catch(__WEBPACK_IMPORTED_MODULE_5__lib_functions__["b" /* handleError */]);
     };
     return deleteSchoolService;
 }());
@@ -1048,9 +1130,8 @@ var deleteClassService = (function () {
     }
     deleteClassService.prototype.deleteClass = function (klasse) {
         return this.http.delete(this.global.basicUrl + "/" + this.url + "/" + klasse.id, { headers: this.headers })
-            .toPromise()
-            .then(function () { return 0; })
-            .catch(__WEBPACK_IMPORTED_MODULE_5__lib_functions__["a" /* handleError */]);
+            .map(function (response) { return response.json(); })
+            .catch(__WEBPACK_IMPORTED_MODULE_5__lib_functions__["b" /* handleError */]);
     };
     return deleteClassService;
 }());
@@ -1070,9 +1151,8 @@ var deleteStudentService = (function () {
     }
     deleteStudentService.prototype.deleteStudent = function (student) {
         return this.http.delete(this.global.basicUrl + "/" + this.url + "/" + student.id, { headers: this.headers })
-            .toPromise()
-            .then(function () { return 0; })
-            .catch(__WEBPACK_IMPORTED_MODULE_5__lib_functions__["a" /* handleError */]);
+            .map(function (response) { return response.json(); })
+            .catch(__WEBPACK_IMPORTED_MODULE_5__lib_functions__["b" /* handleError */]);
     };
     return deleteStudentService;
 }());
@@ -1092,9 +1172,8 @@ var deleteNoteService = (function () {
     }
     deleteNoteService.prototype.deleteNote = function (note) {
         return this.http.delete(this.global.basicUrl + "/" + this.url + "/" + note.id, { headers: this.headers })
-            .toPromise()
-            .then(function () { return 0; })
-            .catch(__WEBPACK_IMPORTED_MODULE_5__lib_functions__["a" /* handleError */]);
+            .map(function (response) { return response.json(); })
+            .catch(__WEBPACK_IMPORTED_MODULE_5__lib_functions__["b" /* handleError */]);
     };
     return deleteNoteService;
 }());
@@ -1114,9 +1193,8 @@ var deleteTeacherService = (function () {
     }
     deleteTeacherService.prototype.deleteTeacher = function (teacher) {
         return this.http.delete(this.global.basicUrl + "/" + this.url + "/" + teacher.id, { headers: this.headers })
-            .toPromise()
-            .then(function () { return 0; })
-            .catch(__WEBPACK_IMPORTED_MODULE_5__lib_functions__["a" /* handleError */]);
+            .map(function (response) { return response.json(); })
+            .catch(__WEBPACK_IMPORTED_MODULE_5__lib_functions__["b" /* handleError */]);
     };
     return deleteTeacherService;
 }());
@@ -1144,10 +1222,12 @@ var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_toPromise__ = __webpack_require__("../../../../rxjs/add/operator/toPromise.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_toPromise___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_toPromise__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs_Rx__ = __webpack_require__("../../../../rxjs/Rx.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs_Rx___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_rxjs_Rx__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__local_service__ = __webpack_require__("../../../../../src/app/service/local.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__lib_functions__ = __webpack_require__("../../../../../src/app/lib/functions.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs_add_operator_map__ = __webpack_require__("../../../../rxjs/add/operator/map.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs_add_operator_map___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_rxjs_add_operator_map__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_Rx__ = __webpack_require__("../../../../rxjs/Rx.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_Rx___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_rxjs_Rx__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__types_types__ = __webpack_require__("../../../../../src/app/types/types.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__local_service__ = __webpack_require__("../../../../../src/app/service/local.service.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -1157,6 +1237,11 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+
+
+
+
+
 
 
 
@@ -1176,22 +1261,22 @@ var getSchoolService = (function () {
     }
     getSchoolService.prototype.getSchools = function () {
         return this.http.get(this.global.basicUrl + "/" + this.url)
-            .toPromise()
-            .then(function (response) { return response.json().parse; })
-            .catch(__WEBPACK_IMPORTED_MODULE_6__lib_functions__["a" /* handleError */]);
+            .map(function (response) {
+            return response.json().school.map(function (item) {
+                return new __WEBPACK_IMPORTED_MODULE_6__types_types__["c" /* School */](item.id, item.name);
+            });
+        });
     };
     //return func.sort(this.global.gSchools,'name','asc');}
     getSchoolService.prototype.getSchool = function (id) {
         return this.http.get(this.global.basicUrl + "/" + this.url + "/" + id)
-            .toPromise()
-            .then(function (response) { return response.json().parse; })
-            .catch(__WEBPACK_IMPORTED_MODULE_6__lib_functions__["a" /* handleError */]);
+            .map(function (response) { return response.json(); });
     };
     return getSchoolService;
 }());
 getSchoolService = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["C" /* Injectable */])(),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_5__local_service__["a" /* Global */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_5__local_service__["a" /* Global */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */]) === "function" && _c || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_7__local_service__["a" /* Global */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_7__local_service__["a" /* Global */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */]) === "function" && _c || Object])
 ], getSchoolService);
 
 var getClassService = (function () {
@@ -1214,21 +1299,21 @@ var getClassService = (function () {
   }*/
     getClassService.prototype.getClass = function (schoolid, id) {
         return this.http.get(this.global.basicUrl + "/" + this.url + "/" + schoolid + "/" + id)
-            .toPromise()
-            .then(function (response) { return response.json().parse; })
-            .catch(__WEBPACK_IMPORTED_MODULE_6__lib_functions__["a" /* handleError */]);
+            .map(function (response) { return response.json(); });
     };
     getClassService.prototype.getEntities = function (id) {
         return this.http.get(this.global.basicUrl + "/" + this.url + "/" + id)
-            .toPromise()
-            .then(function (response) { return response.json().parse; })
-            .catch(__WEBPACK_IMPORTED_MODULE_6__lib_functions__["a" /* handleError */]);
+            .map(function (response) {
+            return response.json().schoolClass.map(function (item) {
+                return new __WEBPACK_IMPORTED_MODULE_6__types_types__["a" /* Class */](item.id, item.name, item.level, item.belongsToSchool);
+            });
+        });
     };
     return getClassService;
 }());
 getClassService = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["C" /* Injectable */])(),
-    __metadata("design:paramtypes", [typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_5__local_service__["a" /* Global */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_5__local_service__["a" /* Global */]) === "function" && _d || Object, typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */]) === "function" && _e || Object, typeof (_f = typeof __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */]) === "function" && _f || Object])
+    __metadata("design:paramtypes", [typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_7__local_service__["a" /* Global */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_7__local_service__["a" /* Global */]) === "function" && _d || Object, typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */]) === "function" && _e || Object, typeof (_f = typeof __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */]) === "function" && _f || Object])
 ], getClassService);
 
 var getStudentService = (function () {
@@ -1251,21 +1336,21 @@ var getStudentService = (function () {
   }*/
     getStudentService.prototype.getStudent = function (classid, id) {
         return this.http.get(this.global.basicUrl + "/" + this.url + "/" + classid + "/" + id)
-            .toPromise()
-            .then(function (response) { return response.json().parse; })
-            .catch(__WEBPACK_IMPORTED_MODULE_6__lib_functions__["a" /* handleError */]);
+            .map(function (response) { return response.json(); });
     };
     getStudentService.prototype.getEntities = function (id) {
         return this.http.get(this.global.basicUrl + "/" + this.url + "/" + id)
-            .toPromise()
-            .then(function (response) { return response.json().parse; })
-            .catch(__WEBPACK_IMPORTED_MODULE_6__lib_functions__["a" /* handleError */]);
+            .map(function (response) {
+            return response.json().student.map(function (item) {
+                return new __WEBPACK_IMPORTED_MODULE_6__types_types__["d" /* Student */](item.id, item.firstname, item.lastname, item.belongsToClass);
+            });
+        });
     };
     return getStudentService;
 }());
 getStudentService = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["C" /* Injectable */])(),
-    __metadata("design:paramtypes", [typeof (_g = typeof __WEBPACK_IMPORTED_MODULE_5__local_service__["a" /* Global */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_5__local_service__["a" /* Global */]) === "function" && _g || Object, typeof (_h = typeof __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */]) === "function" && _h || Object, typeof (_j = typeof __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */]) === "function" && _j || Object])
+    __metadata("design:paramtypes", [typeof (_g = typeof __WEBPACK_IMPORTED_MODULE_7__local_service__["a" /* Global */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_7__local_service__["a" /* Global */]) === "function" && _g || Object, typeof (_h = typeof __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */]) === "function" && _h || Object, typeof (_j = typeof __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */]) === "function" && _j || Object])
 ], getStudentService);
 
 var getNoteService = (function () {
@@ -1288,22 +1373,21 @@ var getNoteService = (function () {
 }*/
     getNoteService.prototype.getNote = function (studentid, id) {
         return this.http.get(this.global.basicUrl + "/" + this.url + "/" + studentid + "/" + id)
-            .toPromise()
-            .then(function (response) { return response.json().parse; })
-            .catch(__WEBPACK_IMPORTED_MODULE_6__lib_functions__["a" /* handleError */]);
+            .map(function (response) { return response.json(); });
     };
     getNoteService.prototype.getEntities = function (id) {
-        var a = this.http.get(this.global.basicUrl + "/" + this.url + "/" + id)
-            .toPromise()
-            .then(function (response) { return response.json().parse; })
-            .catch(__WEBPACK_IMPORTED_MODULE_6__lib_functions__["a" /* handleError */]);
-        return __WEBPACK_IMPORTED_MODULE_6__lib_functions__["b" /* sort */](a, 'timestamp', 'dsc');
+        return this.http.get(this.global.basicUrl + "/" + this.url + "/" + id)
+            .map(function (response) {
+            return response.json().note.map(function (item) {
+                return new __WEBPACK_IMPORTED_MODULE_6__types_types__["b" /* Note */](item.id, item.text, item.timestamp, item.authorTeacherId, item.belongsToStudent);
+            });
+        });
     };
     return getNoteService;
 }());
 getNoteService = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["C" /* Injectable */])(),
-    __metadata("design:paramtypes", [typeof (_k = typeof __WEBPACK_IMPORTED_MODULE_5__local_service__["a" /* Global */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_5__local_service__["a" /* Global */]) === "function" && _k || Object, typeof (_l = typeof __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */]) === "function" && _l || Object, typeof (_m = typeof __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */]) === "function" && _m || Object])
+    __metadata("design:paramtypes", [typeof (_k = typeof __WEBPACK_IMPORTED_MODULE_7__local_service__["a" /* Global */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_7__local_service__["a" /* Global */]) === "function" && _k || Object, typeof (_l = typeof __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */]) === "function" && _l || Object, typeof (_m = typeof __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */]) === "function" && _m || Object])
 ], getNoteService);
 
 var getTeacherService = (function () {
@@ -1312,7 +1396,6 @@ var getTeacherService = (function () {
         this.httpImpl = httpImpl;
         this.routerImpl = routerImpl;
         this.url = 'get/getTeacher';
-        this.headers = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["a" /* Headers */]({ 'Content-Type': '*' });
         this.global = globalData;
         this.http = httpImpl;
         this.router = routerImpl;
@@ -1324,31 +1407,31 @@ var getTeacherService = (function () {
            .catch(func.handleError);
 return func.sort(a,'timestamp','dsc');
 }*/
-    getTeacherService.prototype.getTeacher = function (id) {
-        return this.http.get(this.global.basicUrl + "/" + this.url + "/" + id)
-            .toPromise()
-            .then(function (response) { return response.json().parse; })
-            .catch(__WEBPACK_IMPORTED_MODULE_6__lib_functions__["a" /* handleError */]);
+    getTeacherService.prototype.getTeacher = function (schoolid, id) {
+        return this.http.get(this.global.basicUrl + "/" + this.url + "/" + schoolid + "/" + id)
+            .map(function (response) { return response.json(); });
     };
     getTeacherService.prototype.getEntities = function (id) {
-        var a = this.http.get(this.global.basicUrl + "/" + this.url + "/" + id)
-            .toPromise()
-            .then(function (response) { return response.json().parse; })
-            .catch(__WEBPACK_IMPORTED_MODULE_6__lib_functions__["a" /* handleError */]);
-        return __WEBPACK_IMPORTED_MODULE_6__lib_functions__["b" /* sort */](a, 'timestamp', 'dsc');
+        return this.http.get(this.global.basicUrl + "/" + this.url + "/" + id)
+            .map(function (response) {
+            return response.json().teacher.map(function (item) {
+                return new __WEBPACK_IMPORTED_MODULE_6__types_types__["e" /* Teacher */](item.id, item.firstname, item.lastname, item.mailAddress, item.password, item.belongsToSchool);
+            });
+        });
     };
-    getTeacherService.prototype.getTeacherByMail = function (mail) {
-        return this.http.get("http://localhost:8888/login/login/bsix@gmail.com")
-            .do(console.log)
-            .toPromise()
-            .then(function (response) { return response.json().parse; })
-            .catch(__WEBPACK_IMPORTED_MODULE_6__lib_functions__["a" /* handleError */]);
+    getTeacherService.prototype.getTeacherByMail = function (mail, password) {
+        return this.http.get(this.global.basicUrl + "/login/login/" + mail + "/" + password)
+            .map(function (response) {
+            var t = response.json();
+            localStorage.setItem('CurrentTeacher', JSON.stringify(t));
+            return t;
+        });
     };
     return getTeacherService;
 }());
 getTeacherService = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["C" /* Injectable */])(),
-    __metadata("design:paramtypes", [typeof (_o = typeof __WEBPACK_IMPORTED_MODULE_5__local_service__["a" /* Global */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_5__local_service__["a" /* Global */]) === "function" && _o || Object, typeof (_p = typeof __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */]) === "function" && _p || Object, typeof (_q = typeof __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */]) === "function" && _q || Object])
+    __metadata("design:paramtypes", [typeof (_o = typeof __WEBPACK_IMPORTED_MODULE_7__local_service__["a" /* Global */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_7__local_service__["a" /* Global */]) === "function" && _o || Object, typeof (_p = typeof __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */]) === "function" && _p || Object, typeof (_q = typeof __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */]) === "function" && _q || Object])
 ], getTeacherService);
 
 var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q;
@@ -1367,6 +1450,7 @@ var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q;
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Global; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__dummy_data__ = __webpack_require__("../../../../../src/app/dummy.data.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__types_types__ = __webpack_require__("../../../../../src/app/types/types.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -1379,23 +1463,25 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 
 
 
-var globalSchool;
-var globalClass;
-var globalLogin;
+
+
+
 var globalStatus = null;
 var GlobalSchool = (function () {
     function GlobalSchool() {
     }
     GlobalSchool.prototype.setSchool = function (school) {
-        globalSchool = school;
+        localStorage.setItem('CurrentSchool', JSON.stringify(school));
         return 0;
     };
     GlobalSchool.prototype.unsetSchool = function () {
-        globalSchool = null;
+        localStorage.removeItem('CurrentSchool');
         return 0;
     };
     GlobalSchool.prototype.getSchool = function () {
-        return globalSchool;
+        var school = new __WEBPACK_IMPORTED_MODULE_2__types_types__["c" /* School */](null, null);
+        school = JSON.parse(localStorage.getItem('CurrentSchool'));
+        return school;
     };
     return GlobalSchool;
 }());
@@ -1407,15 +1493,17 @@ var GlobalClass = (function () {
     function GlobalClass() {
     }
     GlobalClass.prototype.setClass = function (klasse) {
-        globalClass = klasse;
+        localStorage.setItem('CurrentClass', JSON.stringify(klasse));
         return 0;
     };
     GlobalClass.prototype.unsetClass = function () {
-        globalClass = null;
+        localStorage.removeItem('CurrentClass');
         return 0;
     };
     GlobalClass.prototype.getClass = function () {
-        return globalClass;
+        var klasse = new __WEBPACK_IMPORTED_MODULE_2__types_types__["a" /* Class */](null, null, null, null);
+        klasse = JSON.parse(localStorage.getItem('CurrentClass'));
+        return klasse;
     };
     return GlobalClass;
 }());
@@ -1428,7 +1516,7 @@ var GlobalStatus = (function () {
     }
     GlobalStatus.prototype.setStatus = function (status) {
         globalStatus = status;
-        setTimeout(function () { return globalStatus = null; }, 2000);
+        setTimeout(function () { return globalStatus = null; }, 3000);
     };
     GlobalStatus.prototype.unsetStatus = function () {
         globalStatus = null;
@@ -1447,14 +1535,16 @@ var GlobalLogin = (function () {
     function GlobalLogin() {
     }
     GlobalLogin.prototype.setLogin = function (teacher) {
-        globalLogin = teacher;
+        localStorage.setItem('CurrentTeacher', JSON.stringify(teacher));
     };
     GlobalLogin.prototype.unsetLogin = function () {
-        globalLogin = null;
+        localStorage.removeItem('CurrentTeacher');
         return 0;
     };
     GlobalLogin.prototype.getLogin = function () {
-        return globalLogin;
+        var teacher = new __WEBPACK_IMPORTED_MODULE_2__types_types__["e" /* Teacher */](null, null, null, null, null, null);
+        teacher = JSON.parse(localStorage.getItem('CurrentTeacher'));
+        return teacher;
     };
     return GlobalLogin;
 }());
@@ -1469,7 +1559,8 @@ var Global = (function () {
         this.gStudents = __WEBPACK_IMPORTED_MODULE_1__dummy_data__["d" /* STUDENTS */];
         this.gNotes = __WEBPACK_IMPORTED_MODULE_1__dummy_data__["b" /* NOTES */];
         this.gTeachers = __WEBPACK_IMPORTED_MODULE_1__dummy_data__["e" /* TEACHERS */];
-        this.basicUrl = 'http://localhost:8888';
+        //public basicUrl = 'http://localhost:8888';
+        this.basicUrl = 'https://studentnotegae-webengii.appspot.com';
     }
     return Global;
 }());
@@ -1523,11 +1614,9 @@ var postSchoolService = (function () {
         this.http = httpImpl;
     }
     postSchoolService.prototype.postSchool = function (school) {
-        return this.http
-            .post(this.global.basicUrl + "/" + this.url + "/" + school.name, JSON.stringify(school), { headers: this.headers })
-            .toPromise()
-            .then(function (res) { return 0; })
-            .catch(__WEBPACK_IMPORTED_MODULE_5__lib_functions__["a" /* handleError */]);
+        return this.http.post(this.global.basicUrl + "/" + this.url + "/" + school.name, JSON.stringify(school), { headers: this.headers })
+            .map(function (response) { return response.json(); })
+            .catch(__WEBPACK_IMPORTED_MODULE_5__lib_functions__["b" /* handleError */]);
     };
     return postSchoolService;
 }());
@@ -1546,11 +1635,9 @@ var postClassService = (function () {
         this.http = httpImpl;
     }
     postClassService.prototype.postClass = function (klasse) {
-        return this.http
-            .post(this.global.basicUrl + "/" + this.url + "/" + klasse.name + "/" + klasse.level + "/" + klasse.belongsToSchool, JSON.stringify(klasse), { headers: this.headers })
-            .toPromise()
-            .then(function (res) { return 0; })
-            .catch(__WEBPACK_IMPORTED_MODULE_5__lib_functions__["a" /* handleError */]);
+        return this.http.post(this.global.basicUrl + "/" + this.url + "/" + klasse.name + "/" + klasse.level + "/" + klasse.belongsToSchool, JSON.stringify(klasse), { headers: this.headers })
+            .map(function (response) { return response.json(); })
+            .catch(__WEBPACK_IMPORTED_MODULE_5__lib_functions__["b" /* handleError */]);
     };
     return postClassService;
 }());
@@ -1569,11 +1656,9 @@ var postStudentService = (function () {
         this.http = httpImpl;
     }
     postStudentService.prototype.postStudent = function (student) {
-        return this.http
-            .post(this.global.basicUrl + "/" + this.url + "/" + student.firstname + "/" + student.lastname + "/" + student.belongsToClass, JSON.stringify(student), { headers: this.headers })
-            .toPromise()
-            .then(function (res) { return 0; })
-            .catch(__WEBPACK_IMPORTED_MODULE_5__lib_functions__["a" /* handleError */]);
+        return this.http.post(this.global.basicUrl + "/" + this.url + "/" + student.firstname + "/" + student.lastname + "/" + student.belongsToClass, JSON.stringify(student), { headers: this.headers })
+            .map(function (response) { return response.json(); })
+            .catch(__WEBPACK_IMPORTED_MODULE_5__lib_functions__["b" /* handleError */]);
     };
     return postStudentService;
 }());
@@ -1592,11 +1677,9 @@ var postNoteService = (function () {
         this.http = httpImpl;
     }
     postNoteService.prototype.postNote = function (note) {
-        return this.http
-            .post(this.global.basicUrl + "/" + this.url + "/" + note.text + "/" + note.authorTeacherId + "/" + note.belongsToStudent, JSON.stringify(note), { headers: this.headers })
-            .toPromise()
-            .then(function (res) { return 0; })
-            .catch(__WEBPACK_IMPORTED_MODULE_5__lib_functions__["a" /* handleError */]);
+        return this.http.post(this.global.basicUrl + "/" + this.url + "/" + note.text + "/" + note.authorTeacherId + "/" + note.belongsToStudent, JSON.stringify(note), { headers: this.headers })
+            .map(function (response) { return response.json(); })
+            .catch(__WEBPACK_IMPORTED_MODULE_5__lib_functions__["b" /* handleError */]);
     };
     return postNoteService;
 }());
@@ -1615,11 +1698,9 @@ var postTeacherService = (function () {
         this.http = httpImpl;
     }
     postTeacherService.prototype.postTeacher = function (teacher) {
-        return this.http
-            .post(this.global.basicUrl + "/" + this.url + "/" + teacher.firstname + "/" + teacher.lastname + "/" + teacher.mailAddress + "/" + teacher.password + "/" + teacher.belongsToSchool, JSON.stringify(teacher), { headers: this.headers })
-            .toPromise()
-            .then(function (res) { return 0; })
-            .catch(__WEBPACK_IMPORTED_MODULE_5__lib_functions__["a" /* handleError */]);
+        return this.http.post(this.global.basicUrl + "/" + this.url + "/" + teacher.firstname + "/" + teacher.lastname + "/" + teacher.mailAddress + "/" + teacher.password + "/" + teacher.belongsToSchool, JSON.stringify(teacher), { headers: this.headers })
+            .map(function (response) { return response.json(); })
+            .catch(__WEBPACK_IMPORTED_MODULE_5__lib_functions__["b" /* handleError */]);
     };
     return postTeacherService;
 }());
@@ -1677,9 +1758,8 @@ var updateSchoolService = (function () {
     updateSchoolService.prototype.updateSchool = function (school) {
         return this.http
             .put(this.global.basicUrl + "/" + this.url + "/" + school.id + "/" + school.name, JSON.stringify(school), { headers: this.headers })
-            .toPromise()
-            .then(function () { return 0; })
-            .catch(__WEBPACK_IMPORTED_MODULE_5__lib_functions__["a" /* handleError */]);
+            .map(function (response) { return response.json(); })
+            .catch(__WEBPACK_IMPORTED_MODULE_5__lib_functions__["b" /* handleError */]);
     };
     return updateSchoolService;
 }());
@@ -1700,9 +1780,8 @@ var updateClassService = (function () {
     updateClassService.prototype.updateClass = function (klasse) {
         return this.http
             .put(this.global.basicUrl + "/" + this.url + "/" + klasse.id + "/" + klasse.level + "/" + klasse.name, JSON.stringify(klasse), { headers: this.headers })
-            .toPromise()
-            .then(function () { return 0; })
-            .catch(__WEBPACK_IMPORTED_MODULE_5__lib_functions__["a" /* handleError */]);
+            .map(function (response) { return response.json(); })
+            .catch(__WEBPACK_IMPORTED_MODULE_5__lib_functions__["b" /* handleError */]);
     };
     return updateClassService;
 }());
@@ -1723,9 +1802,8 @@ var updateStudentService = (function () {
     updateStudentService.prototype.updateStudent = function (student) {
         return this.http
             .put(this.global.basicUrl + "/" + this.url + "/" + student.id + "/" + student.belongsToClass + "/" + student.firstname + "/" + student.lastname, JSON.stringify(student), { headers: this.headers })
-            .toPromise()
-            .then(function () { return 0; })
-            .catch(__WEBPACK_IMPORTED_MODULE_5__lib_functions__["a" /* handleError */]);
+            .map(function (response) { return response.json(); })
+            .catch(__WEBPACK_IMPORTED_MODULE_5__lib_functions__["b" /* handleError */]);
     };
     return updateStudentService;
 }());
@@ -1746,9 +1824,8 @@ var updateNoteService = (function () {
     updateNoteService.prototype.updateNote = function (note) {
         return this.http
             .put(this.global.basicUrl + "/" + this.url + "/" + note.id, JSON.stringify(note), { headers: this.headers })
-            .toPromise()
-            .then(function () { return 0; })
-            .catch(__WEBPACK_IMPORTED_MODULE_5__lib_functions__["a" /* handleError */]);
+            .map(function (response) { return response.json(); })
+            .catch(__WEBPACK_IMPORTED_MODULE_5__lib_functions__["b" /* handleError */]);
     };
     return updateNoteService;
 }());
@@ -1769,9 +1846,8 @@ var updateTeacherService = (function () {
     updateTeacherService.prototype.updateTeacher = function (teacher) {
         return this.http
             .put(this.global.basicUrl + "/" + this.url + "/" + teacher.id + "/" + teacher.firstname + "/" + teacher.lastname + "/" + teacher.mailAddress + "/" + teacher.password, JSON.stringify(teacher), { headers: this.headers })
-            .toPromise()
-            .then(function () { return 0; })
-            .catch(__WEBPACK_IMPORTED_MODULE_5__lib_functions__["a" /* handleError */]);
+            .map(function (response) { return response.json(); })
+            .catch(__WEBPACK_IMPORTED_MODULE_5__lib_functions__["b" /* handleError */]);
     };
     return updateTeacherService;
 }());
@@ -1792,12 +1868,13 @@ var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return StudentComponent; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__types_types__ = __webpack_require__("../../../../../src/app/types/types.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__service_local_service__ = __webpack_require__("../../../../../src/app/service/local.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__service_get_service__ = __webpack_require__("../../../../../src/app/service/get.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__service_update_service__ = __webpack_require__("../../../../../src/app/service/update.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__service_delete_service__ = __webpack_require__("../../../../../src/app/service/delete.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__service_post_service__ = __webpack_require__("../../../../../src/app/service/post.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_functions__ = __webpack_require__("../../../../../src/app/lib/functions.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__types_types__ = __webpack_require__("../../../../../src/app/types/types.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__service_local_service__ = __webpack_require__("../../../../../src/app/service/local.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__service_get_service__ = __webpack_require__("../../../../../src/app/service/get.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__service_update_service__ = __webpack_require__("../../../../../src/app/service/update.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__service_delete_service__ = __webpack_require__("../../../../../src/app/service/delete.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__service_post_service__ = __webpack_require__("../../../../../src/app/service/post.service.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -1807,6 +1884,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+
 
 
 
@@ -1849,11 +1927,12 @@ var StudentComponent = (function () {
         this.GetClassService = GetClassServiceImpl;
         this.showNewStudent = false;
         this.showNewNote = false;
-        this.NewStudent = new __WEBPACK_IMPORTED_MODULE_2__types_types__["d" /* Student */](null, null, null, null);
-        this.NewNote = new __WEBPACK_IMPORTED_MODULE_2__types_types__["b" /* Note */](null, null, null, null, null);
+        this.wait = false;
+        this.NewStudent = new __WEBPACK_IMPORTED_MODULE_3__types_types__["d" /* Student */](null, null, null, null);
+        this.NewNote = new __WEBPACK_IMPORTED_MODULE_3__types_types__["b" /* Note */](null, null, null, null, null);
     }
     StudentComponent.prototype.isNotes = function () {
-        if (this.notes.length > 0) {
+        if (this.notes) {
             return true;
         }
         else {
@@ -1870,22 +1949,22 @@ var StudentComponent = (function () {
         }
     };
     StudentComponent.prototype.cancelNewStudent = function () {
-        this.NewStudent = new __WEBPACK_IMPORTED_MODULE_2__types_types__["d" /* Student */](null, null, null, null);
+        this.NewStudent = new __WEBPACK_IMPORTED_MODULE_3__types_types__["d" /* Student */](null, null, null, null);
         this.showNewStudent = false;
     };
     StudentComponent.prototype.newStudent = function (firstname, lastname, belongsToClass) {
+        var _this = this;
         if (firstname > "" && lastname > "" && belongsToClass > 0) {
-            var h;
-            this.PostStudentService.postStudent(new __WEBPACK_IMPORTED_MODULE_2__types_types__["d" /* Student */](null, firstname, lastname, belongsToClass)).then(function (r) { return h = r; }, function () { return location.href = "/noc"; });
-            if (0 == h) {
-                this.showNewStudent = false;
-                this.globalStatus.setStatus("Data submitted");
-                //fetch new data
-                this.init();
-            }
-            else {
-                this.globalStatus.setStatus("[ERROR] submitting data");
-            }
+            this.PostStudentService.postStudent(new __WEBPACK_IMPORTED_MODULE_3__types_types__["d" /* Student */](null, firstname, lastname, belongsToClass)).subscribe(function (res) {
+                if (res.id) {
+                    _this.showNewStudent = false;
+                    _this.globalStatus.setStatus("Data submitted");
+                    _this.init();
+                }
+                else {
+                    _this.globalStatus.setStatus(res.error);
+                }
+            });
         }
         else {
             this.globalStatus.setStatus("Enter required Values");
@@ -1900,34 +1979,41 @@ var StudentComponent = (function () {
         }
     };
     StudentComponent.prototype.cancelNewNote = function () {
-        this.NewNote = new __WEBPACK_IMPORTED_MODULE_2__types_types__["b" /* Note */](null, null, null, null, null);
+        this.NewNote = new __WEBPACK_IMPORTED_MODULE_3__types_types__["b" /* Note */](null, null, null, null, null);
         this.showNewNote = false;
     };
     StudentComponent.prototype.newNote = function (text, timestamp, authorTeacherId, belongsToStudent) {
+        var _this = this;
         if (text > "" && timestamp > 0 && authorTeacherId != null && belongsToStudent > 0) {
-            var h;
-            this.PostNoteService.postNote(new __WEBPACK_IMPORTED_MODULE_2__types_types__["b" /* Note */](null, text, timestamp, authorTeacherId, belongsToStudent)).then(function (s) { return h = s; }, function () { return location.href = "/noc"; });
-            if (0 == h) {
-                this.showNewNote = false;
-                this.globalStatus.setStatus("Data submitted");
-                //fetch new data
-                this.init();
-            }
-            else {
-                this.globalStatus.setStatus("[ERROR] submitting data");
-            }
+            this.PostNoteService.postNote(new __WEBPACK_IMPORTED_MODULE_3__types_types__["b" /* Note */](null, text, timestamp, authorTeacherId, belongsToStudent)).subscribe(function (res) {
+                if (res.id) {
+                    _this.showNewNote = false;
+                    _this.globalStatus.setStatus("Data submitted");
+                    _this.init();
+                    _this.onSelect(_this.selectedStudent);
+                }
+                else {
+                    _this.globalStatus.setStatus(res.error);
+                }
+            });
         }
         else {
             this.globalStatus.setStatus("Enter required Values");
         }
     };
-    StudentComponent.prototype.getTeacherName = function (teacher) {
-        return teacher.firstname + ' ' + teacher.lastname;
+    StudentComponent.prototype.getTeacherName = function (id) {
+        var teacher = __WEBPACK_IMPORTED_MODULE_2__lib_functions__["a" /* find */](this.teachers, 'id', id);
+        if (teacher != null) {
+            return teacher.firstname + " " + teacher.lastname;
+        }
+        else {
+            return "";
+        }
     };
     StudentComponent.prototype.getLoginName = function () {
         var teacher = this.globalLogin.getLogin();
         if (teacher != null) {
-            return this.getTeacherName(teacher);
+            return teacher.firstname + " " + teacher.lastname;
         }
         else {
             return "Not logged in!";
@@ -1939,13 +2025,15 @@ var StudentComponent = (function () {
             return teacher.id;
         }
         else {
-            return "-1";
+            return "";
         }
     };
     StudentComponent.prototype.init = function () {
         var _this = this;
         if (this.globalSchool.getSchool()) {
-            this.GetStudentService.getEntities(this.globalClass.getClass().id).then(function (s) { return _this.students = s; }, function () { return location.href = "/noc"; });
+            this.GetStudentService.getEntities(this.globalClass.getClass().id).subscribe(function (s) { _this.students = s; });
+            this.GetClassService.getEntities(this.globalSchool.getSchool().id).subscribe(function (s) { return _this.classes = s; });
+            this.GetTeacherService.getEntities(this.globalSchool.getSchool().id).subscribe(function (s) { return _this.teachers = s; });
         }
     };
     StudentComponent.prototype.ngOnInit = function () {
@@ -1954,29 +2042,34 @@ var StudentComponent = (function () {
         this.sub = this.route.params.subscribe(function (params) {
             _this.id = +params['id']; // (+) converts string 'id' to a number
             //Ask Webservice
-            _this.selectedStudent = _this.students.find(function (o) { return o.id === _this.id; });
+            if (_this.id) {
+                _this.wait = true;
+                setTimeout(function () { _this.selectedStudent = _this.students.find(function (o) { return o.id === _this.id; }); _this.GetNoteService.getEntities(_this.selectedStudent.id).subscribe(function (s) { _this.notes = s; }); _this.wait = false; }, 2000);
+            }
         });
-        if (this.selectedStudent) {
-            this.GetNoteService.getEntities(this.selectedStudent.id).then(function (n) { return _this.notes = n; }, function () { return location.href = "/noc"; });
-        }
     };
     StudentComponent.prototype.ngOnDestroy = function () {
-        this.sub.unsubscribe();
     };
     StudentComponent.prototype.updateStudent = function (student, key, value) {
+        var _this = this;
         var val;
         if (student != null && key != null && value != null) {
             val = value;
             student[key] = val;
             var h;
-            this.UpdateStudentService.updateStudent(student).then(function (r) { return h = r; }, function () { return location.href = "/noc"; });
-            if (h == 0) {
-                this.globalStatus.setStatus("Data submitted " + student[key]);
-                this.init();
-            }
-            else {
-                this.globalStatus.setStatus("ERROR during submitting data");
-            }
+            this.UpdateStudentService.updateStudent(student).subscribe(function (res) {
+                if (res.id) {
+                    _this.globalStatus.setStatus("Data submitted");
+                    _this.init();
+                    _this.onSelect(__WEBPACK_IMPORTED_MODULE_2__lib_functions__["a" /* find */](_this.students, 'id', res.id));
+                }
+                else {
+                    _this.globalStatus.setStatus(res.error);
+                }
+            });
+        }
+        else {
+            this.globalStatus.setStatus("No changes");
         }
     };
     StudentComponent.prototype.getNow = function () {
@@ -1984,57 +2077,92 @@ var StudentComponent = (function () {
         return now;
     };
     StudentComponent.prototype.deleteStudent = function (student) {
+        var _this = this;
         var h;
-        this.DeleteStudentService.deleteStudent(student).then(function (r) { return h = r; }, function () { return location.href = "/noc"; });
-        if (h == 0) {
-            this.globalStatus.setStatus("Data submitted");
-            this.init();
+        if (student.id > 0) {
+            this.DeleteStudentService.deleteStudent(student).subscribe(function (res) {
+                if (res.id) {
+                    _this.globalStatus.setStatus("Data submitted");
+                    _this.init();
+                    _this.selectedStudent = null;
+                }
+                else {
+                    _this.globalStatus.setStatus(res.error);
+                }
+            });
         }
         else {
-            this.globalStatus.setStatus("ERROR during submitting data");
+            this.globalStatus.setStatus("Nothing to delete!");
         }
     };
     StudentComponent.prototype.updateNote = function (note, key, value) {
+        var _this = this;
         var val;
         if (note != null && key != null && value != null) {
             val = value;
             note[key] = val;
-            var h;
-            this.UpdateNoteService.updateNote(note).then(function (r) { return h = r; }, function () { return location.href = "/noc"; });
-            if (h == 0) {
-                this.globalStatus.setStatus("Data submitted " + note[key]);
-                this.init();
-            }
-            else {
-                this.globalStatus.setStatus("ERROR during submitting data");
-            }
+            this.UpdateNoteService.updateNote(note).subscribe(function (res) {
+                if (res.id) {
+                    _this.showNewNote = false;
+                    _this.globalStatus.setStatus("Data submitted");
+                    _this.init();
+                    _this.onSelect(_this.selectedStudent);
+                }
+                else {
+                    _this.globalStatus.setStatus(res.error);
+                }
+            });
+        }
+        else {
+            this.globalStatus.setStatus("No changes");
         }
     };
     StudentComponent.prototype.deleteNote = function (note) {
+        var _this = this;
         var h;
-        this.DeleteNoteService.deleteNote(note).then(function (r) { return h = r; }, function () { return location.href = "/noc"; });
-        if (h == 0) {
-            this.globalStatus.setStatus("Data submitted");
-            this.init();
+        if (note.id > 0) {
+            this.DeleteNoteService.deleteNote(note).subscribe(function (res) {
+                if (res.id) {
+                    _this.showNewNote = false;
+                    _this.globalStatus.setStatus("Data submitted");
+                    _this.init();
+                    _this.onSelect(_this.selectedStudent);
+                }
+                else {
+                    _this.globalStatus.setStatus(res.error);
+                }
+            });
         }
         else {
-            this.globalStatus.setStatus("ERROR during submitting data");
+            this.globalStatus.setStatus("Nothing to delete!");
         }
     };
     StudentComponent.prototype.getClassName = function (id) {
-        var klasse;
-        this.GetClassService.getClass(this.globalSchool.getSchool().id, id).then(function (c) { return klasse = c; }, function () { return location.href = "/noc"; });
+        var klasse = __WEBPACK_IMPORTED_MODULE_2__lib_functions__["a" /* find */](this.classes, 'id', id);
         if (klasse != null) {
-            return klasse.name;
+            return klasse.level + " " + klasse.name;
         }
         else {
-            return "not existing";
+            return "";
         }
+    };
+    StudentComponent.prototype.getCurrentClass = function () {
+        return this.globalClass.getClass();
     };
     StudentComponent.prototype.onSelect = function (student) {
         var _this = this;
         this.cancelNewStudent();
-        this.GetNoteService.getEntities(student.id).then(function (n) { return _this.notes = n; }, function () { return location.href = "/noc"; });
+        this.selectedStudent = student;
+        this.notes = null;
+        this.GetClassService.getEntities(this.globalSchool.getSchool().id).subscribe(function (s) { return _this.classes = s; });
+        this.GetNoteService.getEntities(this.selectedStudent.id).subscribe(function (s) {
+            if (s != null) {
+                _this.notes = s;
+            }
+            else {
+                _this.notes = null;
+            }
+        });
     };
     return StudentComponent;
 }());
@@ -2044,7 +2172,7 @@ StudentComponent = __decorate([
         template: __webpack_require__("../../../../../src/app/html/student.component.html"),
         styles: [__webpack_require__("../../../../../src/app/css/component.css")]
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* ActivatedRoute */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* ActivatedRoute */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_7__service_post_service__["d" /* postStudentService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_7__service_post_service__["d" /* postStudentService */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_4__service_get_service__["d" /* getStudentService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__service_get_service__["d" /* getStudentService */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_5__service_update_service__["d" /* updateStudentService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_5__service_update_service__["d" /* updateStudentService */]) === "function" && _d || Object, typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_6__service_delete_service__["d" /* deleteStudentService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_6__service_delete_service__["d" /* deleteStudentService */]) === "function" && _e || Object, typeof (_f = typeof __WEBPACK_IMPORTED_MODULE_4__service_get_service__["e" /* getTeacherService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__service_get_service__["e" /* getTeacherService */]) === "function" && _f || Object, typeof (_g = typeof __WEBPACK_IMPORTED_MODULE_7__service_post_service__["b" /* postNoteService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_7__service_post_service__["b" /* postNoteService */]) === "function" && _g || Object, typeof (_h = typeof __WEBPACK_IMPORTED_MODULE_4__service_get_service__["b" /* getNoteService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__service_get_service__["b" /* getNoteService */]) === "function" && _h || Object, typeof (_j = typeof __WEBPACK_IMPORTED_MODULE_5__service_update_service__["b" /* updateNoteService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_5__service_update_service__["b" /* updateNoteService */]) === "function" && _j || Object, typeof (_k = typeof __WEBPACK_IMPORTED_MODULE_6__service_delete_service__["b" /* deleteNoteService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_6__service_delete_service__["b" /* deleteNoteService */]) === "function" && _k || Object, typeof (_l = typeof __WEBPACK_IMPORTED_MODULE_4__service_get_service__["a" /* getClassService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__service_get_service__["a" /* getClassService */]) === "function" && _l || Object, typeof (_m = typeof __WEBPACK_IMPORTED_MODULE_3__service_local_service__["d" /* GlobalSchool */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__service_local_service__["d" /* GlobalSchool */]) === "function" && _m || Object, typeof (_o = typeof __WEBPACK_IMPORTED_MODULE_3__service_local_service__["b" /* GlobalClass */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__service_local_service__["b" /* GlobalClass */]) === "function" && _o || Object, typeof (_p = typeof __WEBPACK_IMPORTED_MODULE_3__service_local_service__["e" /* GlobalStatus */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__service_local_service__["e" /* GlobalStatus */]) === "function" && _p || Object, typeof (_q = typeof __WEBPACK_IMPORTED_MODULE_3__service_local_service__["c" /* GlobalLogin */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__service_local_service__["c" /* GlobalLogin */]) === "function" && _q || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* ActivatedRoute */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* ActivatedRoute */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_8__service_post_service__["d" /* postStudentService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_8__service_post_service__["d" /* postStudentService */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_5__service_get_service__["d" /* getStudentService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_5__service_get_service__["d" /* getStudentService */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_6__service_update_service__["d" /* updateStudentService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_6__service_update_service__["d" /* updateStudentService */]) === "function" && _d || Object, typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_7__service_delete_service__["d" /* deleteStudentService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_7__service_delete_service__["d" /* deleteStudentService */]) === "function" && _e || Object, typeof (_f = typeof __WEBPACK_IMPORTED_MODULE_5__service_get_service__["e" /* getTeacherService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_5__service_get_service__["e" /* getTeacherService */]) === "function" && _f || Object, typeof (_g = typeof __WEBPACK_IMPORTED_MODULE_8__service_post_service__["b" /* postNoteService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_8__service_post_service__["b" /* postNoteService */]) === "function" && _g || Object, typeof (_h = typeof __WEBPACK_IMPORTED_MODULE_5__service_get_service__["b" /* getNoteService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_5__service_get_service__["b" /* getNoteService */]) === "function" && _h || Object, typeof (_j = typeof __WEBPACK_IMPORTED_MODULE_6__service_update_service__["b" /* updateNoteService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_6__service_update_service__["b" /* updateNoteService */]) === "function" && _j || Object, typeof (_k = typeof __WEBPACK_IMPORTED_MODULE_7__service_delete_service__["b" /* deleteNoteService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_7__service_delete_service__["b" /* deleteNoteService */]) === "function" && _k || Object, typeof (_l = typeof __WEBPACK_IMPORTED_MODULE_5__service_get_service__["a" /* getClassService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_5__service_get_service__["a" /* getClassService */]) === "function" && _l || Object, typeof (_m = typeof __WEBPACK_IMPORTED_MODULE_4__service_local_service__["d" /* GlobalSchool */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__service_local_service__["d" /* GlobalSchool */]) === "function" && _m || Object, typeof (_o = typeof __WEBPACK_IMPORTED_MODULE_4__service_local_service__["b" /* GlobalClass */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__service_local_service__["b" /* GlobalClass */]) === "function" && _o || Object, typeof (_p = typeof __WEBPACK_IMPORTED_MODULE_4__service_local_service__["e" /* GlobalStatus */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__service_local_service__["e" /* GlobalStatus */]) === "function" && _p || Object, typeof (_q = typeof __WEBPACK_IMPORTED_MODULE_4__service_local_service__["c" /* GlobalLogin */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__service_local_service__["c" /* GlobalLogin */]) === "function" && _q || Object])
 ], StudentComponent);
 
 var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q;
@@ -2059,12 +2187,13 @@ var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q;
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return TeacherComponent; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__types_types__ = __webpack_require__("../../../../../src/app/types/types.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__service_local_service__ = __webpack_require__("../../../../../src/app/service/local.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__service_post_service__ = __webpack_require__("../../../../../src/app/service/post.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__service_get_service__ = __webpack_require__("../../../../../src/app/service/get.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__service_update_service__ = __webpack_require__("../../../../../src/app/service/update.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__service_delete_service__ = __webpack_require__("../../../../../src/app/service/delete.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_functions__ = __webpack_require__("../../../../../src/app/lib/functions.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__types_types__ = __webpack_require__("../../../../../src/app/types/types.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__service_local_service__ = __webpack_require__("../../../../../src/app/service/local.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__service_post_service__ = __webpack_require__("../../../../../src/app/service/post.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__service_get_service__ = __webpack_require__("../../../../../src/app/service/get.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__service_update_service__ = __webpack_require__("../../../../../src/app/service/update.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__service_delete_service__ = __webpack_require__("../../../../../src/app/service/delete.service.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -2074,6 +2203,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+
 
 
 
@@ -2103,7 +2233,7 @@ var TeacherComponent = (function () {
         this.DeleteTeacherService = DeleteTeacherServiceImpl;
         this.GetSchoolService = GetSchoolServiceImpl;
         this.showNewTeacher = false;
-        this.NewTeacher = new __WEBPACK_IMPORTED_MODULE_2__types_types__["e" /* Teacher */](null, null, null, null, null, null);
+        this.NewTeacher = new __WEBPACK_IMPORTED_MODULE_3__types_types__["e" /* Teacher */](null, null, null, null, null, null);
     }
     TeacherComponent.prototype.toggleNewTeacher = function () {
         if (this.showNewTeacher == false) {
@@ -2115,59 +2245,76 @@ var TeacherComponent = (function () {
         }
     };
     TeacherComponent.prototype.cancelNewTeacher = function () {
-        this.NewTeacher = new __WEBPACK_IMPORTED_MODULE_2__types_types__["e" /* Teacher */](null, null, null, null, null, null);
+        this.NewTeacher = new __WEBPACK_IMPORTED_MODULE_3__types_types__["e" /* Teacher */](null, null, null, null, null, null);
         this.showNewTeacher = false;
     };
     TeacherComponent.prototype.newTeacher = function (firstname, lastname, mailAddress, password, belongsToSchool) {
+        var _this = this;
         if (firstname > "" && lastname > "" && mailAddress > "" && password > "" && belongsToSchool > 0) {
-            var h;
-            this.PostTeacherService.postTeacher(new __WEBPACK_IMPORTED_MODULE_2__types_types__["e" /* Teacher */](null, firstname, lastname, mailAddress, password, belongsToSchool)).then(function (s) { return h = s; }, function () { return location.href = "/noc"; });
-            if (h == 0) {
-                this.showNewTeacher = false;
-                this.globalStatus.setStatus("Data submitted");
-                //fetch new data
-                this.init();
-            }
-            else {
-                this.globalStatus.setStatus("[ERROR] submitting data");
-            }
+            this.PostTeacherService.postTeacher(new __WEBPACK_IMPORTED_MODULE_3__types_types__["e" /* Teacher */](null, firstname, lastname, mailAddress, password, belongsToSchool)).subscribe(function (res) {
+                if (res.id) {
+                    _this.showNewTeacher = false;
+                    _this.globalStatus.setStatus("Data submitted");
+                    _this.init();
+                }
+                else {
+                    _this.globalStatus.setStatus(res.error);
+                }
+            });
         }
         else {
             this.globalStatus.setStatus("Enter required Values");
         }
     };
     TeacherComponent.prototype.updateTeacher = function (teacher, key, value) {
+        var _this = this;
         var val;
         if (teacher != null && key != null && value != null) {
             val = value;
             teacher[key] = val;
             var h;
-            this.UpdateTeacherService.updateTeacher(teacher).then(function (r) { return h = r; }, function () { return location.href = "/noc"; });
-            if (h == 0) {
-                this.globalStatus.setStatus("Data submitted " + teacher[key]);
-                this.init();
-            }
-            else {
-                this.globalStatus.setStatus("ERROR during submitting data");
-            }
+            this.UpdateTeacherService.updateTeacher(teacher).subscribe(function (res) {
+                if (res.id) {
+                    _this.globalStatus.setStatus("Data submitted");
+                    _this.init();
+                    _this.selectTeacher(__WEBPACK_IMPORTED_MODULE_2__lib_functions__["a" /* find */](_this.teachers, 'id', res.id));
+                }
+                else {
+                    _this.globalStatus.setStatus(res.error);
+                }
+            });
+        }
+        else {
+            this.globalStatus.setStatus("No changes");
         }
     };
     TeacherComponent.prototype.deleteTeacher = function (teacher) {
+        var _this = this;
         var h;
-        this.UpdateTeacherService.updateTeacher(teacher).then(function (r) { return h = r; }, function () { return location.href = "/noc"; });
-        if (h == 0) {
-            this.globalStatus.setStatus("Data submitted");
-            this.init();
+        if (teacher.id > 0) {
+            this.DeleteTeacherService.deleteTeacher(teacher).subscribe(function (res) {
+                if (res.id) {
+                    _this.globalStatus.setStatus("Data submitted");
+                    _this.init();
+                    _this.selectTeacher = null;
+                }
+                else {
+                    _this.globalStatus.setStatus(res.error);
+                }
+            });
         }
         else {
-            this.globalStatus.setStatus("ERROR during submitting data");
+            this.globalStatus.setStatus("Nothing to delete!");
         }
     };
     TeacherComponent.prototype.init = function () {
         var _this = this;
         if (this.globalSchool.getSchool()) {
-            this.GetTeacherService.getEntities(this.globalSchool.getSchool().id).then(function (t) { return _this.teachers = t; }, function () { return location.href = "/noc"; });
+            this.GetTeacherService.getEntities(this.globalSchool.getSchool().id).subscribe(function (s) { return _this.teachers = s; });
+            this.GetSchoolService.getSchools().subscribe(function (s) { return _this.schools = s; });
         }
+    };
+    TeacherComponent.prototype.updatePW = function () {
     };
     TeacherComponent.prototype.ngOnInit = function () {
         var _this = this;
@@ -2175,11 +2322,12 @@ var TeacherComponent = (function () {
         this.sub = this.route.params.subscribe(function (params) {
             _this.id = +params['id']; // (+) converts string 'id' to a number
             //Ask Webservice
-            _this.selectedTeacher = _this.teachers.find(function (o) { return o.id === _this.id; });
+            if (_this.id) {
+                setTimeout(function () { _this.selectedTeacher = _this.teachers.find(function (o) { return o.id === _this.id; }); }, 2000);
+            }
         });
     };
     TeacherComponent.prototype.ngOnDestroy = function () {
-        this.sub.unsubscribe();
     };
     TeacherComponent.prototype.isLoginTeacher = function (id) {
         if (this.globalLogin.getLogin() && this.globalLogin.getLogin().id == id) {
@@ -2193,14 +2341,16 @@ var TeacherComponent = (function () {
         this.globalStatus.setStatus("You cannot change your user. Please relogin with the desired user.");
     };
     TeacherComponent.prototype.getSchoolName = function (id) {
-        var school;
-        this.GetSchoolService.getSchool(id).then(function (s) { return school = s; }, function () { return location.href = "/noc"; });
+        var school = __WEBPACK_IMPORTED_MODULE_2__lib_functions__["a" /* find */](this.schools, 'id', id);
         if (school != null) {
             return school.name;
         }
         else {
-            return "not existing";
+            return "";
         }
+    };
+    TeacherComponent.prototype.getCurrentSchool = function () {
+        return this.globalSchool.getSchool();
     };
     TeacherComponent.prototype.selectTeacher = function (teacher) {
         this.cancelNewTeacher();
@@ -2214,7 +2364,7 @@ TeacherComponent = __decorate([
         template: __webpack_require__("../../../../../src/app/html/teacher.component.html"),
         styles: [__webpack_require__("../../../../../src/app/css/component.css")]
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* ActivatedRoute */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* ActivatedRoute */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_4__service_post_service__["e" /* postTeacherService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__service_post_service__["e" /* postTeacherService */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_5__service_get_service__["e" /* getTeacherService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_5__service_get_service__["e" /* getTeacherService */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_6__service_update_service__["e" /* updateTeacherService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_6__service_update_service__["e" /* updateTeacherService */]) === "function" && _d || Object, typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_7__service_delete_service__["e" /* deleteTeacherService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_7__service_delete_service__["e" /* deleteTeacherService */]) === "function" && _e || Object, typeof (_f = typeof __WEBPACK_IMPORTED_MODULE_5__service_get_service__["c" /* getSchoolService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_5__service_get_service__["c" /* getSchoolService */]) === "function" && _f || Object, typeof (_g = typeof __WEBPACK_IMPORTED_MODULE_3__service_local_service__["d" /* GlobalSchool */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__service_local_service__["d" /* GlobalSchool */]) === "function" && _g || Object, typeof (_h = typeof __WEBPACK_IMPORTED_MODULE_3__service_local_service__["e" /* GlobalStatus */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__service_local_service__["e" /* GlobalStatus */]) === "function" && _h || Object, typeof (_j = typeof __WEBPACK_IMPORTED_MODULE_3__service_local_service__["c" /* GlobalLogin */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__service_local_service__["c" /* GlobalLogin */]) === "function" && _j || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* ActivatedRoute */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* ActivatedRoute */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_5__service_post_service__["e" /* postTeacherService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_5__service_post_service__["e" /* postTeacherService */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_6__service_get_service__["e" /* getTeacherService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_6__service_get_service__["e" /* getTeacherService */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_7__service_update_service__["e" /* updateTeacherService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_7__service_update_service__["e" /* updateTeacherService */]) === "function" && _d || Object, typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_8__service_delete_service__["e" /* deleteTeacherService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_8__service_delete_service__["e" /* deleteTeacherService */]) === "function" && _e || Object, typeof (_f = typeof __WEBPACK_IMPORTED_MODULE_6__service_get_service__["c" /* getSchoolService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_6__service_get_service__["c" /* getSchoolService */]) === "function" && _f || Object, typeof (_g = typeof __WEBPACK_IMPORTED_MODULE_4__service_local_service__["d" /* GlobalSchool */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__service_local_service__["d" /* GlobalSchool */]) === "function" && _g || Object, typeof (_h = typeof __WEBPACK_IMPORTED_MODULE_4__service_local_service__["e" /* GlobalStatus */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__service_local_service__["e" /* GlobalStatus */]) === "function" && _h || Object, typeof (_j = typeof __WEBPACK_IMPORTED_MODULE_4__service_local_service__["c" /* GlobalLogin */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__service_local_service__["c" /* GlobalLogin */]) === "function" && _j || Object])
 ], TeacherComponent);
 
 var _a, _b, _c, _d, _e, _f, _g, _h, _j;
@@ -2238,6 +2388,9 @@ var Class = (function () {
         this.level = level;
         this.belongsToSchool = belongsToSchool;
     }
+    Class.prototype.toString = function () {
+        return (this.id + this.name + this.level + this.belongsToSchool);
+    };
     return Class;
 }());
 
@@ -2249,6 +2402,9 @@ var Note = (function () {
         this.authorTeacherId = authorTeacherId;
         this.belongsToStudent = belongsToStudent;
     }
+    Note.prototype.toString = function () {
+        return (this.id + this.text + this.timestamp + this.authorTeacherId + this.belongsToStudent);
+    };
     return Note;
 }());
 
@@ -2257,6 +2413,9 @@ var School = (function () {
         this.id = id;
         this.name = name;
     }
+    School.prototype.toString = function () {
+        return (this.id + this.name);
+    };
     return School;
 }());
 
@@ -2267,6 +2426,9 @@ var Student = (function () {
         this.lastname = lastname;
         this.belongsToClass = belongsToClass;
     }
+    Student.prototype.toString = function () {
+        return (this.id + this.firstname + this.lastname + this.belongsToClass);
+    };
     return Student;
 }());
 
@@ -2279,6 +2441,9 @@ var Teacher = (function () {
         this.password = password;
         this.belongsToSchool = belongsToSchool;
     }
+    Teacher.prototype.toString = function () {
+        return (this.id + this.firstname + this.lastname + this.mailAddress + this.password + this.belongsToSchool);
+    };
     return Teacher;
 }());
 
