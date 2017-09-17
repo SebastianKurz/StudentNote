@@ -1379,7 +1379,7 @@ return func.sort(a,'timestamp','dsc');
         });
     };
     getTeacherService.prototype.getTeacherByMail = function (mail, password) {
-        return this.http.get(this.global.basicUrl + "/login/login/" + mail)
+        return this.http.get(this.global.basicUrl + "/login/login/" + mail + "/" + password)
             .map(function (response) {
             var t = response.json();
             localStorage.setItem('CurrentTeacher', JSON.stringify(t));
